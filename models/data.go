@@ -1,10 +1,27 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/jinzhu/gorm"
+)
 
 type (
+	User struct {
+		UserId        string
+		TransactionId string
+	}
+
 	Data struct {
+		gorm.Model
+		State         bool
+		Source        int
+		Amount        float64
+		TransactionId string
+	}
+
+	JsonData struct {
 		State         string `json:"state"`
+		Source        string `json:"source"`
 		Amount        string `json:"amount"`
 		TransactionId string `json:"transactionId"`
 	}
@@ -16,7 +33,7 @@ type (
 	}
 )
 
-func (d Data) ValidateData() error {
+func (d JsonData) ValidateData() error {
 
 	if d.Amount == "" {
 		return fmt.Errorf("amount cant be null")

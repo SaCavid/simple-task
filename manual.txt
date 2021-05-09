@@ -1,0 +1,6 @@
+1. Postgres database
+    Port: 5462
+    Database Name: task
+    Database Password: 123456
+
+

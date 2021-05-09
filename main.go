@@ -1,13 +1,14 @@
 package main
 
 import (
+	"./handlers"
+	"./service"
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
 	"os"
-	"simple-task/handlers"
 )
 
 func main() {
@@ -29,7 +30,11 @@ func main() {
 		address = "127.0.0.1"
 	}
 
-	srv := handlers.Server{TransactionIds: make(map[string]string, 0)}
+	srv := handlers.Server{
+		TransactionIds: make(map[string]string, 0),
+		Repo:           service.NewTaskRepository(),
+	}
+
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {

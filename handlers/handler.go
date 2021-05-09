@@ -1,24 +1,47 @@
 package handlers
 
 import (
+	"../models"
+	"../service"
 	"fmt"
 	"github.com/labstack/echo"
+	"log"
 	"net/http"
-	"simple-task/models"
 	"strconv"
 	"sync"
 )
 
-//const (
-//	game = iota
-//	server
-//	payment
-//	client
-//)
+type SourceType int
 
-//var (
-//	SourceTypes = [...]string{"game", "server", "payment", "client"}
-//)
+var (
+	// must be unique names
+	// index must be same in constants
+	SourceTypes = [...]string{"game", "server", "payment"}
+)
+
+const (
+	game SourceType = iota
+	server
+	payment
+)
+
+// Example usage
+//var d SourceType = game
+//d.String()
+func (s SourceType) String() string {
+	return SourceTypes[s]
+}
+
+func (s SourceType) IndexOf(name string) (int, error) {
+
+	for k, v := range SourceTypes {
+		if v == name {
+			return k, nil
+		}
+	}
+
+	return -1, fmt.Errorf("not acceptable source type")
+}
 
 type Server struct {
 	Mu sync.Mutex
@@ -28,28 +51,30 @@ type Server struct {
 
 	// For faster user balance check -- Better to use Redis
 	UserBalances map[string]float64
+
+	Repo *service.TaskRepository
 }
 
 func (srv *Server) Handler(c echo.Context) error {
-	d := new(models.Data)
+	jd := new(models.JsonData)
 	// log.Println(c.Request().Header.Get("Content-Length"))
 	// log.Println(c.Request().Header.Get("Source-Type"))
-	if err := c.Bind(&d); err != nil {
+	if err := c.Bind(&jd); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
 
-	if err := d.ValidateData(); err != nil {
+	if err := jd.ValidateData(); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
 
-	if srv.CheckTransactionId(d.TransactionId) {
+	if srv.CheckTransactionId(jd.TransactionId) {
 		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
 	}
 
-	switch d.State {
+	switch jd.State {
 	case "win":
 
-		err := srv.UserWin("user id", d.Amount)
+		err := srv.UserWin("user id", jd)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 		}
@@ -57,7 +82,7 @@ func (srv *Server) Handler(c echo.Context) error {
 		break
 	case "lost":
 
-		err := srv.UserLost("user id", d.Amount)
+		err := srv.UserLost("user id", jd)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 		}
@@ -102,10 +127,17 @@ func (srv *Server) SaveUser(id string, balance float64) {
 	srv.Mu.Unlock()
 }
 
-func (srv *Server) UserWin(id, amount string) error {
+func (srv *Server) UserWin(id string, d *models.JsonData) error {
 
-	a, err := strconv.ParseFloat(amount, 64)
+	a, err := strconv.ParseFloat(d.Amount, 64)
 	if err != nil {
+		return err
+	}
+	var s SourceType
+
+	i, err := s.IndexOf(d.Source)
+	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -113,14 +145,33 @@ func (srv *Server) UserWin(id, amount string) error {
 	balance := srv.UserBalances[id]
 	srv.UserBalances[id] = balance + a
 	srv.Mu.Unlock()
+	mData := new(models.Data)
 
+	mData.TransactionId = d.TransactionId
+	mData.State = true
+	mData.Amount = a
+
+	mData.Source = i
+
+	err = srv.CreateData(mData)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 	return nil
 }
 
-func (srv *Server) UserLost(id, amount string) error {
+func (srv *Server) UserLost(id string, d *models.JsonData) error {
 
-	a, err := strconv.ParseFloat(amount, 64)
+	a, err := strconv.ParseFloat(d.Amount, 64)
 	if err != nil {
+		return err
+	}
+	var s SourceType
+
+	i, err := s.IndexOf(d.Source)
+	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -133,6 +184,22 @@ func (srv *Server) UserLost(id, amount string) error {
 
 	srv.UserBalances[id] = balance - a
 	srv.Mu.Unlock()
+	mData := new(models.Data)
+
+	mData.TransactionId = d.TransactionId
+	mData.State = false
+	mData.Amount = a
+	mData.Source = i
+
+	err = srv.CreateData(mData)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 
 	return nil
+}
+
+func (srv *Server) PostProcessing() {
+
 }
