@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/SaCavid/simple-task/models"
+	"../models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
@@ -17,6 +17,8 @@ func NewTaskRepository() *TaskRepository {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+
 
 	return &TaskRepository{Db: taskRepo}
 }

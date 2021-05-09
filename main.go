@@ -1,9 +1,9 @@
 package main
 
 import (
+	"./handlers"
+	"./service"
 	"fmt"
-	"github.com/SaCavid/simple-task/handlers"
-	"github.com/SaCavid/simple-task/service"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"log"

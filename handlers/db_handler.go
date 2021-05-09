@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/SaCavid/simple-task/models"
+	"../models"
 	"log"
 )
 

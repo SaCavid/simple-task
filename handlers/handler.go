@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"../models"
+	"../service"
 	"fmt"
-	"github.com/SaCavid/simple-task/models"
-	"github.com/SaCavid/simple-task/service"
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
@@ -57,8 +57,8 @@ type Server struct {
 
 func (srv *Server) Handler(c echo.Context) error {
 	jd := new(models.JsonData)
-	// log.Println(c.Request().Header.Get("Content-Length"))
-	// log.Println(c.Request().Header.Get("Source-Type"))
+	log.Println(c.Request().Header.Get("Content-Length"))
+	log.Println(c.Request().Header.Get("Source-Type"))
 	if err := c.Bind(&jd); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
@@ -70,7 +70,8 @@ func (srv *Server) Handler(c echo.Context) error {
 	if srv.CheckTransactionId(jd.TransactionId) {
 		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
 	}
-
+	jd.Source = c.Request().Header.Get("Source-Type")
+	log.Println(jd.Source)
 	switch jd.State {
 	case "win":
 
@@ -137,7 +138,7 @@ func (srv *Server) UserWin(id string, d *models.JsonData) error {
 
 	i, err := s.IndexOf(d.Source)
 	if err != nil {
-		log.Println(err)
+		log.Println(d.Source, err)
 		return err
 	}
 
