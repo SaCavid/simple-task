@@ -1,7 +1,7 @@
 package service
 
 import (
-	"../models"
+	"github.com/SaCavid/simple-task/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
