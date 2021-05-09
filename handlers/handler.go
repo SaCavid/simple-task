@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"../models"
-	"../service"
 	"fmt"
+	"github.com/SaCavid/simple-task/models"
+	"github.com/SaCavid/simple-task/service"
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
