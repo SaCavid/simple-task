@@ -13,7 +13,7 @@ type TaskRepository struct {
 }
 
 func NewTaskRepository() *TaskRepository {
-	taskRepo, err := CreateDbConnectionSensors(os.Getenv("DATABASE_URL"))
+	taskRepo, err := CreateDbConnection(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,7 +21,7 @@ func NewTaskRepository() *TaskRepository {
 	return &TaskRepository{Db: taskRepo}
 }
 
-func CreateDbConnectionSensors(connectionUri string) (*gorm.DB, error) {
+func CreateDbConnection(connectionUri string) (*gorm.DB, error) {
 
 	db, err := gorm.Open("postgres", connectionUri)
 	if err != nil {

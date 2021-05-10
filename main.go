@@ -50,7 +50,7 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	e.POST("/api/users", srv.FetchUsersFortesting)
+	e.POST("/api/users", srv.FetchUsersForTesting)
 	e.POST("/api/register", srv.Register)
 
 	e.POST(endPoint, srv.Handler)
