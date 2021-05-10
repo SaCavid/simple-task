@@ -28,7 +28,10 @@ func CreateDbConnectionSensors(connectionUri string) (*gorm.DB, error) {
 		return nil, err
 	}
 
+	db.DropTableIfExists(&models.Data{}, &models.User{})
+
 	db.AutoMigrate(&models.Data{}, &models.User{})
 
+	db.DropTableIfExists()
 	return db, nil
 }

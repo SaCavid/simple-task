@@ -32,6 +32,7 @@ func main() {
 
 	srv := handlers.Server{
 		TransactionIds: make(map[string]string, 0),
+		UserBalances:   make(map[string]float64, 0),
 		Repo:           service.NewTaskRepository(),
 	}
 
