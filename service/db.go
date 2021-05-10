@@ -28,7 +28,11 @@ func CreateDbConnectionSensors(connectionUri string) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	db.DropTableIfExists(&models.Data{}, &models.User{})
+	b := os.Getenv("DROP_TABLES")
+	if b == "true" {
+		log.Println("Dropping tables data and users")
+		db.DropTableIfExists(&models.Data{}, &models.User{})
+	}
 
 	db.AutoMigrate(&models.Data{}, &models.User{})
 

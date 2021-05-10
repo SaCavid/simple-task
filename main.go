@@ -26,6 +26,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
+
 	if address == "" {
 		address = "127.0.0.1"
 	}
