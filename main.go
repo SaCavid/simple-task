@@ -41,7 +41,7 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	e.POST("/register", srv.Register)
+	e.POST("/api/register", srv.Register)
 
 	e.POST(endPoint, srv.Handler)
 

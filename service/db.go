@@ -28,7 +28,7 @@ func CreateDbConnectionSensors(connectionUri string) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	db.AutoMigrate(&models.Data{})
+	db.AutoMigrate(&models.Data{}, &models.User{})
 
 	return db, nil
 }
