@@ -97,7 +97,7 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 
 	users := make([]models.User, 0)
 
-	err := srv.Repo.Db.Find(&users).Error
+	err := srv.Repo.Db.Table("users").Find(&users).Error
 	if err != nil {
 		log.Println(err)
 		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
@@ -105,8 +105,10 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 
 	keys := make([]string, len(users))
 	for _, v := range users {
+		log.Println(v.UserId)
 		keys = append(keys, v.UserId)
 	}
+
 	log.Println(len(keys))
 	return c.JSON(http.StatusOK, &models.Response{Message: "users", Data: keys})
 }
