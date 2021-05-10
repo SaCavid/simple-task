@@ -11,6 +11,6 @@ func (srv *Server) CreateData(data *models.Data) error {
 		log.Println(err)
 		return err
 	}
-	log.Println("hi")
+
 	return nil
 }

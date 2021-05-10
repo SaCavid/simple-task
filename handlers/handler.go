@@ -113,8 +113,8 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 
 func (srv *Server) Handler(c echo.Context) error {
 	jd := new(models.JsonData)
-	log.Println(c.Request().Header.Get("Content-Length"))
-	log.Println(c.Request().Header.Get("Source-Type"))
+	//log.Println(c.Request().Header.Get("Content-Length"))
+	//log.Println(c.Request().Header.Get("Source-Type"))
 	if err := c.Bind(&jd); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
