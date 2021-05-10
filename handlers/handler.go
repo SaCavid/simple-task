@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"sync"
 )
@@ -53,6 +54,46 @@ type Server struct {
 	UserBalances map[string]float64
 
 	Repo *service.TaskRepository
+}
+
+func (srv *Server) Register(c echo.Context) error {
+	user := new(models.User)
+
+	if err := c.Bind(&user); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
+	}
+
+	if user.UserId == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user id can't be null"})
+	}
+
+	maximumFakeUsers := os.Getenv("N_FAKE_USERS") // for testing
+
+	m, err := strconv.ParseInt(maximumFakeUsers, 10, 64)
+	if err != nil {
+		log.Println(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: "general error"})
+	}
+
+	srv.Mu.Lock()
+	if len(srv.UserBalances) >= int(m) {
+		srv.Mu.Unlock()
+		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: "maximum user count reached"})
+	}
+	srv.Mu.Unlock()
+
+	if srv.CheckUser(user.UserId) {
+		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user already registered"})
+	}
+
+	err = srv.Repo.Db.Create(user).Error
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
+	}
+
+	srv.AddUser(user.UserId)
+
+	return c.JSON(http.StatusOK, &models.Response{Message: "user registered"})
 }
 
 func (srv *Server) Handler(c echo.Context) error {

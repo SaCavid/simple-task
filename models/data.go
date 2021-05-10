@@ -7,8 +7,9 @@ import (
 
 type (
 	User struct {
-		UserId        string
-		TransactionId string
+		gorm.Model
+		UserId  string
+		Balance float64
 	}
 
 	Data struct {

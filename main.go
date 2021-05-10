@@ -41,6 +41,8 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
+	e.POST("/register", srv.Register)
+
 	e.POST(endPoint, srv.Handler)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", address, port)))
