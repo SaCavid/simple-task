@@ -129,9 +129,10 @@ func (srv *Server) Handler(c echo.Context) error {
 
 	id := c.Request().Header.Get("Authorization")
 	if id == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
+		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "not logged"})
 	}
 
+	log.Println(id)
 	if !srv.CheckUser(id) {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
 	}
