@@ -107,7 +107,7 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 	for _, v := range users {
 		keys = append(keys, v.UserId)
 	}
-
+	log.Println(len(keys))
 	return c.JSON(http.StatusOK, &models.Response{Message: "users", Data: keys})
 }
 
