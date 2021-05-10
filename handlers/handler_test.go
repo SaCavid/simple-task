@@ -14,14 +14,18 @@ import (
 )
 
 var (
-	Users []models.User
+	Users   []models.User
+	Address string
+	Port    string
+	Url     string
 )
 
 func user(id int, wg *sync.WaitGroup) {
 	log.SetFlags(log.Lshortfile)
 	defer wg.Done()
 	payload := []byte(`{"state": "win", "amount": "10.15", "transactionId": "some generated identificator"}`)
-	resp, err := http.NewRequest("POST", "", bytes.NewBuffer(payload))
+
+	resp, err := http.NewRequest("POST", Url, bytes.NewBuffer(payload))
 	if err != nil {
 		log.Println(id, err)
 	}
@@ -39,10 +43,14 @@ func user(id int, wg *sync.WaitGroup) {
 	}
 }
 
-func BenchmarkServer_Handler(b *testing.B) {
+func TestServer_Handler(t *testing.T) {
+
 	if err := godotenv.Load("../.env"); err != nil {
 		log.Print("No .env file found")
 	}
+	Address = os.Getenv("ADDRESS")
+	Port = os.Getenv("PORT")
+	Url = os.Getenv("TASK_END_POINT")
 
 	Database, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {

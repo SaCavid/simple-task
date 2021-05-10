@@ -126,6 +126,16 @@ func (srv *Server) Handler(c echo.Context) error {
 	if srv.CheckTransactionId(jd.TransactionId) {
 		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
 	}
+
+	id := c.Request().Header.Get("Authorization")
+	if id == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
+	}
+
+	if !srv.CheckUser(id) {
+		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
+	}
+
 	jd.Source = c.Request().Header.Get("Source-Type")
 	log.Println(jd.Source)
 	switch jd.State {
