@@ -26,9 +26,6 @@ const (
 	payment
 )
 
-// Example usage
-//var d SourceType = game
-//d.String()
 func (s SourceType) String() string {
 	return SourceTypes[s]
 }
@@ -94,6 +91,24 @@ func (srv *Server) Register(c echo.Context) error {
 	srv.AddUser(user.UserId)
 
 	return c.JSON(http.StatusOK, &models.Response{Message: "user registered"})
+}
+
+func (srv *Server) FetchUsersForTesting(c echo.Context) error {
+
+	users := make([]models.User, 0)
+
+	err := srv.Repo.Db.Find(&users).Error
+	if err != nil {
+		log.Println(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
+	}
+
+	keys := make([]string, len(users))
+	for _, v := range users {
+		keys = append(keys, v.UserId)
+	}
+
+	return c.JSON(http.StatusOK, &models.Response{Message: "users", Data: keys})
 }
 
 func (srv *Server) Handler(c echo.Context) error {
@@ -167,6 +182,24 @@ func (srv *Server) SaveUser(id string, balance float64) {
 	srv.Mu.Lock()
 	srv.UserBalances[id] = balance
 	srv.Mu.Unlock()
+}
+
+func (srv *Server) FetchUsers() error {
+
+	users := make([]models.User, 0)
+
+	err := srv.Repo.Db.Find(&users).Error
+	if err != nil {
+		return err
+	}
+
+	srv.Mu.Lock()
+	for _, v := range users {
+		srv.UserBalances[v.UserId] = v.Balance
+	}
+	srv.Mu.Unlock()
+
+	return nil
 }
 
 func (srv *Server) UserWin(id string, d *models.JsonData) error {

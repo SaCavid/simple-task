@@ -37,12 +37,20 @@ func main() {
 		Repo:           service.NewTaskRepository(),
 	}
 
+	if os.Getenv("DROP_TABLES") != "true" {
+		err := srv.FetchUsers()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
+	e.POST("/api/users", srv.FetchUsersFortesting)
 	e.POST("/api/register", srv.Register)
 
 	e.POST(endPoint, srv.Handler)
