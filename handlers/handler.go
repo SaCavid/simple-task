@@ -112,63 +112,63 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 }
 
 func (srv *Server) Handler(c echo.Context) error {
-	jd := new(models.JsonData)
-	//log.Println(c.Request().Header.Get("Content-Length"))
-	//log.Println(c.Request().Header.Get("Source-Type"))
-	if err := c.Bind(&jd); err != nil {
-		log.Println(err)
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
-	}
-
-	if err := jd.ValidateData(); err != nil {
-		log.Println(err)
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
-	}
-
-	if srv.CheckTransactionId(jd.TransactionId) {
-		log.Println("transaction id already used")
-		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
-	}
-
-	// Save transaction id not to use again ever if its failed
-	srv.SaveTransactionId(jd.TransactionId)
-	id := c.Request().Header.Get("Authorization")
-	if id == "" {
-		log.Println("not logged")
-		return echo.NewHTTPError(http.StatusForbidden, &models.Response{Error: true, Message: "not logged"})
-	}
-
-	if !srv.CheckUser(id) {
-		log.Println("user id didnt registered")
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
-	}
-
-	jd.Source = c.Request().Header.Get("Source-Type")
-
-	switch jd.State {
-	case "win":
-
-		err := srv.UserWin("user id", jd)
-		if err != nil {
-			log.Println(err)
-			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
-		}
-
-		break
-	case "lose":
-
-		balance, err := srv.UserLost("user id", jd)
-		if err != nil {
-			log.Println(err, jd.State, "-->", jd.Amount, "User balance:", balance)
-			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
-		}
-
-		break
-	default:
-
-		log.Println("error with state", jd.State)
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "error with state"})
-	}
+	//jd := new(models.JsonData)
+	////log.Println(c.Request().Header.Get("Content-Length"))
+	////log.Println(c.Request().Header.Get("Source-Type"))
+	//if err := c.Bind(&jd); err != nil {
+	//	log.Println(err)
+	//	return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
+	//}
+	//
+	//if err := jd.ValidateData(); err != nil {
+	//	log.Println(err)
+	//	return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
+	//}
+	//
+	//if srv.CheckTransactionId(jd.TransactionId) {
+	//	log.Println("transaction id already used")
+	//	return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
+	//}
+	//
+	//// Save transaction id not to use again ever if its failed
+	//srv.SaveTransactionId(jd.TransactionId)
+	//id := c.Request().Header.Get("Authorization")
+	//if id == "" {
+	//	log.Println("not logged")
+	//	return echo.NewHTTPError(http.StatusForbidden, &models.Response{Error: true, Message: "not logged"})
+	//}
+	//
+	//if !srv.CheckUser(id) {
+	//	log.Println("user id didnt registered")
+	//	return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
+	//}
+	//
+	//jd.Source = c.Request().Header.Get("Source-Type")
+	//
+	//switch jd.State {
+	//case "win":
+	//
+	//	err := srv.UserWin("user id", jd)
+	//	if err != nil {
+	//		log.Println(err)
+	//		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
+	//	}
+	//
+	//	break
+	//case "lose":
+	//
+	//	balance, err := srv.UserLost("user id", jd)
+	//	if err != nil {
+	//		log.Println(err, jd.State, "-->", jd.Amount, "User balance:", balance)
+	//		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
+	//	}
+	//
+	//	break
+	//default:
+	//
+	//	log.Println("error with state", jd.State)
+	//	return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "error with state"})
+	//}
 
 	return c.JSON(http.StatusOK, &models.Response{Message: "transaction processed"})
 }
