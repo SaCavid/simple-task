@@ -152,7 +152,7 @@ func (srv *Server) Handler(c echo.Context) error {
 		}
 
 		break
-	case "lost":
+	case "lose":
 
 		err := srv.UserLost("user id", jd)
 		if err != nil {
