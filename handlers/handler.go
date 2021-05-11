@@ -222,9 +222,10 @@ func (srv *Server) BulkInsertTransactions() {
 		var value []string
 		var values []interface{}
 		for _, data := range transactionsList {
-			value = append(value, "(?,?,?,?,?,?,?)")
+			value = append(value, "(?,?,?,?,?,?,?,?)")
 			values = append(values, data.CreatedAt)
 			values = append(values, data.UpdatedAt)
+			values = append(values, data.DeletedAt)
 			values = append(values, data.UserId)
 			values = append(values, data.State)
 			values = append(values, data.Source)
@@ -232,7 +233,7 @@ func (srv *Server) BulkInsertTransactions() {
 			values = append(values, data.TransactionId)
 		}
 
-		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
+		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
 		err := srv.Repo.Db.Begin().Exec(stmt, values...).Error
 		if err != nil {
 			srv.Repo.Db.Begin().Rollback()
