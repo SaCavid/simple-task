@@ -14,16 +14,16 @@ import (
 
 type SourceType int
 
-var (
-	// must be unique names
-	// index must be same in constants
-	SourceTypes = [...]string{"game", "server", "payment"}
-)
-
 const (
 	game SourceType = iota
 	server
 	payment
+)
+
+var (
+	// must be unique names
+	// index must be same in constants
+	SourceTypes = [...]string{"game", "server", "payment"}
 )
 
 func (s SourceType) String() string {
@@ -50,7 +50,8 @@ type Server struct {
 	// For faster user balance check -- Better to use Redis
 	UserBalances map[string]float64
 
-	Repo *service.TaskRepository
+	Transactions []models.Data
+	Repo         *service.TaskRepository
 }
 
 func (srv *Server) Register(c echo.Context) error {
@@ -129,6 +130,7 @@ func (srv *Server) Handler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
 	}
 
+	// Save transaction id not to use again ever if its failed
 	srv.SaveTransactionId(jd.TransactionId)
 	id := c.Request().Header.Get("Authorization")
 	if id == "" {
@@ -182,6 +184,17 @@ func (srv *Server) SaveTransactionId(id string) {
 	srv.Mu.Lock()
 	srv.TransactionIds[id] = id
 	srv.Mu.Unlock()
+}
+
+func (srv *Server) SaveTransaction(data models.Data) {
+	srv.Mu.Lock()
+	srv.Transactions = append(srv.Transactions, data)
+	log.Println(len(srv.Transactions))
+	srv.Mu.Unlock()
+}
+
+func (srv *Server) BulkInsertTransactions() {
+
 }
 
 func (srv *Server) CheckUser(id string) bool {
@@ -247,11 +260,12 @@ func (srv *Server) UserWin(id string, d *models.JsonData) error {
 
 	mData.Source = i
 
-	err = srv.CreateData(mData)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
+	srv.SaveTransaction(*mData)
+	//err = srv.CreateData(mData)
+	//if err != nil {
+	//	log.Println(err)
+	//	return err
+	//}
 	return nil
 }
 
@@ -285,11 +299,12 @@ func (srv *Server) UserLost(id string, d *models.JsonData) (float64, error) {
 	mData.Amount = a
 	mData.Source = i
 
-	err = srv.CreateData(mData)
-	if err != nil {
-		log.Println(err)
-		return 0, err
-	}
+	srv.SaveTransaction(*mData)
+	//err = srv.CreateData(mData)
+	//if err != nil {
+	//	log.Println(err)
+	//	return 0, err
+	//}
 
 	return balance, nil
 }
