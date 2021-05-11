@@ -201,17 +201,20 @@ func (srv *Server) BulkInsertTransactions() {
 	for {
 
 		srv.Mu.Lock()
-		if len(srv.Transactions) <= 100 {
-			time.Sleep(60 * time.Second)
+		log.Println(len(srv.Transactions))
+		if len(srv.Transactions) <= 500 {
+			time.Sleep(30 * time.Second)
 			continue
 		}
 
-		transactionsList := srv.Transactions[:100]
-		srv.Transactions = srv.Transactions[100:]
+		transactionsList := srv.Transactions[:500]
+		srv.Transactions = srv.Transactions[500:]
+		log.Println(len(srv.Transactions))
 		srv.Mu.Unlock()
 
 		srv.Repo.Db.Begin()
 
+		srv.Repo.Db.LogMode(true)
 		var value []string
 		var values []interface{}
 		for _, data := range transactionsList {
@@ -226,7 +229,7 @@ func (srv *Server) BulkInsertTransactions() {
 			values = append(values, data.TransactionId)
 		}
 
-		stmt := fmt.Sprintf("INSERT INTO users (name, password) VALUES %s", strings.Join(value, ","))
+		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
 		err := srv.Repo.Db.Begin().Exec(stmt, values...).Error
 		if err != nil {
 			srv.Repo.Db.Begin().Rollback()
@@ -234,8 +237,8 @@ func (srv *Server) BulkInsertTransactions() {
 		}
 
 		srv.Repo.Db.Begin().Commit()
+		log.Println("Rows inserted:", len(values))
 	}
-
 }
 
 func (srv *Server) CheckUser(id string) bool {

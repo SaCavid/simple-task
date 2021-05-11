@@ -38,6 +38,7 @@ func main() {
 		Repo:           service.NewTaskRepository(),
 	}
 
+	srv.BulkInsertTransactions()
 	if os.Getenv("DROP_TABLES") != "true" {
 		err := srv.FetchUsers()
 		if err != nil {
