@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
@@ -54,6 +55,10 @@ func main() {
 	e.POST("/api/register", srv.Register)
 
 	e.POST(endPoint, srv.Handler)
+	s := &http.Server{
+		ReadTimeout: 5 * time.Second,
+	}
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", address, port)))
+	log.Println("ok")
+	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", address, port)), s)
 }
