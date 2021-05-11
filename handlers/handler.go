@@ -203,6 +203,7 @@ func (srv *Server) BulkInsertTransactions() {
 		srv.Mu.Lock()
 		log.Println(len(srv.Transactions))
 		if len(srv.Transactions) <= 500 {
+			srv.Mu.Unlock()
 			time.Sleep(30 * time.Second)
 			continue
 		}
