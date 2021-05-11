@@ -128,6 +128,7 @@ func (srv *Server) Handler(c echo.Context) error {
 		log.Println("transaction id already used")
 		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
 	}
+
 	srv.SaveTransactionId(jd.TransactionId)
 	id := c.Request().Header.Get("Authorization")
 	if id == "" {
@@ -141,7 +142,7 @@ func (srv *Server) Handler(c echo.Context) error {
 	}
 
 	jd.Source = c.Request().Header.Get("Source-Type")
-	log.Println(jd.Source)
+
 	switch jd.State {
 	case "win":
 
@@ -154,16 +155,16 @@ func (srv *Server) Handler(c echo.Context) error {
 		break
 	case "lose":
 
-		err := srv.UserLost("user id", jd)
+		balance, err := srv.UserLost("user id", jd)
 		if err != nil {
-			log.Println(err)
+			log.Println(err, jd.State, "-->", jd.Amount, "User balance:", balance)
 			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 		}
 
 		break
 	default:
 
-		log.Println("error with state")
+		log.Println("error with state", jd.State)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "error with state"})
 	}
 
@@ -254,25 +255,25 @@ func (srv *Server) UserWin(id string, d *models.JsonData) error {
 	return nil
 }
 
-func (srv *Server) UserLost(id string, d *models.JsonData) error {
+func (srv *Server) UserLost(id string, d *models.JsonData) (float64, error) {
 
 	a, err := strconv.ParseFloat(d.Amount, 64)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	var s SourceType
 
 	i, err := s.IndexOf(d.Source)
 	if err != nil {
 		log.Println(err)
-		return err
+		return 0, err
 	}
 
 	srv.Mu.Lock()
 	balance := srv.UserBalances[id]
 	if (balance - a) < 0 {
 		srv.Mu.Unlock()
-		return fmt.Errorf("not enough user balance")
+		return balance, fmt.Errorf("not enough user balance")
 	}
 
 	srv.UserBalances[id] = balance - a
@@ -287,10 +288,10 @@ func (srv *Server) UserLost(id string, d *models.JsonData) error {
 	err = srv.CreateData(mData)
 	if err != nil {
 		log.Println(err)
-		return err
+		return 0, err
 	}
 
-	return nil
+	return balance, nil
 }
 
 func (srv *Server) PostProcessing() {
