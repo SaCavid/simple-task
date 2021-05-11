@@ -240,7 +240,12 @@ func (srv *Server) BulkInsertTransactions() {
 			log.Println(err)
 		}
 
-		srv.Repo.Db.Begin().Commit()
+		err = srv.Repo.Db.Begin().Commit().Error
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
 		log.Println("Rows inserted:", len(values)/8)
 	}
 }
