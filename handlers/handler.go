@@ -216,7 +216,8 @@ func (srv *Server) BulkInsertTransactions() {
 		srv.Transactions = srv.Transactions[count:]
 		srv.Mu.Unlock()
 
-		err := srv.Repo.Db.Begin().Error
+		tx := srv.Repo.Db.Begin()
+		err := tx.Error
 		if err != nil {
 			log.Println(err)
 			continue
@@ -238,13 +239,13 @@ func (srv *Server) BulkInsertTransactions() {
 		}
 
 		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
-		err = srv.Repo.Db.Begin().Exec(stmt, values...).Error
+		err = tx.Exec(stmt, values...).Error
 		if err != nil {
-			srv.Repo.Db.Begin().Rollback()
+			tx.Rollback()
 			log.Println(err)
 		}
 
-		err = srv.Repo.Db.Begin().Commit().Error
+		err = tx.Commit().Error
 		if err != nil {
 			log.Println(err)
 			continue
