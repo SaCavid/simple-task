@@ -25,7 +25,7 @@ func user(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
 	payload := []byte(`{"state": "win", "amount": "10.15", "transactionId": "some generated identificator"}`)
 
-	resp, err := http.NewRequest("POST", Url, bytes.NewBuffer(payload))
+	resp, err := http.Post("POST", Url, bytes.NewBuffer(payload))
 	if err != nil {
 		log.Println(id, err)
 	}

@@ -8,7 +8,7 @@ import (
 type (
 	User struct {
 		gorm.Model
-		UserId  string
+		UserId  string `gorm:"index"`
 		Balance float64
 	}
 
@@ -17,7 +17,7 @@ type (
 		State         bool
 		Source        int
 		Amount        float64
-		TransactionId string
+		TransactionId string `gorm:"index"`
 	}
 
 	JsonData struct {

@@ -108,7 +108,6 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 	}
 
 	log.Println(len(users))
-	log.Println(users)
 	return c.JSON(http.StatusOK, &models.Response{Message: "users", Data: users})
 }
 
