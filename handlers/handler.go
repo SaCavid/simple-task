@@ -192,7 +192,6 @@ func (srv *Server) SaveTransactionId(id string) {
 func (srv *Server) SaveTransaction(data models.Data) {
 	srv.Mu.Lock()
 	srv.Transactions = append(srv.Transactions, data)
-	log.Println(len(srv.Transactions))
 	srv.Mu.Unlock()
 }
 
@@ -223,10 +222,9 @@ func (srv *Server) BulkInsertTransactions() {
 		var value []string
 		var values []interface{}
 		for _, data := range transactionsList {
-			value = append(value, "(?,?,?,?,?,?,?,?)")
+			value = append(value, "(?,?,?,?,?,?,?)")
 			values = append(values, data.CreatedAt)
 			values = append(values, data.UpdatedAt)
-			values = append(values, data.DeletedAt)
 			values = append(values, data.UserId)
 			values = append(values, data.State)
 			values = append(values, data.Source)
@@ -234,7 +232,7 @@ func (srv *Server) BulkInsertTransactions() {
 			values = append(values, data.TransactionId)
 		}
 
-		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
+		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
 		err := srv.Repo.Db.Begin().Exec(stmt, values...).Error
 		if err != nil {
 			srv.Repo.Db.Begin().Rollback()
@@ -303,6 +301,9 @@ func (srv *Server) UserWin(id string, d *models.JsonData) error {
 	srv.Mu.Unlock()
 	mData := new(models.Data)
 
+	mData.CreatedAt = time.Now()
+	mData.UpdatedAt = time.Now()
+
 	mData.UserId = id
 	mData.TransactionId = d.TransactionId
 	mData.State = true
@@ -343,6 +344,9 @@ func (srv *Server) UserLost(id string, d *models.JsonData) (float64, error) {
 	srv.UserBalances[id] = balance - a
 	srv.Mu.Unlock()
 	mData := new(models.Data)
+
+	mData.CreatedAt = time.Now()
+	mData.UpdatedAt = time.Now()
 
 	mData.UserId = id
 	mData.TransactionId = d.TransactionId
