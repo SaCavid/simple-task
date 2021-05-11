@@ -201,16 +201,20 @@ func (srv *Server) BulkInsertTransactions() {
 	for {
 
 		srv.Mu.Lock()
-		log.Println(len(srv.Transactions))
-		if len(srv.Transactions) <= 500 {
+
+		if len(srv.Transactions) <= 0 {
 			srv.Mu.Unlock()
 			time.Sleep(30 * time.Second)
 			continue
 		}
+		count := len(srv.Transactions)
 
-		transactionsList := srv.Transactions[:500]
-		srv.Transactions = srv.Transactions[500:]
-		log.Println(len(srv.Transactions))
+		if count > 500 {
+			count = 500
+		}
+
+		transactionsList := srv.Transactions[:count]
+		srv.Transactions = srv.Transactions[count:]
 		srv.Mu.Unlock()
 
 		srv.Repo.Db.Begin()
@@ -238,7 +242,7 @@ func (srv *Server) BulkInsertTransactions() {
 		}
 
 		srv.Repo.Db.Begin().Commit()
-		log.Println("Rows inserted:", len(values))
+		log.Println("Rows inserted:", len(values)/8)
 	}
 }
 
