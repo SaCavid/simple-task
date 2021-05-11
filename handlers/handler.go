@@ -107,7 +107,6 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 	}
 
-	log.Println(len(users))
 	return c.JSON(http.StatusOK, &models.Response{Message: "users", Data: users})
 }
 
@@ -116,23 +115,28 @@ func (srv *Server) Handler(c echo.Context) error {
 	//log.Println(c.Request().Header.Get("Content-Length"))
 	//log.Println(c.Request().Header.Get("Source-Type"))
 	if err := c.Bind(&jd); err != nil {
+		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
 
 	if err := jd.ValidateData(); err != nil {
+		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
 
 	if srv.CheckTransactionId(jd.TransactionId) {
+		log.Println("transaction id already used")
 		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
 	}
 	srv.SaveTransactionId(jd.TransactionId)
 	id := c.Request().Header.Get("Authorization")
 	if id == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "not logged"})
+		log.Println("not logged")
+		return echo.NewHTTPError(http.StatusForbidden, &models.Response{Error: true, Message: "not logged"})
 	}
 
 	if !srv.CheckUser(id) {
+		log.Println("user id didnt registered")
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
 	}
 
@@ -143,6 +147,7 @@ func (srv *Server) Handler(c echo.Context) error {
 
 		err := srv.UserWin("user id", jd)
 		if err != nil {
+			log.Println(err)
 			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 		}
 
@@ -151,11 +156,14 @@ func (srv *Server) Handler(c echo.Context) error {
 
 		err := srv.UserLost("user id", jd)
 		if err != nil {
+			log.Println(err)
 			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 		}
 
 		break
 	default:
+
+		log.Println("error with state")
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "error with state"})
 	}
 
