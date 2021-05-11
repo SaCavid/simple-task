@@ -38,7 +38,7 @@ func main() {
 		Repo:           service.NewTaskRepository(),
 	}
 
-	srv.BulkInsertTransactions()
+	go srv.BulkInsertTransactions()
 	if os.Getenv("DROP_TABLES") != "true" {
 		err := srv.FetchUsers()
 		if err != nil {
@@ -60,6 +60,5 @@ func main() {
 		ReadTimeout: 5 * time.Second,
 	}
 
-	log.Println("ok")
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", address, port)), s)
 }
