@@ -9,7 +9,9 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
+	"time"
 )
 
 type SourceType int
@@ -113,6 +115,7 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 
 func (srv *Server) Handler(c echo.Context) error {
 	jd := new(models.JsonData)
+
 	//log.Println(c.Request().Header.Get("Content-Length"))
 	//log.Println(c.Request().Header.Get("Source-Type"))
 	if err := c.Bind(&jd); err != nil {
@@ -148,7 +151,7 @@ func (srv *Server) Handler(c echo.Context) error {
 	switch jd.State {
 	case "win":
 
-		err := srv.UserWin("user id", jd)
+		err := srv.UserWin(id, jd)
 		if err != nil {
 			log.Println(err)
 			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
@@ -157,7 +160,7 @@ func (srv *Server) Handler(c echo.Context) error {
 		break
 	case "lose":
 
-		balance, err := srv.UserLost("user id", jd)
+		balance, err := srv.UserLost(id, jd)
 		if err != nil {
 			log.Println(err, jd.State, "-->", jd.Amount, "User balance:", balance)
 			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
@@ -194,6 +197,44 @@ func (srv *Server) SaveTransaction(data models.Data) {
 }
 
 func (srv *Server) BulkInsertTransactions() {
+
+	for {
+
+		srv.Mu.Lock()
+		if len(srv.Transactions) <= 100 {
+			time.Sleep(60 * time.Second)
+			continue
+		}
+
+		transactionsList := srv.Transactions[:100]
+		srv.Transactions = srv.Transactions[100:]
+		srv.Mu.Unlock()
+
+		srv.Repo.Db.Begin()
+
+		var value []string
+		var values []interface{}
+		for _, data := range transactionsList {
+			value = append(value, "(?,?,?,?,?,?,?,?)")
+			values = append(values, data.CreatedAt)
+			values = append(values, data.UpdatedAt)
+			values = append(values, data.DeletedAt)
+			values = append(values, data.UserId)
+			values = append(values, data.State)
+			values = append(values, data.Source)
+			values = append(values, data.Amount)
+			values = append(values, data.TransactionId)
+		}
+
+		stmt := fmt.Sprintf("INSERT INTO users (name, password) VALUES %s", strings.Join(value, ","))
+		err := srv.Repo.Db.Begin().Exec(stmt, values...).Error
+		if err != nil {
+			srv.Repo.Db.Begin().Rollback()
+			log.Println(err)
+		}
+
+		srv.Repo.Db.Begin().Commit()
+	}
 
 }
 
@@ -254,6 +295,7 @@ func (srv *Server) UserWin(id string, d *models.JsonData) error {
 	srv.Mu.Unlock()
 	mData := new(models.Data)
 
+	mData.UserId = id
 	mData.TransactionId = d.TransactionId
 	mData.State = true
 	mData.Amount = a
@@ -294,6 +336,7 @@ func (srv *Server) UserLost(id string, d *models.JsonData) (float64, error) {
 	srv.Mu.Unlock()
 	mData := new(models.Data)
 
+	mData.UserId = id
 	mData.TransactionId = d.TransactionId
 	mData.State = false
 	mData.Amount = a

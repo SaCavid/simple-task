@@ -14,6 +14,7 @@ type (
 
 	Data struct {
 		gorm.Model
+		UserId        string
 		State         bool
 		Source        int
 		Amount        float64
