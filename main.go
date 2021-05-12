@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/SaCavid/simple-task/handlers"
+	"github.com/SaCavid/simple-task/models"
 	"github.com/SaCavid/simple-task/service"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
@@ -34,7 +35,7 @@ func main() {
 
 	srv := handlers.Server{
 		TransactionIds: make(map[string]string, 0),
-		UserBalances:   make(map[string]float64, 0),
+		UserBalances:   make(map[string]models.Balance, 0),
 		Repo:           service.NewTaskRepository(),
 	}
 
