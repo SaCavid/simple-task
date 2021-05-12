@@ -146,7 +146,7 @@ func (srv *Server) Handler(c echo.Context) error {
 		i, err := s.IndexOf(jd.Source)
 		if err != nil {
 			log.Println(jd.Source, err)
-			return err
+			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 		}
 
 		data := models.Data{
@@ -169,7 +169,7 @@ func (srv *Server) Handler(c echo.Context) error {
 		i, err := s.IndexOf(jd.Source)
 		if err != nil {
 			log.Println(jd.Source, err)
-			return err
+			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 		}
 
 		data := models.Data{
@@ -196,13 +196,13 @@ func (srv *Server) Handler(c echo.Context) error {
 
 			a, err := strconv.ParseFloat(jd.Amount, 64)
 			if err != nil {
-				return err
+				return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: mainErr.Error()})
 			}
 
 			i, err := s.IndexOf(jd.Source)
 			if err != nil {
 				log.Println(jd.Source, err)
-				return err
+				return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: mainErr.Error()})
 			}
 
 			data := models.Data{
@@ -229,13 +229,13 @@ func (srv *Server) Handler(c echo.Context) error {
 
 			a, err := strconv.ParseFloat(jd.Amount, 64)
 			if err != nil {
-				return err
+				return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: mainErr.Error()})
 			}
 
 			i, err := s.IndexOf(jd.Source)
 			if err != nil {
 				log.Println(jd.Source, err)
-				return err
+				return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: mainErr.Error()})
 			}
 
 			data := models.Data{
@@ -259,13 +259,13 @@ func (srv *Server) Handler(c echo.Context) error {
 
 		a, err := strconv.ParseFloat(jd.Amount, 64)
 		if err != nil {
-			return err
+			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 		}
 
 		i, err := s.IndexOf(jd.Source)
 		if err != nil {
 			log.Println(jd.Source, err)
-			return err
+			return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: err.Error()})
 		}
 
 		data := models.Data{
