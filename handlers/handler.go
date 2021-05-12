@@ -376,4 +376,18 @@ func (srv *Server) UserLost(id string, d *models.JsonData) (float64, error) {
 
 func (srv *Server) PostProcessing() {
 
+	for {
+		time.Sleep(10 * time.Second)
+
+		var data []models.Data
+
+		log.Println(len(data))
+		err := srv.Repo.Db.Exec("SELECT * FROM data WHERE MOD (id, 2) = 1 ORDER BY id  DESC limit 10").Find(&data).Error
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		log.Println(len(data))
+	}
 }
