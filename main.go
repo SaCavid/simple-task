@@ -39,6 +39,11 @@ func main() {
 		Repo:           service.NewTaskRepository(),
 	}
 
+	err := srv.FetchUsers()
+	if err != nil {
+		log.Println(err)
+	}
+
 	go srv.BulkInsertTransactions()
 	go srv.BulkUpdateBalances()
 	go srv.PostProcessing()

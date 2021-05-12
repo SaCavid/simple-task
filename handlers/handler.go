@@ -140,6 +140,7 @@ func (srv *Server) Handler(c echo.Context) error {
 	srv.SaveTransactionId(jd.TransactionId)
 	id := c.Request().Header.Get("Authorization")
 	if id == "" {
+		log.Println("not logged")
 		var s SourceType
 
 		i, err := s.IndexOf(jd.Source)
@@ -148,7 +149,6 @@ func (srv *Server) Handler(c echo.Context) error {
 			return err
 		}
 
-		log.Println("not logged")
 		data := models.Data{
 			UserId:        "",
 			State:         false,
@@ -172,7 +172,6 @@ func (srv *Server) Handler(c echo.Context) error {
 			return err
 		}
 
-		log.Println("not logged")
 		data := models.Data{
 			UserId:        "",
 			State:         false,
@@ -191,8 +190,32 @@ func (srv *Server) Handler(c echo.Context) error {
 
 		err := srv.UserWin(id, jd)
 		if err != nil {
+			mainErr := err
 			log.Println(err)
-			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
+			var s SourceType
+
+			a, err := strconv.ParseFloat(jd.Amount, 64)
+			if err != nil {
+				return err
+			}
+
+			i, err := s.IndexOf(jd.Source)
+			if err != nil {
+				log.Println(jd.Source, err)
+				return err
+			}
+
+			data := models.Data{
+				UserId:        id,
+				State:         true,
+				Source:        i,
+				Status:        2, // error . saved for unique transaction id.
+				Amount:        a,
+				TransactionId: jd.TransactionId,
+			}
+
+			srv.SaveTransaction(data)
+			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: mainErr.Error()})
 		}
 
 		break
@@ -201,7 +224,32 @@ func (srv *Server) Handler(c echo.Context) error {
 		balance, err := srv.UserLost(id, jd)
 		if err != nil {
 			log.Println(err, jd.State, "-->", jd.Amount, "User balance:", balance)
-			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
+			mainErr := err
+			log.Println(err)
+			var s SourceType
+
+			a, err := strconv.ParseFloat(jd.Amount, 64)
+			if err != nil {
+				return err
+			}
+
+			i, err := s.IndexOf(jd.Source)
+			if err != nil {
+				log.Println(jd.Source, err)
+				return err
+			}
+
+			data := models.Data{
+				UserId:        id,
+				State:         false,
+				Source:        i,
+				Status:        2, // error . saved for unique transaction id.
+				Amount:        a,
+				TransactionId: jd.TransactionId,
+			}
+
+			srv.SaveTransaction(data)
+			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: mainErr.Error()})
 		}
 
 		break
@@ -340,7 +388,6 @@ func (srv *Server) BulkUpdateBalances() {
 				value = append(value, fmt.Sprintf("('%s',%.2f)", data.UserId, data.Amount))
 			}
 
-			srv.Repo.Db.LogMode(true)
 			if err := srv.Repo.Db.Exec(fmt.Sprintf("UPDATE users AS u SET balance = data.a FROM (VALUES %s) AS data(user_id, a) WHERE u.user_id = data.user_id", strings.Join(value, ","))).Error; err != nil {
 				log.Println(err)
 				continue
