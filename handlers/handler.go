@@ -285,7 +285,7 @@ func (srv *Server) FetchUsers() error {
 
 	srv.Mu.Lock()
 	for _, v := range users {
-		srv.UserBalances[v.UserId] = v.Balance
+		srv.UserBalances[v.UserId] = v
 	}
 	srv.Mu.Unlock()
 

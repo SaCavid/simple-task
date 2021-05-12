@@ -9,7 +9,7 @@ type (
 	User struct {
 		gorm.Model
 		UserId  string `gorm:"index"`
-		Balance Balance
+		Balance float64
 	}
 
 	Balance struct {
