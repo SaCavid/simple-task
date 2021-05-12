@@ -323,13 +323,32 @@ func (srv *Server) BulkUpdateBalances() {
 		srv.Balance = false
 		srv.Mu.Unlock()
 
-		var value []string
-		for _, data := range balancesList {
-			value = append(value, fmt.Sprintf("('%s','%.2f')", data.UserId, data.Amount))
+		for {
+			count := len(balancesList)
+
+			if count == 0 {
+				break
+			}
+
+			if count > 500 {
+				count = 500
+			}
+
+			chunkList := balancesList[:count]
+			var value []string
+			for _, data := range chunkList {
+				value = append(value, fmt.Sprintf("('%s',%.2f)", data.UserId, data.Amount))
+			}
+
+			srv.Repo.Db.LogMode(true)
+			if err := srv.Repo.Db.Exec("UPDATE users AS u SET balance = data.a FROM (VALUES %s) AS data(user_id, a) WHERE t.user_id = data.user_id", strings.Join(value, ",")).Error; err != nil {
+				log.Println(err)
+				continue
+			}
+
+			balancesList = balancesList[count:]
 		}
 
-		stmt := fmt.Sprintf("UPDATE users AS u SET a = data.a FROM (VALUES %s) AS data(user_id, a) WHERE t.user_id = data.user_id", strings.Join(value, ","))
-		log.Println(stmt)
 		log.Println("Rows inserted:", len(balancesList))
 	}
 }
