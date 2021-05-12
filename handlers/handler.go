@@ -50,6 +50,7 @@ type Server struct {
 	TransactionIds map[string]string
 
 	// For faster user balance check -- Better to use Redis
+	Balance      bool // true --> there is not saved balance
 	UserBalances map[string]float64
 
 	Transactions []models.Data
