@@ -118,7 +118,7 @@ func (srv *Server) Handler(c echo.Context) error {
 	jd := new(models.JsonData)
 
 	jd.Source = c.Request().Header.Get("Source-Type")
-
+	log.Println(jd.Source, "--<")
 	//log.Println(c.Request().Header.Get("Content-Length"))
 	//log.Println(c.Request().Header.Get("Source-Type"))
 	if err := c.Bind(&jd); err != nil {
@@ -225,7 +225,6 @@ func (srv *Server) Handler(c echo.Context) error {
 		if err != nil {
 			log.Println(err, jd.State, "-->", jd.Amount, "User balance:", balance)
 			mainErr := err
-			log.Println(err)
 			var s SourceType
 
 			a, err := strconv.ParseFloat(jd.Amount, 64)
@@ -256,6 +255,29 @@ func (srv *Server) Handler(c echo.Context) error {
 	default:
 
 		log.Println("error with state", jd.State)
+		var s SourceType
+
+		a, err := strconv.ParseFloat(jd.Amount, 64)
+		if err != nil {
+			return err
+		}
+
+		i, err := s.IndexOf(jd.Source)
+		if err != nil {
+			log.Println(jd.Source, err)
+			return err
+		}
+
+		data := models.Data{
+			UserId:        id,
+			State:         false,
+			Source:        i,
+			Status:        2, // error . saved for unique transaction id.
+			Amount:        a,
+			TransactionId: jd.TransactionId,
+		}
+
+		srv.SaveTransaction(data)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "error with state"})
 	}
 
@@ -337,7 +359,7 @@ func (srv *Server) BulkInsertTransactions() {
 			continue
 		}
 
-		log.Println("Rows inserted:", len(values)/8)
+		//	log.Println("Rows inserted:", len(values)/8)
 	}
 }
 
@@ -396,7 +418,7 @@ func (srv *Server) BulkUpdateBalances() {
 			balancesList = balancesList[count:]
 		}
 
-		log.Println("Rows inserted:", len(balancesList))
+		// log.Println("Rows inserted:", len(balancesList))
 	}
 }
 
@@ -461,7 +483,6 @@ func (srv *Server) UserWin(id string, d *models.JsonData) error {
 
 	i, err := s.IndexOf(d.Source)
 	if err != nil {
-		log.Println(d.Source, err)
 		return err
 	}
 
