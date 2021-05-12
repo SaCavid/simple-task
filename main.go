@@ -40,6 +40,7 @@ func main() {
 	}
 
 	go srv.BulkInsertTransactions()
+	go srv.BulkUpdateBalances()
 	go srv.PostProcessing()
 
 	if os.Getenv("DROP_TABLES") != "true" {

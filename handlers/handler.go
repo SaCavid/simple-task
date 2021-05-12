@@ -293,64 +293,64 @@ func (srv *Server) BulkInsertTransactions() {
 	}
 }
 
-//func (srv *Server) BulkInsertUpdateBalances() {
-//
-//	for {
-//
-//		srv.Mu.Lock()
-//
-//		if len(srv.Transactions) <= 0 {
-//			srv.Mu.Unlock()
-//			time.Sleep(10 * time.Second)
-//			continue
-//		}
-//		count := len(srv.Transactions)
-//
-//		if count > 500 {
-//			count = 500
-//		}
-//
-//		transactionsList := srv.Transactions[:count]
-//		srv.Transactions = srv.Transactions[count:]
-//		srv.Mu.Unlock()
-//
-//		tx := srv.Repo.Db.Begin()
-//		err := tx.Error
-//		if err != nil {
-//			log.Println(err)
-//			continue
-//		}
-//
-//		var value []string
-//		var values []interface{}
-//		for _, data := range transactionsList {
-//			value = append(value, "(?,?,?,?,?,?,?,?)")
-//			values = append(values, data.CreatedAt)
-//			values = append(values, data.UpdatedAt)
-//			values = append(values, data.DeletedAt)
-//			values = append(values, data.UserId)
-//			values = append(values, data.State)
-//			values = append(values, data.Source)
-//			values = append(values, data.Amount)
-//			values = append(values, data.TransactionId)
-//		}
-//
-//		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
-//		err = tx.Exec(stmt, values...).Error
-//		if err != nil {
-//			tx.Rollback()
-//			log.Println(err)
-//		}
-//
-//		err = tx.Commit().Error
-//		if err != nil {
-//			log.Println(err)
-//			continue
-//		}
-//
-//		log.Println("Rows inserted:", len(values)/8)
-//	}
-//}
+func (srv *Server) BulkUpdateBalances() {
+
+	for {
+
+		srv.Mu.Lock()
+
+		if len(srv.Transactions) <= 0 {
+			srv.Mu.Unlock()
+			time.Sleep(10 * time.Second)
+			continue
+		}
+		count := len(srv.Transactions)
+
+		if count > 500 {
+			count = 500
+		}
+
+		transactionsList := srv.Transactions[:count]
+		srv.Transactions = srv.Transactions[count:]
+		srv.Mu.Unlock()
+
+		tx := srv.Repo.Db.Begin()
+		err := tx.Error
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		var value []string
+		var values []interface{}
+		for _, data := range transactionsList {
+			value = append(value, "(?,?,?,?,?,?,?,?)")
+			values = append(values, data.CreatedAt)
+			values = append(values, data.UpdatedAt)
+			values = append(values, data.DeletedAt)
+			values = append(values, data.UserId)
+			values = append(values, data.State)
+			values = append(values, data.Source)
+			values = append(values, data.Amount)
+			values = append(values, data.TransactionId)
+		}
+
+		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
+		err = tx.Exec(stmt, values...).Error
+		if err != nil {
+			tx.Rollback()
+			log.Println(err)
+		}
+
+		err = tx.Commit().Error
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		log.Println("Rows inserted:", len(values)/8)
+	}
+}
 
 func (srv *Server) CheckUser(id string) bool {
 	srv.Mu.Lock()
@@ -483,8 +483,16 @@ func (srv *Server) UserLost(id string, d *models.JsonData) (float64, error) {
 
 func (srv *Server) PostProcessing() {
 
+	t := os.Getenv("N_MINUTES")
+
+	m, err := strconv.ParseInt(t, 10, 64)
+	if err != nil {
+		log.Println(err)
+		m = 10
+	}
+
 	for {
-		time.Sleep(10 * time.Second)
+		time.Sleep(time.Duration(m) * time.Minute)
 
 		var data []models.Data
 
@@ -497,7 +505,38 @@ func (srv *Server) PostProcessing() {
 
 		log.Println(len(data))
 		for _, v := range data {
-			log.Println(v.ID)
+
+			if v.Status == 1 { // if its not canceled before or not transaction record with error
+				srv.Mu.Lock()
+				b := srv.UserBalances[v.UserId]
+
+				if v.State { // win transaction
+					if b.Amount-v.Amount < 0 {
+						log.Println("Cancel not accepted. balance cant be negative.")
+						srv.Mu.Unlock()
+						continue
+					}
+
+					b.Amount = b.Amount - v.Amount
+					b.Saved = true
+					srv.UserBalances[v.UserId] = b
+					srv.Balance = true
+				} else { // lose transaction
+					b.Amount = b.Amount + v.Amount
+					b.Saved = true
+					srv.UserBalances[v.UserId] = b
+					srv.Balance = true
+				}
+
+				srv.Mu.Unlock()
+				v.Status = 3
+
+				err = srv.Repo.Db.Save(&v).Error
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+			}
 		}
 	}
 }
