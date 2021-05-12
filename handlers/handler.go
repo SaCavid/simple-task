@@ -115,12 +115,12 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 }
 
 func (srv *Server) Handler(c echo.Context) error {
+
 	jd := new(models.JsonData)
 
 	jd.Source = c.Request().Header.Get("Source-Type")
-	log.Println(jd.Source, "--<")
 	//log.Println(c.Request().Header.Get("Content-Length"))
-	//log.Println(c.Request().Header.Get("Source-Type"))
+
 	if err := c.Bind(&jd); err != nil {
 		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
@@ -196,13 +196,12 @@ func (srv *Server) Handler(c echo.Context) error {
 
 			a, err := strconv.ParseFloat(jd.Amount, 64)
 			if err != nil {
-				return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: mainErr.Error()})
+				return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 			}
 
 			i, err := s.IndexOf(jd.Source)
 			if err != nil {
-				log.Println(jd.Source, err)
-				return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: mainErr.Error()})
+				return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: err.Error()})
 			}
 
 			data := models.Data{
@@ -229,13 +228,12 @@ func (srv *Server) Handler(c echo.Context) error {
 
 			a, err := strconv.ParseFloat(jd.Amount, 64)
 			if err != nil {
-				return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: mainErr.Error()})
+				return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 			}
 
 			i, err := s.IndexOf(jd.Source)
 			if err != nil {
-				log.Println(jd.Source, err)
-				return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: mainErr.Error()})
+				return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: err.Error()})
 			}
 
 			data := models.Data{
@@ -264,7 +262,6 @@ func (srv *Server) Handler(c echo.Context) error {
 
 		i, err := s.IndexOf(jd.Source)
 		if err != nil {
-			log.Println(jd.Source, err)
 			return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: err.Error()})
 		}
 
