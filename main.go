@@ -39,6 +39,8 @@ func main() {
 	}
 
 	go srv.BulkInsertTransactions()
+	go srv.PostProcessing()
+
 	if os.Getenv("DROP_TABLES") != "true" {
 		err := srv.FetchUsers()
 		if err != nil {
