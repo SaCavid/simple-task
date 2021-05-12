@@ -389,5 +389,8 @@ func (srv *Server) PostProcessing() {
 		}
 
 		log.Println(len(data))
+		for _, v := range data {
+			log.Println(v.ID)
+		}
 	}
 }
