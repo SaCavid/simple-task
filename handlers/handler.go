@@ -382,7 +382,7 @@ func (srv *Server) PostProcessing() {
 		var data []models.Data
 
 		log.Println(len(data))
-		err := srv.Repo.Db.Table("data").Where("WHERE MOD (id, 2) = 1").Order("id  DESC").Limit("10").Find(&data).Error
+		err := srv.Repo.Db.Table("data").Where("MOD (id, 2) = 1").Order("id  DESC").Limit("10").Find(&data).Error
 		if err != nil {
 			log.Println(err)
 			continue
