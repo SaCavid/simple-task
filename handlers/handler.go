@@ -149,13 +149,18 @@ func (srv *Server) Handler(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 		}
 
+		a, err := strconv.ParseFloat(jd.Amount, 64)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
+		}
+
 		data := models.Data{
-			UserId:        "",
+			UserId:        id,
 			State:         false,
 			Source:        i,
 			Status:        2, // error . saved for unique transaction id.
-			Amount:        0,
-			TransactionId: "",
+			Amount:        a,
+			TransactionId: jd.TransactionId,
 		}
 		data.CreatedAt = time.Now()
 		data.UpdatedAt = time.Now()
@@ -173,13 +178,18 @@ func (srv *Server) Handler(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 		}
 
+		a, err := strconv.ParseFloat(jd.Amount, 64)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
+		}
+
 		data := models.Data{
-			UserId:        "",
+			UserId:        id,
 			State:         false,
 			Source:        i,
 			Status:        2, // error . saved for unique transaction id.
-			Amount:        0,
-			TransactionId: "",
+			Amount:        a,
+			TransactionId: jd.TransactionId,
 		}
 		data.CreatedAt = time.Now()
 		data.UpdatedAt = time.Now()
