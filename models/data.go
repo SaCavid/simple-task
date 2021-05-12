@@ -14,16 +14,17 @@ type (
 
 	Balance struct {
 		Amount float64
-		Saved  bool
+		Saved  bool // if true this balance didnt saved to the database
 	}
 
 	Data struct {
 		gorm.Model
 		UserId        string
-		State         bool
-		Source        int
-		Amount        float64
-		TransactionId string `gorm:"index"`
+		State         bool    // transaction win - lose state
+		Status        uint8   // operation status processed -1 / error denied -2 / canceled -3 / cancel denied -4 and etc
+		Source        int     // source of operation
+		Amount        float64 // amount of operation
+		TransactionId string  `gorm:"index"` // unique transaction id
 	}
 
 	JsonData struct {

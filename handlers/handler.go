@@ -51,7 +51,7 @@ type Server struct {
 
 	// For faster user balance check -- Better to use Redis
 	Balance      bool // true --> there is not saved balance
-	UserBalances map[string]float64
+	UserBalances map[string]models.Balance
 
 	Transactions []models.Data
 	Repo         *service.TaskRepository
@@ -117,6 +117,8 @@ func (srv *Server) FetchUsersForTesting(c echo.Context) error {
 func (srv *Server) Handler(c echo.Context) error {
 	jd := new(models.JsonData)
 
+	jd.Source = c.Request().Header.Get("Source-Type")
+
 	//log.Println(c.Request().Header.Get("Content-Length"))
 	//log.Println(c.Request().Header.Get("Source-Type"))
 	if err := c.Bind(&jd); err != nil {
@@ -138,16 +140,51 @@ func (srv *Server) Handler(c echo.Context) error {
 	srv.SaveTransactionId(jd.TransactionId)
 	id := c.Request().Header.Get("Authorization")
 	if id == "" {
+		var s SourceType
+
+		i, err := s.IndexOf(jd.Source)
+		if err != nil {
+			log.Println(jd.Source, err)
+			return err
+		}
+
 		log.Println("not logged")
+		data := models.Data{
+			UserId:        "",
+			State:         false,
+			Source:        i,
+			Status:        2, // error . saved for unique transaction id.
+			Amount:        0,
+			TransactionId: "",
+		}
+
+		srv.SaveTransaction(data)
 		return echo.NewHTTPError(http.StatusForbidden, &models.Response{Error: true, Message: "not logged"})
 	}
 
 	if !srv.CheckUser(id) {
 		log.Println("user id didnt registered")
+		var s SourceType
+
+		i, err := s.IndexOf(jd.Source)
+		if err != nil {
+			log.Println(jd.Source, err)
+			return err
+		}
+
+		log.Println("not logged")
+		data := models.Data{
+			UserId:        "",
+			State:         false,
+			Source:        i,
+			Status:        2, // error . saved for unique transaction id.
+			Amount:        0,
+			TransactionId: "",
+		}
+
+		srv.SaveTransaction(data)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
 	}
-
-	jd.Source = c.Request().Header.Get("Source-Type")
 
 	switch jd.State {
 	case "win":
@@ -227,18 +264,19 @@ func (srv *Server) BulkInsertTransactions() {
 		var value []string
 		var values []interface{}
 		for _, data := range transactionsList {
-			value = append(value, "(?,?,?,?,?,?,?,?)")
+			value = append(value, "(?,?,?,?,?,?,?,?,?)")
 			values = append(values, data.CreatedAt)
 			values = append(values, data.UpdatedAt)
 			values = append(values, data.DeletedAt)
 			values = append(values, data.UserId)
 			values = append(values, data.State)
+			values = append(values, data.Status)
 			values = append(values, data.Source)
 			values = append(values, data.Amount)
 			values = append(values, data.TransactionId)
 		}
 
-		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
+		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, status, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
 		err = tx.Exec(stmt, values...).Error
 		if err != nil {
 			tx.Rollback()
@@ -255,6 +293,65 @@ func (srv *Server) BulkInsertTransactions() {
 	}
 }
 
+//func (srv *Server) BulkInsertUpdateBalances() {
+//
+//	for {
+//
+//		srv.Mu.Lock()
+//
+//		if len(srv.Transactions) <= 0 {
+//			srv.Mu.Unlock()
+//			time.Sleep(10 * time.Second)
+//			continue
+//		}
+//		count := len(srv.Transactions)
+//
+//		if count > 500 {
+//			count = 500
+//		}
+//
+//		transactionsList := srv.Transactions[:count]
+//		srv.Transactions = srv.Transactions[count:]
+//		srv.Mu.Unlock()
+//
+//		tx := srv.Repo.Db.Begin()
+//		err := tx.Error
+//		if err != nil {
+//			log.Println(err)
+//			continue
+//		}
+//
+//		var value []string
+//		var values []interface{}
+//		for _, data := range transactionsList {
+//			value = append(value, "(?,?,?,?,?,?,?,?)")
+//			values = append(values, data.CreatedAt)
+//			values = append(values, data.UpdatedAt)
+//			values = append(values, data.DeletedAt)
+//			values = append(values, data.UserId)
+//			values = append(values, data.State)
+//			values = append(values, data.Source)
+//			values = append(values, data.Amount)
+//			values = append(values, data.TransactionId)
+//		}
+//
+//		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
+//		err = tx.Exec(stmt, values...).Error
+//		if err != nil {
+//			tx.Rollback()
+//			log.Println(err)
+//		}
+//
+//		err = tx.Commit().Error
+//		if err != nil {
+//			log.Println(err)
+//			continue
+//		}
+//
+//		log.Println("Rows inserted:", len(values)/8)
+//	}
+//}
+
 func (srv *Server) CheckUser(id string) bool {
 	srv.Mu.Lock()
 	_, ok := srv.UserBalances[id]
@@ -264,13 +361,10 @@ func (srv *Server) CheckUser(id string) bool {
 
 func (srv *Server) AddUser(id string) {
 	srv.Mu.Lock()
-	srv.UserBalances[id] = 0
-	srv.Mu.Unlock()
-}
-
-func (srv *Server) SaveUser(id string, balance float64) {
-	srv.Mu.Lock()
-	srv.UserBalances[id] = balance
+	b := models.Balance{}
+	b.Amount = 0
+	b.Saved = false
+	srv.UserBalances[id] = b
 	srv.Mu.Unlock()
 }
 
@@ -285,7 +379,11 @@ func (srv *Server) FetchUsers() error {
 
 	srv.Mu.Lock()
 	for _, v := range users {
-		srv.UserBalances[v.UserId] = v.Balance
+		b := models.Balance{
+			Amount: v.Balance,
+			Saved:  false,
+		}
+		srv.UserBalances[v.UserId] = b
 	}
 	srv.Mu.Unlock()
 
@@ -307,10 +405,13 @@ func (srv *Server) UserWin(id string, d *models.JsonData) error {
 	}
 
 	srv.Mu.Lock()
-	balance := srv.UserBalances[id]
-	srv.UserBalances[id] = balance + a
+	b := srv.UserBalances[id]
+	b.Amount = b.Amount + a
+	b.Saved = true     // not saved
+	srv.Balance = true // not saved balance in map
+	srv.UserBalances[id] = b
 	srv.Mu.Unlock()
-	mData := new(models.Data)
+	mData := models.Data{}
 
 	mData.CreatedAt = time.Now()
 	mData.UpdatedAt = time.Now()
@@ -319,10 +420,11 @@ func (srv *Server) UserWin(id string, d *models.JsonData) error {
 	mData.TransactionId = d.TransactionId
 	mData.State = true
 	mData.Amount = a
+	mData.Status = 1
 
 	mData.Source = i
 
-	srv.SaveTransaction(*mData)
+	srv.SaveTransaction(mData)
 	//err = srv.CreateData(mData)
 	//if err != nil {
 	//	log.Println(err)
@@ -346,15 +448,18 @@ func (srv *Server) UserLost(id string, d *models.JsonData) (float64, error) {
 	}
 
 	srv.Mu.Lock()
-	balance := srv.UserBalances[id]
-	if (balance - a) < 0 {
+	b := srv.UserBalances[id]
+	if (b.Amount - a) < 0 {
 		srv.Mu.Unlock()
-		return balance, fmt.Errorf("not enough user balance")
+		return b.Amount, fmt.Errorf("not enough user balance")
 	}
 
-	srv.UserBalances[id] = balance - a
+	b.Amount = b.Amount - a
+	b.Saved = true     // user balance not saved
+	srv.Balance = true // not saved balance in map
+	srv.UserBalances[id] = b
 	srv.Mu.Unlock()
-	mData := new(models.Data)
+	mData := models.Data{}
 
 	mData.CreatedAt = time.Now()
 	mData.UpdatedAt = time.Now()
@@ -364,15 +469,16 @@ func (srv *Server) UserLost(id string, d *models.JsonData) (float64, error) {
 	mData.State = false
 	mData.Amount = a
 	mData.Source = i
+	mData.Status = 1
 
-	srv.SaveTransaction(*mData)
+	srv.SaveTransaction(mData)
 	//err = srv.CreateData(mData)
 	//if err != nil {
 	//	log.Println(err)
 	//	return 0, err
 	//}
 
-	return balance, nil
+	return b.Amount, nil
 }
 
 func (srv *Server) PostProcessing() {
@@ -385,7 +491,7 @@ func (srv *Server) PostProcessing() {
 		log.Println(len(data))
 		err := srv.Repo.Db.Table("data").Where("MOD (id, 2) = 1").Order("id  DESC").Limit("10").Find(&data).Error
 		if err != nil {
-			log.Println(err)
+			log.Println("Post Processing:", err)
 			continue
 		}
 
