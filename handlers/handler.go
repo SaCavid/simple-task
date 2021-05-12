@@ -341,7 +341,7 @@ func (srv *Server) BulkUpdateBalances() {
 			}
 
 			srv.Repo.Db.LogMode(true)
-			if err := srv.Repo.Db.Exec(fmt.Sprintf("UPDATE users AS u SET balance = data.a FROM (VALUES %s) AS data(user_id, a) WHERE t.user_id = data.user_id", strings.Join(value, ","))).Error; err != nil {
+			if err := srv.Repo.Db.Exec(fmt.Sprintf("UPDATE users AS u SET balance = data.a FROM (VALUES %s) AS data(user_id, a) WHERE u.user_id = data.user_id", strings.Join(value, ","))).Error; err != nil {
 				log.Println(err)
 				continue
 			}
