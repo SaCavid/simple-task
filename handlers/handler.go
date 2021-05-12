@@ -271,7 +271,7 @@ func (srv *Server) CheckTransactionId(id string) bool {
 
 func (srv *Server) SaveTransactionId(id string) {
 	srv.Mu.Lock()
-	srv.TransactionIds[id] = id
+	srv.TransactionIds[id] = ""
 	srv.Mu.Unlock()
 }
 
@@ -432,6 +432,19 @@ func (srv *Server) FetchUsers() error {
 			Saved:  false,
 		}
 		srv.UserBalances[v.UserId] = b
+	}
+	srv.Mu.Unlock()
+
+	transactions := make([]models.Data, 0)
+
+	err = srv.Repo.Db.Find(&transactions).Error
+	if err != nil {
+		return err
+	}
+
+	srv.Mu.Lock()
+	for _, v := range transactions {
+		srv.TransactionIds[v.TransactionId] = ""
 	}
 	srv.Mu.Unlock()
 
