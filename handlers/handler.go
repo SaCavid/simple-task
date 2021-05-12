@@ -297,58 +297,40 @@ func (srv *Server) BulkUpdateBalances() {
 
 	for {
 
-		srv.Mu.Lock()
-
-		if len(srv.Transactions) <= 0 {
-			srv.Mu.Unlock()
+		if !srv.Balance {
 			time.Sleep(10 * time.Second)
 			continue
 		}
-		count := len(srv.Transactions)
 
-		if count > 500 {
-			count = 500
+		type balance struct {
+			UserId string
+			Amount float64
 		}
 
-		transactionsList := srv.Transactions[:count]
-		srv.Transactions = srv.Transactions[count:]
+		balancesList := make([]balance, 0)
+
+		srv.Mu.Lock()
+		for k, v := range srv.UserBalances {
+			if v.Saved {
+				s := balance{
+					UserId: k,
+					Amount: v.Amount,
+				}
+				balancesList = append(balancesList, s)
+			}
+			v.Saved = false
+		}
+		srv.Balance = false
 		srv.Mu.Unlock()
 
-		tx := srv.Repo.Db.Begin()
-		err := tx.Error
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-
 		var value []string
-		var values []interface{}
-		for _, data := range transactionsList {
-			value = append(value, "(?,?,?,?,?,?,?,?)")
-			values = append(values, data.CreatedAt)
-			values = append(values, data.UpdatedAt)
-			values = append(values, data.DeletedAt)
-			values = append(values, data.UserId)
-			values = append(values, data.State)
-			values = append(values, data.Source)
-			values = append(values, data.Amount)
-			values = append(values, data.TransactionId)
+		for _, data := range balancesList {
+			value = append(value, fmt.Sprintf("(%s,%.2f)", data.UserId, data.Amount))
 		}
 
-		stmt := fmt.Sprintf("INSERT INTO data (created_at, updated_at, deleted_at, user_id, state, source, amount, transaction_id) VALUES %s", strings.Join(value, ","))
-		err = tx.Exec(stmt, values...).Error
-		if err != nil {
-			tx.Rollback()
-			log.Println(err)
-		}
-
-		err = tx.Commit().Error
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-
-		log.Println("Rows inserted:", len(values)/8)
+		stmt := fmt.Sprintf("UPDATE users AS u SET a = data.a FROM (VALUES %s) AS data(user_id, a) WHERE t.user_id = data.user_id", strings.Join(value, ","))
+		log.Println(stmt)
+		log.Println("Rows inserted:", len(balancesList))
 	}
 }
 
@@ -496,14 +478,12 @@ func (srv *Server) PostProcessing() {
 
 		var data []models.Data
 
-		log.Println(len(data))
 		err := srv.Repo.Db.Table("data").Where("MOD (id, 2) = 1").Order("id  DESC").Limit("10").Find(&data).Error
 		if err != nil {
 			log.Println("Post Processing:", err)
 			continue
 		}
 
-		log.Println(len(data))
 		for _, v := range data {
 
 			if v.Status == 1 { // if its not canceled before or not transaction record with error
