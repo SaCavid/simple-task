@@ -203,7 +203,7 @@ func (srv *Server) BulkInsertTransactions() {
 
 		if len(srv.Transactions) <= 0 {
 			srv.Mu.Unlock()
-			time.Sleep(30 * time.Second)
+			time.Sleep(10 * time.Second)
 			continue
 		}
 		count := len(srv.Transactions)
@@ -223,7 +223,6 @@ func (srv *Server) BulkInsertTransactions() {
 			continue
 		}
 
-		srv.Repo.Db.LogMode(true)
 		var value []string
 		var values []interface{}
 		for _, data := range transactionsList {
