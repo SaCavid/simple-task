@@ -58,7 +58,7 @@ func main() {
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Task, World!")
+		return c.String(http.StatusOK, "Task!")
 	})
 
 	e.GET("/api/users", srv.FetchUsersForTesting)

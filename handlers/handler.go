@@ -157,7 +157,8 @@ func (srv *Server) Handler(c echo.Context) error {
 			Amount:        0,
 			TransactionId: "",
 		}
-
+		data.CreatedAt = time.Now()
+		data.UpdatedAt = time.Now()
 		srv.SaveTransaction(data)
 		return echo.NewHTTPError(http.StatusForbidden, &models.Response{Error: true, Message: "not logged"})
 	}
@@ -180,6 +181,8 @@ func (srv *Server) Handler(c echo.Context) error {
 			Amount:        0,
 			TransactionId: "",
 		}
+		data.CreatedAt = time.Now()
+		data.UpdatedAt = time.Now()
 
 		srv.SaveTransaction(data)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
@@ -212,6 +215,8 @@ func (srv *Server) Handler(c echo.Context) error {
 				Amount:        a,
 				TransactionId: jd.TransactionId,
 			}
+			data.CreatedAt = time.Now()
+			data.UpdatedAt = time.Now()
 
 			srv.SaveTransaction(data)
 			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: mainErr.Error()})
@@ -244,6 +249,8 @@ func (srv *Server) Handler(c echo.Context) error {
 				Amount:        a,
 				TransactionId: jd.TransactionId,
 			}
+			data.CreatedAt = time.Now()
+			data.UpdatedAt = time.Now()
 
 			srv.SaveTransaction(data)
 			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: mainErr.Error()})
@@ -273,6 +280,8 @@ func (srv *Server) Handler(c echo.Context) error {
 			Amount:        a,
 			TransactionId: jd.TransactionId,
 		}
+		data.CreatedAt = time.Now()
+		data.UpdatedAt = time.Now()
 
 		srv.SaveTransaction(data)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "error with state"})
@@ -365,7 +374,7 @@ func (srv *Server) BulkUpdateBalances() {
 	for {
 
 		if !srv.Balance {
-			time.Sleep(10 * time.Second)
+			time.Sleep(1 * time.Second)
 			continue
 		}
 
