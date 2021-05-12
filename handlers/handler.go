@@ -325,7 +325,7 @@ func (srv *Server) BulkUpdateBalances() {
 
 		var value []string
 		for _, data := range balancesList {
-			value = append(value, fmt.Sprintf("(%s,%.2f)", data.UserId, data.Amount))
+			value = append(value, fmt.Sprintf("('%s','%.2f')", data.UserId, data.Amount))
 		}
 
 		stmt := fmt.Sprintf("UPDATE users AS u SET a = data.a FROM (VALUES %s) AS data(user_id, a) WHERE t.user_id = data.user_id", strings.Join(value, ","))
