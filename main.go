@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-	time.Sleep(60 * time.Second)
 	log.SetFlags(log.Lshortfile)
 
 	// loads values from .env into the system
