@@ -17,7 +17,7 @@ func NewTaskRepository() *TaskRepository {
 
 	// docker-compose sometimes starts processing container faster than expected.
 	// timeout for not to get error. docker-compose depends on configuration didnt helps. can be adjusted.
-	time.Sleep(10 * time.Second)
+	time.Sleep(5 * time.Second)
 	taskRepo, err := CreateDbConnection(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal(err)
