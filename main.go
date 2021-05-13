@@ -21,7 +21,6 @@ func main() {
 	}
 
 	port := "80"
-	address := "127.0.0.1"
 
 	srv := handlers.Server{
 		TransactionIds: make(map[string]string, 0),
@@ -52,5 +51,5 @@ func main() {
 		ReadTimeout: 5 * time.Second,
 	}
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", address, port)), s)
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)), s)
 }
