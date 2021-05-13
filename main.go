@@ -9,7 +9,6 @@ import (
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -21,17 +20,8 @@ func main() {
 		log.Print("No .env file found")
 	}
 
-	port := os.Getenv("PORT")
-	address := os.Getenv("ADDRESS")
-	endPoint := os.Getenv("TASK_END_POINT")
-
-	if port == "" {
-		port = "8080"
-	}
-
-	if address == "" {
-		address = "127.0.0.1"
-	}
+	port := "80"
+	address := "127.0.0.1"
 
 	srv := handlers.Server{
 		TransactionIds: make(map[string]string, 0),
@@ -48,13 +38,6 @@ func main() {
 	go srv.BulkUpdateBalances()
 	go srv.PostProcessing()
 
-	if os.Getenv("DROP_TABLES") != "true" {
-		err := srv.FetchUsers()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {
@@ -64,7 +47,7 @@ func main() {
 	e.GET("/api/users", srv.FetchUsersForTesting)
 	e.POST("/api/register", srv.Register)
 
-	e.POST(endPoint, srv.Handler)
+	e.POST("/api/processing", srv.Handler)
 	s := &http.Server{
 		ReadTimeout: 5 * time.Second,
 	}
