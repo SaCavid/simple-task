@@ -16,15 +16,9 @@ services:
       - database_postgres:/var/lib/postgresql/data
 
   web:
-    build: .
+    image: sacavid/simple-task:latest
     container_name: "processing"
     restart: always
-    environment:
-      DB_USERNAME: "postgres"
-      DB_PASSWORD: "123456"
-      DB_DB: "task"
-      DB_HOST: "db"
-      DB_POST: "5432"
     ports:
       - "80:8080"
     depends_on:

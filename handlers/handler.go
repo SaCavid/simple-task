@@ -44,7 +44,6 @@ func (srv *Server) Handler(c echo.Context) error {
 	}
 
 	if srv.CheckTransactionId(jd.TransactionId) {
-		log.Println("transaction id already used")
 		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
 	}
 
