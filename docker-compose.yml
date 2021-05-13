@@ -16,8 +16,8 @@ services:
       - database_postgres:/var/lib/postgresql/data
 
   web:
-    build: .
-#    image: sacavid/simple-task:latest
+#    build: .
+    image: sacavid/simple-task:latest
     container_name: "processing"
     restart: always
     ports:
