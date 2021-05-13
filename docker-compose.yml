@@ -18,16 +18,15 @@ services:
   web:
     build: .
     container_name: "processing"
-    restart: on-failure
+    restart: always
     environment:
       DB_USERNAME: "postgres"
       DB_PASSWORD: "123456"
-      DB_DB: "postgres"
+      DB_DB: "task"
       DB_HOST: "db"
-      DB_TABLE: "users"
       DB_POST: "5432"
     ports:
-      - "80:80"
+      - "80:8080"
     depends_on:
       - db
     networks:

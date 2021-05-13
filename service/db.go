@@ -6,6 +6,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 	"os"
+	"time"
 )
 
 type TaskRepository struct {
@@ -13,6 +14,7 @@ type TaskRepository struct {
 }
 
 func NewTaskRepository() *TaskRepository {
+	time.Sleep(10 * time.Second)
 	taskRepo, err := CreateDbConnection(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal(err)
@@ -28,14 +30,13 @@ func CreateDbConnection(connectionUri string) (*gorm.DB, error) {
 		return nil, err
 	}
 
+	db.AutoMigrate(&models.Data{}, &models.User{})
+
+	// while development can be triggered to drop database tables
 	b := os.Getenv("DROP_TABLES")
 	if b == "true" {
 		log.Println("Dropping tables data and users")
 		db.DropTableIfExists(&models.Data{}, &models.User{})
 	}
-
-	db.AutoMigrate(&models.Data{}, &models.User{})
-
-	db.DropTableIfExists()
 	return db, nil
 }

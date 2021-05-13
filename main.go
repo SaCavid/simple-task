@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -20,7 +21,7 @@ func main() {
 		log.Print("No .env file found")
 	}
 
-	port := "80"
+	port := os.Getenv("HTTP_SERVER_PORT")
 
 	srv := handlers.Server{
 		TransactionIds: make(map[string]string, 0),
