@@ -1,74 +1,157 @@
 package handlers
 
 import (
-	"bytes"
-	"fmt"
 	"github.com/SaCavid/simple-task/models"
-	"github.com/jinzhu/gorm"
-	"github.com/joho/godotenv"
+	"github.com/labstack/echo"
 	"log"
 	"net/http"
-	"os"
-	"sync"
+	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
 var (
-	Users   []models.User
-	Address string
-	Port    string
-	Url     string
+	msg                    = `{"state": "win", "amount": "10.15", "transactionId": "Same identification"}`
+	errorUsedTransactionId = `{"state": "win", "amount": "10.15", "transactionId": "Same identification"}`
+	errorNoTransactionId   = `{"state": "win", "amount": "10.15", "transactionId": ""}`
+	errorNoState           = `{"state": "", "amount": "10.15", "transactionId": "Some identification"}`
+	errorNullAmount        = `{"state": "win", "amount": "", "transactionId": "Some identification"}`
 )
 
-func user(id int, wg *sync.WaitGroup) {
-	log.SetFlags(log.Lshortfile)
-	defer wg.Done()
-	payload := []byte(`{"state": "win", "amount": "10.15", "transactionId": "some generated identificator"}`)
+func TestServer_Handler(t *testing.T) {
+	notAcceptableSourceType()
+	noState()
+	noTransactionId()
+	noAmount()
+	sameTransactionId()
+	notRegistered()
+}
 
-	resp, err := http.Post("POST", Url, bytes.NewBuffer(payload))
-	if err != nil {
-		log.Println(id, err)
+func notAcceptableSourceType() {
+	// Setup
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set("Source-type", "not-source")
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	h := &Server{
+		TransactionIds: make(map[string]string, 0),
+		UserBalances:   make(map[string]models.Balance, 0),
 	}
 
-	defer resp.Body.Close()
-	for true {
+	err := h.Handler(c)
+	if err != nil {
+		log.Println("Testing not registered state. Expected Code: 400. Got:", err.Error())
+	}
 
-		bs := make([]byte, 1014)
-		n, err := resp.Body.Read(bs)
-		fmt.Println(string(bs[:n]))
+}
 
-		if n == 0 || err != nil {
-			break
-		}
+func noState() {
+	// Setup
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(errorNoState))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	h := &Server{
+		TransactionIds: make(map[string]string, 0),
+		UserBalances:   make(map[string]models.Balance, 0),
+	}
+
+	err := h.Handler(c)
+	if err != nil {
+		log.Println("Testing null state. Expected Code: 400. Got:", err.Error())
+	}
+
+}
+
+func noTransactionId() {
+	// Setup
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(errorNoTransactionId))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set("Source-type", "server")
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	h := &Server{
+		TransactionIds: make(map[string]string, 0),
+		UserBalances:   make(map[string]models.Balance, 0),
+	}
+
+	err := h.Handler(c)
+	if err != nil {
+		log.Println("Testing null transaction Id. Expected Code: 400. Got:", err.Error())
+	}
+
+}
+
+func noAmount() {
+	// Setup
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(errorNullAmount))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set("Source-type", "server")
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	h := &Server{
+		TransactionIds: make(map[string]string, 0),
+		UserBalances:   make(map[string]models.Balance, 0),
+	}
+
+	err := h.Handler(c)
+	if err != nil {
+		log.Println("Testing null amount. Expected Code: 400. Got:", err.Error())
+	}
+
+}
+
+func sameTransactionId() {
+	// Setup
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(errorUsedTransactionId))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set("Source-type", "server")
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	h := &Server{
+		TransactionIds: make(map[string]string, 0),
+		UserBalances:   make(map[string]models.Balance, 0),
+	}
+
+	err := h.Handler(c)
+	if err != nil {
+		log.Println("Testing not logged. Expected Code: 403. Got:", err.Error())
+	}
+
+	req = httptest.NewRequest(http.MethodPost, "/", strings.NewReader(errorUsedTransactionId))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set("Source-type", "server")
+	rec = httptest.NewRecorder()
+	c2 := e.NewContext(req, rec)
+
+	err = h.Handler(c2)
+	if err != nil {
+		log.Println("Testing repeat transaction id. Expected Code: 406. Got:", err.Error())
 	}
 }
 
-func TestServer_Handler(t *testing.T) {
-
-	if err := godotenv.Load("../.env"); err != nil {
-		log.Print("No .env file found")
+func notRegistered() {
+	// Setup
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set("Source-type", "server")
+	req.Header.Set("Authorization", "not-registered-id")
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	h := &Server{
+		TransactionIds: make(map[string]string, 0),
+		UserBalances:   make(map[string]models.Balance, 0),
 	}
-	Address = os.Getenv("ADDRESS")
-	Port = os.Getenv("PORT")
-	Url = os.Getenv("TASK_END_POINT")
 
-	Database, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+	err := h.Handler(c)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Testing not registered. Expected Code: 400. Got:", err.Error())
 	}
-
-	err = Database.Find(&Users).Error
-	if err != nil {
-		log.Println(err)
-	}
-
-	var wg sync.WaitGroup
-
-	log.Println("Users registered:", len(Users))
-	for i := 1; i <= len(Users); i++ {
-		wg.Add(1)
-		go user(i, &wg)
-	}
-
-	wg.Wait()
 }

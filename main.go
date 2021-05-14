@@ -51,6 +51,6 @@ func main() {
 	s := &http.Server{
 		ReadTimeout: 5 * time.Second,
 	}
-	log.Println("Testing pro bat")
+
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)), s)
 }

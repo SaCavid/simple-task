@@ -34,30 +34,26 @@ func (srv *Server) Handler(c echo.Context) error {
 	//log.Println(c.Request().Header.Get("Content-Length"))
 
 	if err := c.Bind(&jd); err != nil {
-		log.Println(err)
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
-	}
-
-	if err := jd.ValidateData(); err != nil {
-		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
 
 	if srv.CheckTransactionId(jd.TransactionId) {
 		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: fmt.Sprintf("this transaction id already used")})
 	}
-
 	// Save transaction id not to use again ever if its failed
 	srv.SaveTransactionId(jd.TransactionId)
+
+	if err := jd.ValidateData(); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
+	}
+
 	id := c.Request().Header.Get("Authorization")
 	if id == "" {
-		log.Println("not logged")
 		var s SourceType
 
 		i, err := s.IndexOf(jd.Source)
 		if err != nil {
-			log.Println(jd.Source, err)
-			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
+			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 		}
 
 		a, err := strconv.ParseFloat(jd.Amount, 64)
@@ -80,7 +76,6 @@ func (srv *Server) Handler(c echo.Context) error {
 	}
 
 	if !srv.CheckUser(id) {
-		log.Println("user id didnt registered")
 		var s SourceType
 
 		i, err := s.IndexOf(jd.Source)
@@ -115,7 +110,6 @@ func (srv *Server) Handler(c echo.Context) error {
 		err := srv.UserWin(id, jd)
 		if err != nil {
 			mainErr := err
-			log.Println(err)
 			var s SourceType
 
 			a, err := strconv.ParseFloat(jd.Amount, 64)
@@ -148,7 +142,6 @@ func (srv *Server) Handler(c echo.Context) error {
 
 		balance, err := srv.UserLost(id, jd)
 		if err != nil {
-			log.Println(err, jd.State, "-->", jd.Amount, "User balance:", balance)
 			mainErr := err
 			var s SourceType
 
@@ -174,7 +167,7 @@ func (srv *Server) Handler(c echo.Context) error {
 			data.UpdatedAt = time.Now()
 
 			srv.SaveTransaction(data)
-			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: mainErr.Error()})
+			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: mainErr.Error() + jd.State + "-->" + jd.Amount + "Balance:" + fmt.Sprintf("%.2f", balance)})
 		}
 
 		break
