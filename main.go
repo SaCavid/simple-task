@@ -26,7 +26,7 @@ func main() {
 	srv := handlers.Server{
 		TransactionIds: make(map[string]string, 0),
 		UserBalances:   make(map[string]models.Balance, 0),
-		Repo:           service.NewTaskRepository(),
+		Repo:           service.NewTaskRepository(os.Getenv("DATABASE_URL")),
 	}
 
 	err := srv.FetchUsers()
