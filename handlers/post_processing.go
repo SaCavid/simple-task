@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func (srv *Server) PostProcessing() {
+func (h *Server) PostProcessing() {
 
 	t := os.Getenv("N_MINUTES")
 
@@ -23,7 +23,7 @@ func (srv *Server) PostProcessing() {
 
 		var data []models.Data
 
-		err := srv.Repo.Db.Table("data").Where("MOD (id, 2) = 1").Order("id  DESC").Limit("10").Find(&data).Error
+		err := h.Repo.Db.Table("data").Where("MOD (id, 2) = 1").Order("id  DESC").Limit("10").Find(&data).Error
 		if err != nil {
 			log.Println("Post Processing:", err)
 			continue
@@ -32,31 +32,31 @@ func (srv *Server) PostProcessing() {
 		for _, v := range data {
 
 			if v.Status == 1 { // if its not canceled before or not transaction record with error
-				srv.Mu.Lock()
-				b := srv.UserBalances[v.UserId]
+				h.Mu.Lock()
+				b := h.UserBalances[v.UserId]
 
 				if v.State { // win transaction
 					if b.Amount-v.Amount < 0 {
 						log.Println("Cancel not accepted. balance cant be negative.")
-						srv.Mu.Unlock()
+						h.Mu.Unlock()
 						continue
 					}
 
 					b.Amount = b.Amount - v.Amount
 					b.Saved = true
-					srv.UserBalances[v.UserId] = b
-					srv.Balance = true
+					h.UserBalances[v.UserId] = b
+					h.Balance = true
 				} else { // lose transaction
 					b.Amount = b.Amount + v.Amount
 					b.Saved = true
-					srv.UserBalances[v.UserId] = b
-					srv.Balance = true
+					h.UserBalances[v.UserId] = b
+					h.Balance = true
 				}
 
-				srv.Mu.Unlock()
+				h.Mu.Unlock()
 				v.Status = 3
 
-				err = srv.Repo.Db.Save(&v).Error
+				err = h.Repo.Db.Save(&v).Error
 				if err != nil {
 					log.Println(err)
 					continue

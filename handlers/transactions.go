@@ -8,47 +8,47 @@ import (
 	"time"
 )
 
-func (srv *Server) CheckTransactionId(id string) bool {
-	srv.Mu.Lock()
-	_, ok := srv.TransactionIds[id]
-	srv.Mu.Unlock()
+func (h *Server) CheckTransactionId(id string) bool {
+	h.Mu.Lock()
+	_, ok := h.TransactionIds[id]
+	h.Mu.Unlock()
 	return ok
 }
 
-func (srv *Server) SaveTransactionId(id string) {
-	srv.Mu.Lock()
-	srv.TransactionIds[id] = ""
-	srv.Mu.Unlock()
+func (h *Server) SaveTransactionId(id string) {
+	h.Mu.Lock()
+	h.TransactionIds[id] = ""
+	h.Mu.Unlock()
 }
 
-func (srv *Server) SaveTransaction(data models.Data) {
-	srv.Mu.Lock()
-	srv.Transactions = append(srv.Transactions, data)
-	srv.Mu.Unlock()
+func (h *Server) SaveTransaction(data models.Data) {
+	h.Mu.Lock()
+	h.Transactions = append(h.Transactions, data)
+	h.Mu.Unlock()
 }
 
-func (srv *Server) BulkInsertTransactions() {
+func (h *Server) BulkInsertTransactions() {
 
 	for {
 
-		srv.Mu.Lock()
+		h.Mu.Lock()
 
-		if len(srv.Transactions) <= 0 {
-			srv.Mu.Unlock()
+		if len(h.Transactions) <= 0 {
+			h.Mu.Unlock()
 			time.Sleep(10 * time.Second)
 			continue
 		}
-		count := len(srv.Transactions)
+		count := len(h.Transactions)
 
 		if count > 500 {
 			count = 500
 		}
 
-		transactionsList := srv.Transactions[:count]
-		srv.Transactions = srv.Transactions[count:]
-		srv.Mu.Unlock()
+		transactionsList := h.Transactions[:count]
+		h.Transactions = h.Transactions[count:]
+		h.Mu.Unlock()
 
-		tx := srv.Repo.Db.Begin()
+		tx := h.Repo.Db.Begin()
 		err := tx.Error
 		if err != nil {
 			log.Println(err)

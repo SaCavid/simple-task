@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
+	"log"
 )
 
 type (
@@ -43,12 +44,23 @@ type (
 
 func (d JsonData) ValidateData() error {
 
-	if d.Amount == "" {
-		return fmt.Errorf("amount cant be null")
+	if d.State == "" {
+		return fmt.Errorf("null state")
+	}
+
+	if d.State != "win" {
+		if d.State != "lose" {
+			log.Println(d.State)
+			return fmt.Errorf("wrong state")
+		}
 	}
 
 	if d.TransactionId == "" {
 		return fmt.Errorf("transaction id cant be null")
+	}
+
+	if d.Amount == "" {
+		return fmt.Errorf("amount cant be null")
 	}
 
 	return nil
