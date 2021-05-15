@@ -1,16 +1,12 @@
-FROM golang:1.15.8-alpine
+FROM golang:alpine
 
-RUN apk add build-base
 RUN apk add --no-cache git
+ENV CGO_ENABLED=0
+WORKDIR /app
+COPY go.mod .
+RUN go mod download
+COPY . .
 
-ADD . /go/src/myapp
-WORKDIR /go/src/myapp
+RUN cd . && go build -o main . && cp main ../../ && cd ../../
 
-RUN go get -d -v ./...
-
-# Install the package
-RUN go install -v ./...
-
-EXPOSE 80
-
-ENTRYPOINT ["/go/bin/myapp"]
+CMD ["./main"]

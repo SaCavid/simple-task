@@ -12,4 +12,7 @@ docker push sacavid/simple-task:latest
 PAUSE
 docker-compose up
 PAUSE
+go mod init
+go mod tidy
+
 docker exec processing go test -bench=. ./...
