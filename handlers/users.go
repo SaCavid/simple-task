@@ -37,15 +37,16 @@ func (h *Server) Register(c echo.Context) error {
 
 func (h *Server) Test(c echo.Context) error {
 
-	cmd := exec.Command("go", "test -bench=. ./...")
-
-	out, err := cmd.CombinedOutput()
+	//command:= exec.Command("/root/work/frontend.sh")
+	command, err := exec.Command("go", "test", "-bench=.", "./...").CombinedOutput()
+	// set var to get the output
 	if err != nil {
-		log.Printf("cmd.Run() failed with %s\n", err)
-		return c.JSON(http.StatusOK, &models.Response{Message: err.Error()})
+		log.Println(err, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, &models.Response{Message: fmt.Sprintf("combined out:\n%s\n", string(out))})
+	log.Println(string(command))
+
+	return c.JSON(http.StatusOK, &models.Response{Message: fmt.Sprintf("combined out:\n%s\n", string(command))})
 }
 
 func (h *Server) FetchUsersForTesting(c echo.Context) error {

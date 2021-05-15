@@ -46,7 +46,7 @@ func main() {
 	e.GET("/api/users", srv.FetchUsersForTesting)
 	e.POST("/api/register", srv.Register)
 
-	e.POST("/api/test", srv.Test)
+	e.GET("/api/test", srv.Test)
 
 	e.POST("/api/processing", srv.Handler)
 	s := &http.Server{
