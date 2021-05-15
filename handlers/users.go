@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
-	"os/exec"
 	"strings"
 	"time"
 )
@@ -33,20 +32,6 @@ func (h *Server) Register(c echo.Context) error {
 	h.AddUser(user.UserId)
 
 	return c.JSON(http.StatusOK, &models.Response{Message: "user registered"})
-}
-
-func (h *Server) Test(c echo.Context) error {
-
-	//command:= exec.Command("/root/work/frontend.sh")
-	command, err := exec.Command("go", "test", "-bench=.", "./...").CombinedOutput()
-	// set var to get the output
-	if err != nil {
-		log.Println(err, err.Error())
-	}
-
-	log.Println(string(command))
-
-	return c.JSON(http.StatusOK, &models.Response{Message: fmt.Sprintf("combined out:\n%s\n", string(command))})
 }
 
 func (h *Server) FetchUsersForTesting(c echo.Context) error {
@@ -141,8 +126,9 @@ func (h *Server) AddUser(id string) {
 	h.Mu.Unlock()
 }
 
-func (h *Server) FetchUsers() error {
+func (h *Server) FetchData() error {
 
+	// get all users information for further use
 	users := make([]models.User, 0)
 
 	err := h.Repo.Db.Find(&users).Error
@@ -160,6 +146,7 @@ func (h *Server) FetchUsers() error {
 	}
 	h.Mu.Unlock()
 
+	// get all transactions information. not to allow repeating transaction id
 	transactions := make([]models.Data, 0)
 
 	err = h.Repo.Db.Find(&transactions).Error
