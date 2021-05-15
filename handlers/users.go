@@ -10,25 +10,32 @@ import (
 	"time"
 )
 
+// simple registration handler
+// Example registration json object:
+// { "UserId":"NewId"}
 func (h *Server) Register(c echo.Context) error {
 	user := new(models.User)
 	if err := c.Bind(&user); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
 
+	// empty user id not allowed
 	if user.UserId == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user id can't be null"})
 	}
 
+	// check if user already registered or not
 	if h.CheckUser(user.UserId) {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user already registered"})
 	}
 
+	// add user to database
 	err := h.Repo.Db.Create(user).Error
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 	}
 
+	// add user to map for further use
 	h.AddUser(user.UserId)
 
 	return c.JSON(http.StatusOK, &models.Response{Message: "user registered"})
@@ -51,6 +58,7 @@ func (h *Server) FetchUsersForTesting(c echo.Context) error {
 	return c.JSON(http.StatusOK, &models.Response{Message: "users", Data: users})
 }
 
+// update user balances if get true in Server.Balance
 func (h *Server) BulkUpdateBalances() {
 
 	for {
@@ -110,6 +118,8 @@ func (h *Server) BulkUpdateBalances() {
 	}
 }
 
+// check if user already registered and exists or not
+// can be improved adding database check and expire time
 func (h *Server) CheckUser(id string) bool {
 	h.Mu.Lock()
 	_, ok := h.UserBalances[id]
@@ -117,6 +127,7 @@ func (h *Server) CheckUser(id string) bool {
 	return ok
 }
 
+// add new user to map Server.UserBalances
 func (h *Server) AddUser(id string) {
 	h.Mu.Lock()
 	b := models.Balance{}
@@ -126,6 +137,7 @@ func (h *Server) AddUser(id string) {
 	h.Mu.Unlock()
 }
 
+// get all data in server startup
 func (h *Server) FetchData() error {
 
 	// get all users information for further use
@@ -163,6 +175,7 @@ func (h *Server) FetchData() error {
 	return nil
 }
 
+// win state transaction
 func (h *Server) UserWin(id string, d *models.Data) (float64, error) {
 
 	h.Mu.Lock()
@@ -184,6 +197,7 @@ func (h *Server) UserWin(id string, d *models.Data) (float64, error) {
 	return b.Amount, nil
 }
 
+// lose state transaction
 func (h *Server) UserLost(id string, d *models.Data) (float64, error) {
 
 	h.Mu.Lock()

@@ -8,6 +8,9 @@ import (
 	"time"
 )
 
+// Post processing task:
+// Every N minutes 10 latest odd records must be canceled and balance should be corrected by the application.
+// Cancelled records shouldn't be processed twice.
 func (h *Server) PostProcessing() {
 
 	t := os.Getenv("N_MINUTES")
@@ -23,6 +26,7 @@ func (h *Server) PostProcessing() {
 
 		var data []models.Data
 
+		// get latest 10 odd records
 		err := h.Repo.Db.Table("data").Where("MOD (id, 2) = 1").Order("id  DESC").Limit("10").Find(&data).Error
 		if err != nil {
 			log.Println("Post Processing:", err)
@@ -31,7 +35,8 @@ func (h *Server) PostProcessing() {
 
 		for _, v := range data {
 
-			if v.Status == 1 { // if its not canceled before or not transaction record with error
+			// check if its not canceled before or not transaction record with error
+			if v.Status == 1 {
 				h.Mu.Lock()
 				b := h.UserBalances[v.UserId]
 
@@ -54,7 +59,7 @@ func (h *Server) PostProcessing() {
 				}
 
 				h.Mu.Unlock()
-				v.Status = 3
+				v.Status = 3 // transaction status canceled - 3
 
 				err = h.Repo.Db.Save(&v).Error
 				if err != nil {

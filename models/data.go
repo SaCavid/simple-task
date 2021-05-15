@@ -34,6 +34,7 @@ type (
 		TransactionId string `json:"transactionId"`
 	}
 
+	// response json object to all requests
 	Response struct {
 		Error   bool        `json:"error"`
 		Message string      `json:"message"`

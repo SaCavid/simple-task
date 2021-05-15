@@ -36,10 +36,12 @@ func CreateDbConnection(connectionUri string) (*gorm.DB, error) {
 	db.AutoMigrate(&models.Data{}, &models.User{})
 
 	// while development can be triggered to drop database tables
+	// can be changed in .env file
 	b := os.Getenv("DROP_TABLES")
 	if b == "true" {
 		log.Println("Dropping tables data and users")
 		db.DropTableIfExists(&models.Data{}, &models.User{})
 	}
+
 	return db, nil
 }
