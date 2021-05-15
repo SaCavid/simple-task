@@ -37,6 +37,8 @@ func TestServer_Handler(t *testing.T) {
 	h.sameTransactionId(e)
 	h.notLogged(e)
 	h.notRegistered(e)
+	h.registerUser(e)
+
 }
 
 func (h *Server) notAcceptableSourceType(e *echo.Echo) {

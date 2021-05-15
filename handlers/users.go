@@ -6,15 +6,13 @@ import (
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
-	"os"
-	"strconv"
 	"strings"
 	"time"
 )
 
 func (h *Server) Register(c echo.Context) error {
 	user := new(models.User)
-
+	log.Println("Registration")
 	if err := c.Bind(&user); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
@@ -23,26 +21,11 @@ func (h *Server) Register(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user id can't be null"})
 	}
 
-	maximumFakeUsers := os.Getenv("N_FAKE_USERS") // for testing
-
-	m, err := strconv.ParseInt(maximumFakeUsers, 10, 64)
-	if err != nil {
-		log.Println(err)
-		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: "general error"})
-	}
-
-	h.Mu.Lock()
-	if len(h.UserBalances) >= int(m) {
-		h.Mu.Unlock()
-		return echo.NewHTTPError(http.StatusNotAcceptable, &models.Response{Error: true, Message: "maximum user count reached"})
-	}
-	h.Mu.Unlock()
-
 	if h.CheckUser(user.UserId) {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user already registered"})
 	}
 
-	err = h.Repo.Db.Create(user).Error
+	err := h.Repo.Db.Create(user).Error
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 	}
