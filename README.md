@@ -43,6 +43,10 @@
         1. Register new user for testing
            http://127.0.0.1/api/register
 
+            Headers: 
+                "Accept" "application/json"
+                "Content-type" "application/json"
+
             Below json object must be posted for registration
             {
                 "UserId":"NewUserID"
@@ -52,6 +56,8 @@
            http://127.0.0.1/api/processing
 
             Headers: 
+                "Accept" "application/json"
+                "Content-type" "application/json"
                 "Source-type"  "server" || "game" || "payment"
                 "Authorization"  "NewUserId"
             
