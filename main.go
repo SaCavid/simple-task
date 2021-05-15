@@ -39,13 +39,14 @@ func main() {
 	go srv.PostProcessing()
 
 	e := echo.New()
-
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Task!")
 	})
 
 	e.GET("/api/users", srv.FetchUsersForTesting)
 	e.POST("/api/register", srv.Register)
+
+	e.POST("/api/test", srv.Test)
 
 	e.POST("/api/processing", srv.Handler)
 	s := &http.Server{

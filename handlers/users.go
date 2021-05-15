@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
+	"os/exec"
 	"strings"
 	"time"
 )
@@ -32,6 +33,19 @@ func (h *Server) Register(c echo.Context) error {
 	h.AddUser(user.UserId)
 
 	return c.JSON(http.StatusOK, &models.Response{Message: "user registered"})
+}
+
+func (h *Server) Test(c echo.Context) error {
+
+	cmd := exec.Command("go", "test -bench=. ./...")
+
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Printf("cmd.Run() failed with %s\n", err)
+		return c.JSON(http.StatusOK, &models.Response{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, &models.Response{Message: fmt.Sprintf("combined out:\n%s\n", string(out))})
 }
 
 func (h *Server) FetchUsersForTesting(c echo.Context) error {
@@ -161,7 +175,7 @@ func (h *Server) FetchUsers() error {
 	return nil
 }
 
-func (h *Server) UserWin(id string, d *models.Data) error {
+func (h *Server) UserWin(id string, d *models.Data) (float64, error) {
 
 	h.Mu.Lock()
 	b := h.UserBalances[id]
@@ -179,7 +193,7 @@ func (h *Server) UserWin(id string, d *models.Data) error {
 	//	log.Println(err)
 	//	return err
 	//}
-	return nil
+	return b.Amount, nil
 }
 
 func (h *Server) UserLost(id string, d *models.Data) (float64, error) {

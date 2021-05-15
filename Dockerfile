@@ -12,4 +12,5 @@ RUN go install -v ./...
 #RUN go get myapp
 #RUN go install
 EXPOSE 80
+
 ENTRYPOINT ["/go/bin/myapp"]

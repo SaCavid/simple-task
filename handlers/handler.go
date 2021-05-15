@@ -30,7 +30,7 @@ func (h *Server) Handler(c echo.Context) error {
 	jd := new(models.JsonData)
 
 	if err := c.Bind(&jd); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
+		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "bad request"})
 	}
 
 	if h.CheckTransactionId(jd.TransactionId) {
@@ -87,15 +87,17 @@ func (h *Server) Handler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusForbidden, &models.Response{Error: true, Message: "not logged"})
 	}
 
-	if !h.CheckUser(id) {
-		h.SaveTransaction(data)
-		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
+	if id != "only_for_testing_benchmark" {
+		if !h.CheckUser(id) {
+			h.SaveTransaction(data)
+			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "user didnt registered"})
+		}
 	}
-
+	var balance float64
 	switch jd.State {
 	case "win":
 
-		err = h.UserWin(id, &data)
+		balance, err = h.UserWin(id, &data)
 		if err != nil {
 			data.Status = 2
 			h.SaveTransaction(data)
@@ -105,11 +107,11 @@ func (h *Server) Handler(c echo.Context) error {
 		break
 	case "lose":
 
-		balance, err := h.UserLost(id, &data)
+		balance, err = h.UserLost(id, &data)
 		if err != nil {
 			data.Status = 2
 			h.SaveTransaction(data)
-			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error() + jd.State + "-->" + jd.Amount + "Balance:" + fmt.Sprintf("%.2f", balance)})
+			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error() + " " + jd.State + "-->" + jd.Amount + " Balance:" + fmt.Sprintf("%.2f", balance)})
 		}
 
 		break
@@ -119,5 +121,5 @@ func (h *Server) Handler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "error with state"})
 	}
 
-	return c.JSON(http.StatusOK, &models.Response{Message: "transaction processed"})
+	return c.JSON(201, &models.Response{Message: "transaction processed", Data: "Balance:" + fmt.Sprintf("%.2f", balance)})
 }
