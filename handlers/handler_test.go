@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/SaCavid/simple-task/models"
-	"github.com/SaCavid/simple-task/service"
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
@@ -23,10 +22,10 @@ var (
 )
 
 func TestServer_Handler(t *testing.T) {
+
 	h := &Server{
 		TransactionIds: make(map[string]string, 0),
 		UserBalances:   make(map[string]models.Balance, 0),
-		Repo:           service.NewTaskRepository(),
 	}
 
 	e := echo.New()
@@ -156,5 +155,34 @@ func (h *Server) notRegistered(e *echo.Echo) {
 	err := h.Handler(c)
 	if err != nil {
 		log.Println("Testing not registered. Expected Code: 400. Got:", err.Error())
+	}
+}
+
+func (h *Server) benchmarkRegistered(e *echo.Echo) {
+	// Setup
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg3))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	req.Header.Set("Source-type", "server")
+	req.Header.Set("Authorization", "not-registered-id")
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	h.Handler(c)
+}
+
+// Benchmark
+func BenchmarkServer_Handler(b *testing.B) {
+
+	h := &Server{
+		TransactionIds: make(map[string]string, 0),
+		UserBalances:   make(map[string]models.Balance, 0),
+	}
+
+	e := echo.New()
+
+	// run the function N times
+	N := 100000
+	for i := 0; i < N; i++ {
+		h.benchmarkRegistered(e)
 	}
 }
