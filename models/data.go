@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"log"
 )
 
 type (
@@ -50,7 +49,6 @@ func (d JsonData) ValidateData() error {
 
 	if d.State != "win" {
 		if d.State != "lose" {
-			log.Println(d.State)
 			return fmt.Errorf("wrong state")
 		}
 	}

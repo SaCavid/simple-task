@@ -12,7 +12,6 @@ import (
 
 func (h *Server) Register(c echo.Context) error {
 	user := new(models.User)
-	log.Println("Registration")
 	if err := c.Bind(&user); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
