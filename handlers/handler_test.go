@@ -240,14 +240,21 @@ func (h *Server) errorNegativeBalance(e *echo.Echo) {
 	}
 }
 
-func (h *Server) benchmarkNotRegistered(e *echo.Echo, msg string) {
+func (h *Server) benchmarkRegistered(e *echo.Echo, msg string) {
 	// Setup
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	req.Header.Set("Source-type", "server")
-	req.Header.Set("Authorization", "only_for_testing_benchmark")
+	req.Header.Set("Authorization", "registered-id")
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
+
+	b := models.Balance{
+		Amount: 0,
+		Saved:  true,
+	}
+
+	h.UserBalances["registered-id"] = b
 
 	h.Handler(c)
 }
@@ -274,7 +281,7 @@ func BenchmarkServer_Handler(b *testing.B) {
 	N := len(m)
 	for i := 0; i < N; i++ {
 		d, _ := json.Marshal(m[i])
-		h.benchmarkNotRegistered(e, string(d))
+		h.benchmarkRegistered(e, string(d))
 	}
 }
 
@@ -288,5010 +295,5010 @@ var (
 	//  '{{repeat(1000,1000)}}',
 	//  {
 	//    state:'{{random("win", "lose")}}',
-	//    amount:'{{floating(0, 100, 2, "0,0.00")}}',
+	//    amount:'{{floating(1000, 4000, 2, "0,0.00")}}',
 	//    transactionId:'{{guid()}}'
 	//  }
 	//]
 	randomMsg = `[
   {
     "state": "lose",
-    "amount": 88.88,
-    "transactionId": "673c4749-af15-47ef-a477-e19ecca5030b"
+    "amount": "3,148.19",
+    "transactionId": "3b11e8c4-469e-4725-aa7b-7a69e27c02a2"
   },
   {
     "state": "win",
-    "amount": 49.9,
-    "transactionId": "b7fbe724-c6da-4a2f-b83b-fdf075b35a95"
+    "amount": "1,723.36",
+    "transactionId": "391bf6da-8db2-42f9-9e3c-499161727543"
   },
   {
     "state": "lose",
-    "amount": 17.92,
-    "transactionId": "55500f97-0ea4-481d-8dbd-fcf5af63211a"
+    "amount": "2,212.79",
+    "transactionId": "fe37191c-76a2-4e5b-b164-c0c6d82eeb6c"
   },
   {
-    "state": "win",
-    "amount": 67.83,
-    "transactionId": "b0575727-31fa-4d22-ab70-237b50ea4d24"
+    "state": "lose",
+    "amount": "3,713.08",
+    "transactionId": "4b6e46cf-1715-48bb-93e6-481776a0d65b"
   },
   {
-    "state": "win",
-    "amount": 25.25,
-    "transactionId": "75042fcc-f4a0-4233-8edd-36fca953afed"
+    "state": "lose",
+    "amount": "3,225.07",
+    "transactionId": "62275fd5-bb43-4d8e-8676-d39025377868"
   },
   {
     "state": "win",
-    "amount": 33.82,
-    "transactionId": "77fe4255-7337-4449-8707-ba4f6b04196b"
+    "amount": "1,973.18",
+    "transactionId": "cf35155c-e21c-42da-822c-38fbdaf00e0e"
   },
   {
     "state": "lose",
-    "amount": 84.58,
-    "transactionId": "a2098078-a26d-41c4-aa05-af0ce80c617e"
+    "amount": "3,563.27",
+    "transactionId": "d69569f2-a3d4-446a-b9be-2198dbb1af26"
   },
   {
-    "state": "lose",
-    "amount": 9.3,
-    "transactionId": "9578f263-a622-4094-aff3-6995b2a8fe67"
+    "state": "win",
+    "amount": "1,751.92",
+    "transactionId": "88281923-746b-4bd6-a48d-d0a6ed032e5d"
   },
   {
-    "state": "lose",
-    "amount": 92.16,
-    "transactionId": "9339301f-b779-447c-af51-e5395fd5493c"
+    "state": "win",
+    "amount": "1,069.99",
+    "transactionId": "04afa048-a92f-424e-87b4-1880cfb636f4"
   },
   {
     "state": "win",
-    "amount": 78.41,
-    "transactionId": "8f50c96f-29ad-4831-8b20-f98abfd8f5f7"
+    "amount": "2,116.21",
+    "transactionId": "09a905b7-3e6c-4606-a6dc-22d9913b790b"
   },
   {
-    "state": "lose",
-    "amount": 97.4,
-    "transactionId": "673b3a76-a720-48f7-8a8f-c09cab145385"
+    "state": "win",
+    "amount": "2,758.58",
+    "transactionId": "715ebd55-187f-4461-b544-1f73fece7165"
   },
   {
-    "state": "lose",
-    "amount": 88.83,
-    "transactionId": "d62257c4-17bc-4cf5-b7a6-b5e559623dd6"
+    "state": "win",
+    "amount": "3,710.50",
+    "transactionId": "4f2e5770-2629-4d72-aaa7-c8510b185532"
   },
   {
     "state": "win",
-    "amount": 77.69,
-    "transactionId": "6483e36c-52dd-401e-8a07-cecbb5e4d464"
+    "amount": "1,349.68",
+    "transactionId": "b4d259fc-b622-4fa8-bcc9-7ee6965ed8b3"
   },
   {
     "state": "lose",
-    "amount": 36.62,
-    "transactionId": "cb7a7148-1a1b-4cf0-9432-d947f91f62e5"
+    "amount": "3,491.43",
+    "transactionId": "d44b0dda-4045-4303-b4e1-a8b4b467300c"
   },
   {
     "state": "lose",
-    "amount": 0.22,
-    "transactionId": "64260628-6613-4deb-8226-55b07b104354"
+    "amount": "2,755.66",
+    "transactionId": "8b02f708-1c76-44c0-9004-582cd72ad001"
   },
   {
+    "state": "lose",
+    "amount": "2,112.77",
+    "transactionId": "d022f977-b235-47bd-a5a3-bf716633a77d"
+  },
+  {
     "state": "win",
-    "amount": 93.95,
-    "transactionId": "533638dc-7459-4b23-9209-aec89f2ee4e0"
+    "amount": "1,407.81",
+    "transactionId": "80e50b4d-16de-4528-99ba-847d944aa26d"
   },
   {
     "state": "win",
-    "amount": 86.84,
-    "transactionId": "63219934-763c-4270-bd65-73d9c4806d2c"
+    "amount": "3,363.47",
+    "transactionId": "239b1ea5-95ae-4c14-bb73-123ff64cea3c"
   },
   {
-    "state": "lose",
-    "amount": 45.57,
-    "transactionId": "875573f5-d1a2-48a5-9c0e-fe68791a2eea"
+    "state": "win",
+    "amount": "3,995.49",
+    "transactionId": "bd015d8f-7723-4139-b479-6df559b602ce"
   },
   {
     "state": "win",
-    "amount": 95.29,
-    "transactionId": "24dc00c1-f82d-4dfd-b0e1-c9a6ce676051"
+    "amount": "1,732.94",
+    "transactionId": "0667e49a-61bb-46e4-9d57-11ec25bc3ddb"
   },
   {
     "state": "win",
-    "amount": 55.24,
-    "transactionId": "d42b90a6-ce84-4f5c-b421-0d211a54a9ba"
+    "amount": "3,153.38",
+    "transactionId": "4749c578-13cd-4038-9f8e-76657a1fe66c"
   },
   {
-    "state": "lose",
-    "amount": 34.06,
-    "transactionId": "132f0639-6d65-4123-a06b-00de6ab741ac"
+    "state": "win",
+    "amount": "2,317.07",
+    "transactionId": "07737b74-a850-454b-b91b-b722b225024a"
   },
   {
     "state": "win",
-    "amount": 85.73,
-    "transactionId": "00edf77a-f3e3-43ac-8838-36bb88b5c770"
+    "amount": "3,136.70",
+    "transactionId": "ac30586e-ecfd-4a0b-be97-c4dd4947a43b"
   },
   {
     "state": "win",
-    "amount": 88.51,
-    "transactionId": "55d55334-48dd-436b-86b8-45256ee3030d"
+    "amount": "1,941.03",
+    "transactionId": "242e152c-4731-48be-8b9f-ddabf3bfeb42"
   },
   {
     "state": "lose",
-    "amount": 33.37,
-    "transactionId": "141464ed-b59a-44cc-b616-f67b1e92bb09"
+    "amount": "3,010.83",
+    "transactionId": "f2b594ac-8c83-4d76-9e71-5db04fbb2dda"
   },
   {
     "state": "win",
-    "amount": 12.99,
-    "transactionId": "de319589-6469-44b8-a9e4-f414aa9d4631"
+    "amount": "1,622.73",
+    "transactionId": "fa7e2cea-ad06-411d-92cc-8a90578f9442"
   },
   {
     "state": "lose",
-    "amount": 89.63,
-    "transactionId": "b433b39d-7237-497b-8ad2-4ec6c8a18930"
+    "amount": "1,721.25",
+    "transactionId": "3f2cbb3b-881a-4714-b2e1-cb0798ee492e"
   },
   {
     "state": "lose",
-    "amount": 83.22,
-    "transactionId": "03e542e2-fcdd-4105-94aa-6e5b5348ea13"
+    "amount": "2,179.69",
+    "transactionId": "b48c0beb-bb57-45a0-8092-0375414af0cc"
   },
   {
     "state": "win",
-    "amount": 88.51,
-    "transactionId": "eef6532b-540e-48e6-95e1-36ae6b2949ee"
+    "amount": "3,099.80",
+    "transactionId": "7563a0d8-c918-42f5-8dea-ba21b875b6f2"
   },
   {
-    "state": "win",
-    "amount": 14.63,
-    "transactionId": "77cf7410-65cd-4321-b45b-a8ea72898519"
+    "state": "lose",
+    "amount": "1,232.15",
+    "transactionId": "59877510-15b1-4797-be14-8f5a706b997e"
   },
   {
     "state": "lose",
-    "amount": 67.43,
-    "transactionId": "72b08d13-2435-4106-95b9-f857ff787290"
+    "amount": "1,013.74",
+    "transactionId": "90555418-75b7-4aaf-aa58-6e8412440f62"
   },
   {
-    "state": "lose",
-    "amount": 37.29,
-    "transactionId": "b7b3d14e-79a4-44d3-951e-67dad3d1e2bd"
+    "state": "win",
+    "amount": "3,405.33",
+    "transactionId": "31096f22-8090-4803-bcfe-b03d9486c923"
   },
   {
-    "state": "lose",
-    "amount": 46.05,
-    "transactionId": "21ccf313-1516-4403-bdd9-8a26e139535d"
+    "state": "win",
+    "amount": "1,578.75",
+    "transactionId": "e6051f9a-74bb-4cc3-9027-36d1ed4e1899"
   },
   {
     "state": "lose",
-    "amount": 9.42,
-    "transactionId": "702d2ab1-d4df-4a23-8c7f-cfdb4688a2fd"
+    "amount": "1,966.32",
+    "transactionId": "412d0336-acd8-45ae-96ae-9da8c8a37f21"
   },
   {
     "state": "lose",
-    "amount": 5.17,
-    "transactionId": "af9f9c62-9cac-4aa1-8352-07ae3af30519"
+    "amount": "2,670.51",
+    "transactionId": "510842d9-4a6c-4a16-9fb8-ef14d8c4e1fd"
   },
   {
     "state": "win",
-    "amount": 54.82,
-    "transactionId": "5715ca49-386d-47c9-9b84-6814f1ea90d7"
+    "amount": "2,722.11",
+    "transactionId": "f74c03f4-8f4e-401d-8a0a-9ace28dac987"
   },
   {
     "state": "win",
-    "amount": 28.64,
-    "transactionId": "60eb1f7a-5cdc-468b-b791-5db21ef83851"
+    "amount": "1,001.01",
+    "transactionId": "ab9aec5b-b31b-4211-a9d9-a4b0aa86546d"
   },
   {
-    "state": "lose",
-    "amount": 28.97,
-    "transactionId": "78b8e495-3446-43d1-bd04-810eba1bacd8"
+    "state": "win",
+    "amount": "1,719.95",
+    "transactionId": "d5b35297-b99c-4199-857b-ae0be2ae8680"
   },
   {
-    "state": "win",
-    "amount": 13.7,
-    "transactionId": "8947698a-8849-42c7-ab53-65ee3fffa36b"
+    "state": "lose",
+    "amount": "3,791.80",
+    "transactionId": "8f438b22-90f8-49c0-ad84-15f5b6479cb7"
   },
   {
     "state": "win",
-    "amount": 71.94,
-    "transactionId": "717c9f81-b7ab-45dc-ae7f-217bb21533af"
+    "amount": "1,215.52",
+    "transactionId": "d13c62f7-3dd0-4f86-99e1-3e0ddd3d5f96"
   },
   {
     "state": "lose",
-    "amount": 94.88,
-    "transactionId": "2279404f-5f50-4272-b217-265e4c172a9f"
+    "amount": "3,368.19",
+    "transactionId": "03d6f837-8a5a-4b84-9e88-117a95b143d0"
   },
   {
     "state": "win",
-    "amount": 30.2,
-    "transactionId": "3da8414f-6abf-43fd-aae5-29baedeb8e7a"
+    "amount": "2,055.36",
+    "transactionId": "85c664b5-057e-4494-b41c-47ae24af0593"
   },
   {
-    "state": "lose",
-    "amount": 72.66,
-    "transactionId": "398fc897-b753-4af9-8623-ea3d6bd8451f"
+    "state": "win",
+    "amount": "3,990.26",
+    "transactionId": "0501d474-59f5-47c2-91ac-243d013cf18c"
   },
   {
-    "state": "lose",
-    "amount": 81.77,
-    "transactionId": "e9a66bda-287b-431a-9b8d-88a895b7a3c7"
+    "state": "win",
+    "amount": "2,171.97",
+    "transactionId": "fef3fac6-b55f-49e2-94ed-63b83bc834d0"
   },
   {
     "state": "lose",
-    "amount": 19.6,
-    "transactionId": "6a7365e4-ff9d-426f-81ad-6b530d00900e"
+    "amount": "2,843.38",
+    "transactionId": "1da4b5cd-872c-44fc-bfe0-a0dd942dbb2b"
+  },
+  {
+    "state": "win",
+    "amount": "2,370.62",
+    "transactionId": "8b767547-ae9c-47a6-b2b5-1ec812efbdca"
   },
   {
     "state": "lose",
-    "amount": 49.86,
-    "transactionId": "aa7065a2-53cb-4964-a6f1-35fb9a6b0e77"
+    "amount": "3,609.64",
+    "transactionId": "bf853514-7a22-40d2-8a77-eb227f32e97f"
   },
   {
-    "state": "win",
-    "amount": 45.57,
-    "transactionId": "a083d3cf-3b12-434b-b8f7-8d15453b0231"
+    "state": "lose",
+    "amount": "1,092.89",
+    "transactionId": "1105c87a-a41c-49f7-8cf8-81e4509de12b"
   },
   {
     "state": "lose",
-    "amount": 4.77,
-    "transactionId": "f91330bb-1f10-4579-aa5c-2cacd1a7adc8"
+    "amount": "3,938.66",
+    "transactionId": "a6089c00-f3cf-45e4-8711-d05b91e686a2"
   },
   {
     "state": "win",
-    "amount": 73.16,
-    "transactionId": "1e5623c5-40ef-4a00-b657-d118d0c07d53"
+    "amount": "1,808.77",
+    "transactionId": "2187a89a-fd92-414f-8fd1-20feba19cf4e"
   },
   {
-    "state": "win",
-    "amount": 57.92,
-    "transactionId": "7381f78e-a910-450c-ae61-7b91c5da28a5"
+    "state": "lose",
+    "amount": "1,530.43",
+    "transactionId": "785e15c2-7742-4256-8a6d-5762b26f6ec0"
   },
   {
-    "state": "win",
-    "amount": 69.76,
-    "transactionId": "89d9be3e-acaa-42a0-90ef-8208a48b2b4a"
+    "state": "lose",
+    "amount": "1,607.85",
+    "transactionId": "f8f6a2a2-4b72-4cbf-bb52-eea4a16ef613"
   },
   {
     "state": "win",
-    "amount": 85.55,
-    "transactionId": "79ff9671-939c-4861-b5df-f853704d1736"
+    "amount": "2,481.22",
+    "transactionId": "127e373b-8513-4055-b960-c781482b23d6"
   },
   {
     "state": "lose",
-    "amount": 89.91,
-    "transactionId": "98c9ec16-1c2e-4240-8e71-ded2d7489aab"
+    "amount": "2,145.31",
+    "transactionId": "c0a83516-c8f4-4fe0-a500-cc55e8f7d624"
   },
   {
     "state": "lose",
-    "amount": 45.46,
-    "transactionId": "03afe266-dcf8-4cc5-a36c-ca797f634280"
+    "amount": "2,408.33",
+    "transactionId": "db52b25a-ba08-4f3e-a149-bfe2ef40793c"
   },
   {
     "state": "win",
-    "amount": 40.3,
-    "transactionId": "550a81e6-0780-4c51-9a11-aa2e5784f959"
-  },
-  {
-    "state": "lose",
-    "amount": 61.89,
-    "transactionId": "9bf88b76-7483-46c6-aaf7-26e28eae388e"
+    "amount": "1,459.49",
+    "transactionId": "1765b251-059c-475f-9444-966ee8d887b7"
   },
   {
     "state": "lose",
-    "amount": 29.11,
-    "transactionId": "7f8ae903-384f-4389-976f-7d9d79b49875"
+    "amount": "1,191.40",
+    "transactionId": "a5ca9af6-7563-4644-974c-9b222b3ee30c"
   },
   {
     "state": "lose",
-    "amount": 86.9,
-    "transactionId": "b37d7810-be48-4c67-9729-c1489af5d13d"
+    "amount": "3,790.04",
+    "transactionId": "97118bc5-7919-40b4-b268-df94876ca5ed"
   },
   {
     "state": "win",
-    "amount": 89.38,
-    "transactionId": "87e3634c-0269-4e8c-a6d7-dfefbebab732"
+    "amount": "2,413.30",
+    "transactionId": "733d3252-83f0-4b8e-816a-9a52c8e850ce"
   },
   {
     "state": "lose",
-    "amount": 40.13,
-    "transactionId": "1022c377-4584-4ca4-8671-5154fe7175d6"
+    "amount": "2,790.03",
+    "transactionId": "84a869e6-6fb7-416b-825e-d6a9bc23ea85"
   },
   {
-    "state": "win",
-    "amount": 60.38,
-    "transactionId": "29beea45-20f9-43ff-8798-5e41f98aee0f"
+    "state": "lose",
+    "amount": "2,515.22",
+    "transactionId": "1dc06b14-2158-4906-b59b-0c96dbbff604"
   },
   {
     "state": "lose",
-    "amount": 61.91,
-    "transactionId": "afe8b446-7508-4d22-b140-398c30d64884"
+    "amount": "1,204.82",
+    "transactionId": "807292b8-5714-4652-b2ed-4ccc529a402e"
   },
   {
     "state": "lose",
-    "amount": 17.36,
-    "transactionId": "41d5d983-371f-4ad6-953b-c1507cffcba2"
+    "amount": "1,049.31",
+    "transactionId": "8e8afbe8-4cfe-49eb-af50-90f92ee98c29"
   },
   {
     "state": "win",
-    "amount": 42.22,
-    "transactionId": "ac4465c9-eb78-4cc1-8317-d81a076bb07e"
+    "amount": "3,514.77",
+    "transactionId": "ad4b4967-b7f6-4fb0-910a-076de0ff552d"
   },
   {
-    "state": "win",
-    "amount": 67.96,
-    "transactionId": "00dfc8ab-a590-468c-906a-176a60fd7992"
+    "state": "lose",
+    "amount": "3,829.55",
+    "transactionId": "df18af07-6cf7-4a0f-a12d-7b6f3d2e4481"
   },
   {
     "state": "win",
-    "amount": 18.89,
-    "transactionId": "fe30a94f-bbf5-46cd-bb03-2390ea12a81c"
+    "amount": "3,225.45",
+    "transactionId": "34ff2d90-8c59-42fd-9d34-b69ba462e945"
   },
   {
     "state": "lose",
-    "amount": 82.33,
-    "transactionId": "3c27834f-18e7-4361-bb2e-55fd592f1a70"
+    "amount": "1,508.27",
+    "transactionId": "85fc7172-ba43-4db0-984f-9cdc39e3268b"
   },
   {
     "state": "lose",
-    "amount": 72.01,
-    "transactionId": "445b90df-bfed-45b4-a1b1-17344e4f69d9"
+    "amount": "2,513.82",
+    "transactionId": "73b872ec-9ef4-4ab6-8806-4df5f70ed609"
   },
   {
     "state": "win",
-    "amount": 15.55,
-    "transactionId": "ca5b31ca-714f-43b9-ad7e-a7d945712bbb"
+    "amount": "2,643.85",
+    "transactionId": "dc60eed8-6050-444b-b1f7-f023a18a1482"
   },
   {
     "state": "lose",
-    "amount": 65.98,
-    "transactionId": "222fc118-d163-4979-975b-b6d34a1fc705"
+    "amount": "1,404.68",
+    "transactionId": "77ec2ecc-9fa6-4f97-a259-57c96d48438d"
   },
   {
     "state": "lose",
-    "amount": 12.85,
-    "transactionId": "c5d0c6e5-ab2e-498b-8e1c-565a7d1d5ce7"
+    "amount": "1,100.17",
+    "transactionId": "ce390ec6-64b2-407e-b5d6-57ab6773fa36"
   },
   {
     "state": "win",
-    "amount": 56.41,
-    "transactionId": "e355992b-0e0d-4e14-b021-4345b8c24aed"
+    "amount": "3,529.86",
+    "transactionId": "f03cb919-e497-4d96-a76a-0fafd63af08f"
   },
   {
-    "state": "lose",
-    "amount": 64.07,
-    "transactionId": "7f8b7afe-25ed-4f95-9672-91adbd17a1c2"
+    "state": "win",
+    "amount": "2,320.20",
+    "transactionId": "368b299f-d739-418b-9eba-e24b32fff465"
   },
   {
     "state": "lose",
-    "amount": 90.13,
-    "transactionId": "b923ac2d-378d-47a3-868f-2a69d3212185"
+    "amount": "2,929.56",
+    "transactionId": "3a9b910f-2357-4e36-ab10-98b545687a32"
   },
   {
-    "state": "win",
-    "amount": 81.55,
-    "transactionId": "9c4d0a3e-4178-4de0-a5bc-9ccb85c82182"
+    "state": "lose",
+    "amount": "1,421.99",
+    "transactionId": "441d1c8b-b78a-42a1-85b9-376b91413142"
   },
   {
     "state": "win",
-    "amount": 91.23,
-    "transactionId": "a150cebe-1b21-4c95-bcf9-9005b373a186"
+    "amount": "2,284.56",
+    "transactionId": "01d07c54-2a6d-40b8-95b3-d46e41ee5e62"
   },
   {
     "state": "win",
-    "amount": 6.31,
-    "transactionId": "af0c5c46-ee39-46ff-83b1-e14060bd2da8"
+    "amount": "3,373.66",
+    "transactionId": "e30550af-b2dc-4b2f-a39a-6271691a80d7"
   },
   {
-    "state": "win",
-    "amount": 57.11,
-    "transactionId": "6698946f-92df-450e-9fcd-dda511a317c5"
+    "state": "lose",
+    "amount": "3,504.58",
+    "transactionId": "5ee7735d-a5ec-43b8-9baf-7bc389d3ffb8"
   },
   {
-    "state": "lose",
-    "amount": 77.1,
-    "transactionId": "07785f0a-8fc6-4a82-aea9-7e6ab9f2cbe1"
+    "state": "win",
+    "amount": "2,844.09",
+    "transactionId": "f0d9bc1b-0b42-4539-a7ee-bf297e8d1544"
   },
   {
-    "state": "lose",
-    "amount": 42.41,
-    "transactionId": "4f48f474-e329-4356-9eb2-9443eae5cd04"
+    "state": "win",
+    "amount": "1,975.64",
+    "transactionId": "39fc6881-74de-4003-8f41-0f7b562a2cb7"
   },
   {
     "state": "win",
-    "amount": 37.62,
-    "transactionId": "9f8429e3-ba13-4f83-97d5-949e99901c78"
+    "amount": "2,930.46",
+    "transactionId": "c423a4df-edd3-45cf-8b71-2d0150aaac0b"
   },
   {
     "state": "lose",
-    "amount": 71.99,
-    "transactionId": "7de31d23-d22e-4b8c-bc7b-bea36466adb1"
+    "amount": "3,954.81",
+    "transactionId": "a1c1c428-99f5-4338-85ce-4b82527e2c73"
   },
   {
     "state": "win",
-    "amount": 13.81,
-    "transactionId": "db5ca0de-ac8f-452b-b13d-631af61607ff"
+    "amount": "1,542.13",
+    "transactionId": "638ce1a1-618b-4788-8d3d-4c9c9baec3f5"
   },
   {
     "state": "win",
-    "amount": 36.75,
-    "transactionId": "8c65d8e3-2e02-49ff-9140-65b238ec644b"
+    "amount": "3,676.51",
+    "transactionId": "656bcc65-eb19-4362-9655-fe7be99c1a50"
   },
   {
     "state": "win",
-    "amount": 51.44,
-    "transactionId": "292f057c-ad1d-4e90-8baf-1416cb218817"
+    "amount": "1,756.94",
+    "transactionId": "da372ccf-b5a5-4669-8477-c98be4a2d9da"
   },
   {
     "state": "win",
-    "amount": 93.36,
-    "transactionId": "90bcbdba-a99e-4588-96bf-cbdd6166beb9"
-  },
-  {
-    "state": "lose",
-    "amount": 12.44,
-    "transactionId": "2a981226-18f8-49d2-9871-f002b7572a36"
+    "amount": "2,783.69",
+    "transactionId": "f089c11d-cd30-4f92-bf63-0894f775abb1"
   },
   {
     "state": "win",
-    "amount": 57.55,
-    "transactionId": "cd85d59e-e281-4b47-b76b-70e37493b7de"
+    "amount": "1,601.16",
+    "transactionId": "d6eb3120-accc-4555-a3db-d32c56bfdc83"
   },
   {
     "state": "lose",
-    "amount": 1.37,
-    "transactionId": "c2f4ebc5-d2a5-4264-867a-39dac51eea4e"
+    "amount": "2,236.39",
+    "transactionId": "bc0fe566-8f2f-4224-8d46-1e7f8f79bffe"
   },
   {
     "state": "win",
-    "amount": 90.47,
-    "transactionId": "1d3871d6-76ef-4659-9ba5-bc2f5d6d462d"
+    "amount": "2,639.77",
+    "transactionId": "c7c14d58-938e-48b8-9ec4-b25dbe7251e8"
   },
   {
     "state": "lose",
-    "amount": 36.4,
-    "transactionId": "18719fda-3d4e-49bd-9f4c-39c8769281ab"
+    "amount": "3,481.44",
+    "transactionId": "99b9df8c-d08c-4926-9021-114c8bb49c55"
   },
   {
     "state": "lose",
-    "amount": 88.62,
-    "transactionId": "daddd3c3-68e1-4149-8a46-7fb25ec4af45"
+    "amount": "2,312.61",
+    "transactionId": "3b664bb8-d844-47a7-bea9-b0c102a02c2f"
   },
   {
     "state": "win",
-    "amount": 8.61,
-    "transactionId": "0f73ebd0-8836-461b-80ef-2ae1b9354fe5"
+    "amount": "3,415.15",
+    "transactionId": "1b46a5bd-61da-482f-828c-e4484638fa01"
   },
   {
     "state": "lose",
-    "amount": 54.1,
-    "transactionId": "9c0c484a-b182-4bf7-8047-2b24b91b5198"
+    "amount": "2,934.62",
+    "transactionId": "39f59370-629f-430a-91a8-be78ef53b329"
   },
   {
     "state": "win",
-    "amount": 73.93,
-    "transactionId": "b0f62138-53c2-4216-b91a-47e792996427"
+    "amount": "3,444.55",
+    "transactionId": "691a46a8-2295-457f-8dd4-23ca7bcef77f"
   },
   {
     "state": "win",
-    "amount": 43.58,
-    "transactionId": "46de830d-4a48-4541-8495-c3ef9209f2dc"
+    "amount": "2,086.48",
+    "transactionId": "406118cb-b6ac-49b0-82b3-05484a29fda3"
   },
   {
-    "state": "win",
-    "amount": 44.98,
-    "transactionId": "a02d9a09-423d-4113-8915-a4119bcc44dc"
+    "state": "lose",
+    "amount": "3,464.03",
+    "transactionId": "f0387936-c677-46df-8750-9c8875a64e6e"
   },
   {
     "state": "win",
-    "amount": 27.17,
-    "transactionId": "9f7c1d94-1122-48e4-8cbd-842fe77fbee0"
+    "amount": "2,570.85",
+    "transactionId": "bd052740-694f-4ae1-aeeb-54b715ed2270"
   },
   {
     "state": "win",
-    "amount": 61.13,
-    "transactionId": "55fc83d2-725d-40a0-b44b-6e3d07792a34"
+    "amount": "3,969.85",
+    "transactionId": "aeb46f5a-f4a7-4e64-9742-a1f6fadd7dca"
   },
   {
-    "state": "win",
-    "amount": 47.41,
-    "transactionId": "98f7f3ed-b4bf-4a0d-b219-09d1975e6515"
+    "state": "lose",
+    "amount": "2,992.78",
+    "transactionId": "55c8a68e-8850-4c74-9666-5420ab461901"
   },
   {
-    "state": "win",
-    "amount": 30.1,
-    "transactionId": "57bad5d6-39f5-4774-ac69-6a6515215da8"
+    "state": "lose",
+    "amount": "2,218.94",
+    "transactionId": "147f6227-af8b-4e51-b5ef-e9ca9bdff3bf"
   },
   {
-    "state": "win",
-    "amount": 59.39,
-    "transactionId": "84dbe99d-e798-4223-9bf6-fca15e723d5e"
+    "state": "lose",
+    "amount": "2,660.39",
+    "transactionId": "3386aafc-fd30-47ca-b533-e6aa0e1d7b38"
   },
   {
     "state": "lose",
-    "amount": 87,
-    "transactionId": "21c813bd-a994-47ee-ac4d-46993552261e"
+    "amount": "3,674.76",
+    "transactionId": "df5efdd3-a381-4579-8bba-b95300068160"
   },
   {
-    "state": "win",
-    "amount": 71.27,
-    "transactionId": "cb191caf-79af-4e15-9759-bd8488354078"
+    "state": "lose",
+    "amount": "1,316.58",
+    "transactionId": "6dbd68e1-ac42-4989-bd52-5778247330f4"
   },
   {
     "state": "win",
-    "amount": 61.14,
-    "transactionId": "45506acd-1bad-4719-bf2e-a5cf2f93255d"
+    "amount": "2,838.02",
+    "transactionId": "83cc6c03-9b10-4c09-ae89-5bc423fc9df1"
   },
   {
-    "state": "win",
-    "amount": 72.34,
-    "transactionId": "4e8ebd98-024a-4d02-aef7-afb4a748781d"
+    "state": "lose",
+    "amount": "2,952.21",
+    "transactionId": "86996207-9141-423a-9778-ab197d25669d"
   },
   {
     "state": "win",
-    "amount": 27.01,
-    "transactionId": "ead8c321-3e89-45c1-b6ef-578010607b49"
+    "amount": "1,787.48",
+    "transactionId": "39aaf42c-e95c-44c5-949d-89110d8fbbe8"
   },
   {
     "state": "win",
-    "amount": 16.92,
-    "transactionId": "6590dcff-5a4b-4b57-a329-14949b8e755d"
+    "amount": "2,792.35",
+    "transactionId": "e2c7a799-fb87-466b-85f7-2a42d4d6e1cb"
+  },
+  {
+    "state": "lose",
+    "amount": "1,252.78",
+    "transactionId": "b8fb699f-a846-49f2-b02a-39df2d7b3ad4"
   },
   {
     "state": "win",
-    "amount": 68.78,
-    "transactionId": "3f77646e-3d07-410a-bdc9-b27ff63662ae"
+    "amount": "1,304.15",
+    "transactionId": "644c9262-346a-4ef6-868e-c78005537702"
   },
   {
     "state": "win",
-    "amount": 35.66,
-    "transactionId": "f3525548-2002-48b3-abb0-826375a648b6"
+    "amount": "3,507.29",
+    "transactionId": "08d76121-e73d-452b-a205-9060fab986c6"
   },
   {
     "state": "lose",
-    "amount": 36.34,
-    "transactionId": "450083a3-3d15-4c85-9dd0-8a16d8ee76e8"
+    "amount": "1,404.39",
+    "transactionId": "5dae538e-52fa-49ff-983d-984c2fe6e673"
   },
   {
-    "state": "lose",
-    "amount": 11.54,
-    "transactionId": "4bec1adc-a5d2-4601-8865-e6ae3806667e"
+    "state": "win",
+    "amount": "1,714.62",
+    "transactionId": "335fba2c-fa75-49dc-be04-2bfde7c92239"
   },
   {
     "state": "lose",
-    "amount": 58.65,
-    "transactionId": "8942b8cc-4b3d-45e0-972b-cecd81bb0119"
+    "amount": "1,312.55",
+    "transactionId": "287774c7-2fd3-47e8-b822-cf39ede16f1e"
   },
   {
-    "state": "win",
-    "amount": 41.08,
-    "transactionId": "a02b7653-a614-4b3c-8a92-cdd1d974541f"
+    "state": "lose",
+    "amount": "3,516.26",
+    "transactionId": "48e96418-45e8-49d2-83ff-859f78b3eee3"
   },
   {
     "state": "win",
-    "amount": 52.71,
-    "transactionId": "7f365241-8545-4392-87b7-9c3c6983d983"
+    "amount": "3,401.11",
+    "transactionId": "73c2505b-95c4-463c-9e79-c0868b5d2586"
   },
   {
     "state": "win",
-    "amount": 5.44,
-    "transactionId": "a721baa4-46ad-484a-a67d-53f587c1d075"
-  },
-  {
-    "state": "lose",
-    "amount": 49.52,
-    "transactionId": "f22a8f28-48c9-4f62-9438-5a00a7b336ff"
+    "amount": "1,231.69",
+    "transactionId": "b8b9e771-590a-4135-b928-805e6a181aa9"
   },
   {
-    "state": "lose",
-    "amount": 14.01,
-    "transactionId": "ee8a0d19-824e-49db-b904-079434a50dcc"
-  },
-  {
     "state": "win",
-    "amount": 74.4,
-    "transactionId": "a989ea8e-8f36-4ccb-92b0-a69f9805cb28"
+    "amount": "2,407.34",
+    "transactionId": "174d3d57-5850-4122-9d6d-b344e9de1bf6"
   },
   {
-    "state": "lose",
-    "amount": 57.6,
-    "transactionId": "c996af5c-e961-49d3-bd5a-8b86f49b9973"
+    "state": "win",
+    "amount": "2,399.28",
+    "transactionId": "2ea6d078-1347-4ae8-afdc-997bba8c6d20"
   },
   {
     "state": "win",
-    "amount": 84.44,
-    "transactionId": "f1ea8d7a-ed08-4cd1-b000-25cca323d9e8"
+    "amount": "2,407.41",
+    "transactionId": "7d217018-e8d8-4e00-848d-3d468d584c25"
   },
   {
-    "state": "lose",
-    "amount": 81.61,
-    "transactionId": "1e70a746-6819-40b8-ba41-0fbc32009ea0"
+    "state": "win",
+    "amount": "1,123.07",
+    "transactionId": "f261b4c0-9103-4d71-acbd-055d08d5473b"
   },
   {
-    "state": "lose",
-    "amount": 50.27,
-    "transactionId": "3ddcd839-d029-40a8-bb1a-8e5a2d6f04be"
+    "state": "win",
+    "amount": "2,324.32",
+    "transactionId": "5dc8b975-64d8-4038-883b-b35d8f0187e5"
   },
   {
     "state": "win",
-    "amount": 53.2,
-    "transactionId": "a8af1fb7-62b0-4d96-b5ff-eab9d4964973"
+    "amount": "2,246.34",
+    "transactionId": "8889ba22-f458-40ae-85f1-6655006cf5b7"
   },
   {
-    "state": "win",
-    "amount": 10.88,
-    "transactionId": "579a334d-13b3-4a5b-9dc9-7d035002fc7c"
+    "state": "lose",
+    "amount": "3,758.33",
+    "transactionId": "7d29ab5f-d02c-4277-8190-006c41c939d4"
   },
   {
     "state": "win",
-    "amount": 8.63,
-    "transactionId": "b8a5e4f5-a748-4828-96e6-8880435c7aa9"
+    "amount": "1,113.14",
+    "transactionId": "662ac09f-5926-4776-b2a2-53d33f22163d"
   },
   {
     "state": "lose",
-    "amount": 88.22,
-    "transactionId": "ee0d5bb5-2d18-423b-99c7-4820d5e3ec77"
+    "amount": "3,912.12",
+    "transactionId": "67604ef0-75b1-4156-96e7-b19beb484cef"
   },
   {
     "state": "lose",
-    "amount": 80.97,
-    "transactionId": "ac7a1d01-4959-44eb-9f82-61290fd2acd5"
+    "amount": "2,572.25",
+    "transactionId": "bb69b59d-57ce-43ff-923a-84daac211572"
   },
   {
-    "state": "lose",
-    "amount": 74.96,
-    "transactionId": "d4938496-1497-40c9-afa3-763dd386ddcb"
+    "state": "win",
+    "amount": "2,886.05",
+    "transactionId": "eed7cced-357d-4b29-b1a5-8afc6f1c2a00"
   },
   {
     "state": "lose",
-    "amount": 12.07,
-    "transactionId": "b2a7ced7-38ee-45bf-8098-c816e090c32c"
+    "amount": "1,170.15",
+    "transactionId": "4c7c3aac-7ba1-459e-ae94-3c5b67ac40ec"
   },
   {
     "state": "lose",
-    "amount": 65.01,
-    "transactionId": "b50e24b4-94f4-4e10-a22f-832f215fdd3e"
+    "amount": "2,152.07",
+    "transactionId": "4c7d2450-8962-48e0-b015-dd02da2c19fe"
   },
   {
     "state": "win",
-    "amount": 83.31,
-    "transactionId": "e17b2848-20dc-4791-87e2-1bf24c740e3c"
+    "amount": "3,258.45",
+    "transactionId": "7d9dd45c-02a6-434b-918b-f6e5d78cc518"
   },
   {
     "state": "lose",
-    "amount": 41.31,
-    "transactionId": "58ff4847-d8df-443e-8b44-58804371a8ec"
+    "amount": "1,859.82",
+    "transactionId": "cc918b3b-d471-457c-98e3-9c05c927e335"
   },
   {
-    "state": "lose",
-    "amount": 32.21,
-    "transactionId": "e18a9640-67b0-436c-84cb-cf7a27f2edbe"
+    "state": "win",
+    "amount": "2,676.20",
+    "transactionId": "dbb39afa-aedb-4377-a029-d0bdadcdaf90"
   },
   {
-    "state": "win",
-    "amount": 14.5,
-    "transactionId": "0470c40b-1648-4023-ab00-03dc757851e2"
+    "state": "lose",
+    "amount": "2,192.06",
+    "transactionId": "18c16a5f-6964-4d00-9416-e9b6a12c5d71"
   },
   {
     "state": "win",
-    "amount": 60.49,
-    "transactionId": "914052ac-fbec-453e-a142-96bdbd131cdf"
+    "amount": "1,704.63",
+    "transactionId": "cec5f3a1-a491-4204-87d4-914a4d22fbb8"
   },
   {
-    "state": "lose",
-    "amount": 60.83,
-    "transactionId": "cf12597d-fa2b-42dc-851b-cd05c21cf06a"
+    "state": "win",
+    "amount": "2,672.65",
+    "transactionId": "8c117cd4-d194-41e4-aef8-3d52f527b076"
   },
   {
-    "state": "lose",
-    "amount": 43.12,
-    "transactionId": "15fdd9de-1d00-41b5-bd29-fa581dd2f2bd"
+    "state": "win",
+    "amount": "3,404.25",
+    "transactionId": "3987339f-37c6-4497-b761-2d814c332ac7"
   },
   {
     "state": "win",
-    "amount": 45.55,
-    "transactionId": "d887d5a3-6754-417e-af70-d156ef9feea7"
+    "amount": "1,496.61",
+    "transactionId": "5c37f0c9-35cd-4a21-80be-ffd3a5e0621b"
   },
   {
     "state": "lose",
-    "amount": 10.37,
-    "transactionId": "6a6659d5-60e2-4e56-a2ad-c74284762d47"
+    "amount": "2,936.03",
+    "transactionId": "bf6203e2-ee31-4e8d-8141-aa6df35be012"
   },
   {
     "state": "win",
-    "amount": 33.06,
-    "transactionId": "ceac253a-ba41-4c1e-93c7-211ce4e5570a"
+    "amount": "1,474.07",
+    "transactionId": "426c4d00-5678-4a14-92eb-2a68feaaba93"
   },
   {
     "state": "lose",
-    "amount": 33,
-    "transactionId": "705e55bc-b6f9-423e-af58-dbf0ca741f2e"
+    "amount": "3,084.02",
+    "transactionId": "10de65a0-d0e3-4b3e-bf15-93865cc0e9b9"
   },
   {
-    "state": "win",
-    "amount": 28.72,
-    "transactionId": "bc22d171-1919-445e-a197-3c0dbff7a45a"
+    "state": "lose",
+    "amount": "1,361.79",
+    "transactionId": "0e76ddea-e659-449a-bd04-06678db737fc"
   },
   {
     "state": "lose",
-    "amount": 52.19,
-    "transactionId": "a5ec6d45-e880-43e1-bcf3-1c32733f8c87"
+    "amount": "1,434.73",
+    "transactionId": "2570d95c-4957-4c30-aa4b-53274190a8d2"
   },
   {
     "state": "lose",
-    "amount": 94.66,
-    "transactionId": "a8d51691-ce3e-43ff-910d-4fee9d57c7d2"
+    "amount": "1,903.40",
+    "transactionId": "bc3f0b14-d0ee-4266-9551-75580936dac5"
   },
   {
     "state": "lose",
-    "amount": 70.39,
-    "transactionId": "23cd3844-db2b-4a35-9fe4-d2342c9bd06d"
+    "amount": "1,790.91",
+    "transactionId": "ab48ebd9-0473-43dc-914d-b1ffc69fb479"
   },
   {
-    "state": "win",
-    "amount": 67.27,
-    "transactionId": "85f89250-9ef1-4959-a841-bb932c17344d"
+    "state": "lose",
+    "amount": "1,576.48",
+    "transactionId": "55bd914f-f23c-4f76-a347-5eea8f495cde"
   },
   {
     "state": "win",
-    "amount": 83.74,
-    "transactionId": "6deb5b08-8dc3-46d6-81f2-e273eb6e915a"
+    "amount": "3,046.32",
+    "transactionId": "c215ef3c-7c20-4ec7-8fc1-32d3380ac705"
   },
   {
     "state": "win",
-    "amount": 64.36,
-    "transactionId": "1d529e6e-68ec-4a6b-8165-a772a4d1c837"
+    "amount": "1,904.30",
+    "transactionId": "cffa048a-136e-446c-b0f7-6cdf294965b0"
   },
   {
     "state": "lose",
-    "amount": 38.12,
-    "transactionId": "d1a55a0a-cc1a-44c4-898c-8061b19d4c4a"
+    "amount": "2,698.52",
+    "transactionId": "c5a06b4a-9bb8-4cad-8389-9385d0d922e7"
   },
   {
     "state": "win",
-    "amount": 92.79,
-    "transactionId": "20eec209-df21-48f6-8d1d-1e94bc6d7066"
+    "amount": "1,044.09",
+    "transactionId": "89733668-6935-4e78-82c7-d973b63616a4"
   },
   {
     "state": "lose",
-    "amount": 28.13,
-    "transactionId": "113b06af-383b-46bc-bd06-e64a57a31eec"
+    "amount": "2,046.86",
+    "transactionId": "063eb6ca-0d74-4fb6-93bc-2ab3e6991fd0"
   },
   {
     "state": "lose",
-    "amount": 12.02,
-    "transactionId": "17a1939c-9285-4c1b-a71d-aa3c5686863b"
+    "amount": "3,974.83",
+    "transactionId": "5a4695d7-d034-4d07-b28d-098eee2e749f"
   },
   {
     "state": "win",
-    "amount": 97.31,
-    "transactionId": "a96cabb7-3929-4058-ae48-5bd9d29568fb"
+    "amount": "2,607.09",
+    "transactionId": "deb3c96f-2ebf-4d0a-9a58-39d614d74450"
   },
   {
     "state": "lose",
-    "amount": 63.56,
-    "transactionId": "0bfc0679-5462-4cbb-854d-3f176aa02ef7"
+    "amount": "1,583.98",
+    "transactionId": "bb35f4a0-3c49-4e02-9203-0e3e34f310a4"
   },
   {
-    "state": "lose",
-    "amount": 41.21,
-    "transactionId": "41062110-7ce7-4f49-9d08-ffbbc70e5a92"
+    "state": "win",
+    "amount": "3,215.16",
+    "transactionId": "15cf325a-06d8-4ccd-8e0e-b78a98881b82"
   },
   {
     "state": "lose",
-    "amount": 33.01,
-    "transactionId": "9e5a5389-d906-4789-874d-821ec5a0ea02"
+    "amount": "3,941.12",
+    "transactionId": "bd358468-5b61-4b73-8fcb-c3f871262998"
   },
   {
     "state": "win",
-    "amount": 63.39,
-    "transactionId": "1bcaf6ab-8d5c-4e76-ae28-648fa782471f"
+    "amount": "2,978.38",
+    "transactionId": "66925bd1-6a8b-42f6-af0e-f02c04dcd493"
   },
   {
     "state": "win",
-    "amount": 17.84,
-    "transactionId": "227e7f4e-7cda-4fee-a58d-85fd317e23d1"
+    "amount": "3,426.21",
+    "transactionId": "1d34e7bb-676e-4dc4-9ef3-16d449378260"
   },
   {
-    "state": "lose",
-    "amount": 19.52,
-    "transactionId": "c1c62a92-1aa1-4aa6-b599-b927ed6f64f3"
+    "state": "win",
+    "amount": "1,524.98",
+    "transactionId": "0af9a539-2e11-4838-839c-36b32e8999a9"
   },
   {
     "state": "win",
-    "amount": 87.58,
-    "transactionId": "424684a4-56f0-4157-ac43-8fa265e798bd"
+    "amount": "1,485.64",
+    "transactionId": "12e83029-63a6-4420-a3b4-7e8761239cbb"
   },
   {
-    "state": "lose",
-    "amount": 53.06,
-    "transactionId": "4b7077ae-1d96-4b11-9846-9d62e1a519d0"
+    "state": "win",
+    "amount": "1,191.27",
+    "transactionId": "bf643549-a7b9-4828-8ee3-feb77f723e69"
   },
   {
     "state": "lose",
-    "amount": 52.06,
-    "transactionId": "abc40e69-6c3f-4bd6-923b-022c6a011e87"
+    "amount": "3,001.36",
+    "transactionId": "1bc47d0f-db46-4f6e-a729-e6e0cd65e09d"
   },
   {
     "state": "win",
-    "amount": 74.85,
-    "transactionId": "76a13689-bcf1-4d3a-a8ec-cc45e07b9eea"
+    "amount": "3,807.11",
+    "transactionId": "82c6aec2-15af-40b1-b7b3-b77b19e4ae7a"
   },
   {
     "state": "lose",
-    "amount": 27.5,
-    "transactionId": "fca57d3b-1154-4b72-ac86-779aab53d97c"
+    "amount": "1,686.76",
+    "transactionId": "5d6e2c2f-4a80-4cc2-95e5-5f0a56b8f7f7"
   },
   {
-    "state": "lose",
-    "amount": 94.54,
-    "transactionId": "1b6a12c7-804a-4a50-a35d-1ca612961779"
+    "state": "win",
+    "amount": "2,774.12",
+    "transactionId": "01f6a914-91c8-44d9-8190-3256efc3691a"
   },
   {
     "state": "lose",
-    "amount": 34.53,
-    "transactionId": "6a608c53-e0d1-43e1-95dd-c4516bf7012f"
+    "amount": "2,136.85",
+    "transactionId": "5693a882-da42-4ccf-872c-ea53d79d6718"
+  },
+  {
+    "state": "win",
+    "amount": "1,858.07",
+    "transactionId": "746b41e0-1f45-4efa-9a89-491ec485b9f3"
   },
   {
     "state": "lose",
-    "amount": 85.3,
-    "transactionId": "e827a5bf-46d2-4450-bbf6-f3bf68c3b333"
+    "amount": "1,913.76",
+    "transactionId": "39b924fe-5496-44f8-aeaa-29fbda43613c"
   },
   {
     "state": "win",
-    "amount": 49.94,
-    "transactionId": "a45756f5-e92a-4e00-b29f-b8e5a6ddb0aa"
+    "amount": "2,561.05",
+    "transactionId": "468fb340-bdbb-42f0-81ad-1b394a203a01"
   },
   {
     "state": "win",
-    "amount": 62.13,
-    "transactionId": "62d4df3f-3331-44b0-91bd-aba5b1b0e3cb"
+    "amount": "1,508.56",
+    "transactionId": "ff858763-5237-4154-82c6-616d19dbca65"
   },
   {
     "state": "lose",
-    "amount": 95.28,
-    "transactionId": "8be4cb2d-3f65-4302-a568-b2eea5c1b876"
+    "amount": "3,173.10",
+    "transactionId": "48989ba5-d675-46fa-bac7-3f5758d51835"
   },
   {
-    "state": "lose",
-    "amount": 0.03,
-    "transactionId": "b9fa1155-2bc5-4320-a756-96c9ea3b9e1a"
+    "state": "win",
+    "amount": "3,692.50",
+    "transactionId": "76cdd42b-1e0a-4863-b8e6-cda97c13adc6"
   },
   {
-    "state": "lose",
-    "amount": 65.45,
-    "transactionId": "3fc59186-1616-4147-901d-7addf84dcd56"
+    "state": "win",
+    "amount": "1,103.57",
+    "transactionId": "62600a4f-80e8-49cf-9ca7-698b725fea53"
   },
   {
     "state": "win",
-    "amount": 1.95,
-    "transactionId": "f74375ef-56ee-453a-b24f-c7cfe2531e00"
+    "amount": "2,691.53",
+    "transactionId": "16f1a4b5-9847-45cd-8c7a-b856c0a3abdf"
   },
   {
     "state": "win",
-    "amount": 28.76,
-    "transactionId": "9defdbed-0147-429a-91d3-311c8128895a"
+    "amount": "1,341.87",
+    "transactionId": "3e470d54-47fa-488f-a026-fc5f1ce36066"
   },
   {
     "state": "win",
-    "amount": 28.18,
-    "transactionId": "445ba58b-72e0-4621-a8c0-a8faf9e0d169"
+    "amount": "3,759.69",
+    "transactionId": "031f0dd7-cc2e-47b6-8d54-d0140cbc3f5d"
   },
   {
     "state": "win",
-    "amount": 90.23,
-    "transactionId": "e6279daa-2b30-4e2b-be0e-b512c3decb95"
+    "amount": "3,652.91",
+    "transactionId": "3f333b84-d0da-4264-8393-281c5099ee96"
   },
   {
     "state": "win",
-    "amount": 97.46,
-    "transactionId": "0a3ad56c-2452-4dc2-aa97-5d16844d78b1"
+    "amount": "3,342.29",
+    "transactionId": "e29c4d65-0b68-4844-88ee-a3002b6f7550"
   },
   {
     "state": "win",
-    "amount": 45.88,
-    "transactionId": "8b14d72b-a385-41fb-80ca-d011c2207322"
+    "amount": "3,143.30",
+    "transactionId": "22c68eac-e5fa-4b26-ba5c-f3e6f4ae141c"
   },
   {
-    "state": "lose",
-    "amount": 68.27,
-    "transactionId": "d47b4002-b61f-44f6-913b-e1c4ef4553dd"
+    "state": "win",
+    "amount": "1,031.65",
+    "transactionId": "da8395ef-2659-469c-922c-5827b9fcb2ce"
   },
   {
     "state": "win",
-    "amount": 17.2,
-    "transactionId": "b30cd9ad-0841-469a-ac40-d62e6c07f953"
+    "amount": "2,928.14",
+    "transactionId": "09303cf6-5588-4e38-8a53-772f46cd7ad5"
   },
   {
-    "state": "win",
-    "amount": 50.87,
-    "transactionId": "c07beea7-e24b-49a8-b8be-2e34e8b3e8c0"
+    "state": "lose",
+    "amount": "1,459.19",
+    "transactionId": "4d724515-2f42-4fb8-8560-9a89c07d1cbc"
   },
   {
     "state": "win",
-    "amount": 14.94,
-    "transactionId": "8592ea03-a1ab-4d92-be6b-66e648e5d3d0"
+    "amount": "1,851.30",
+    "transactionId": "948ea555-4f60-451c-a003-a6f2645aa3cb"
   },
   {
     "state": "lose",
-    "amount": 63.07,
-    "transactionId": "5b370504-83f6-4974-b203-7f0ad9d91312"
+    "amount": "2,628.90",
+    "transactionId": "f4e24b3f-8202-4d16-9648-9df01cfbd4c9"
   },
   {
     "state": "win",
-    "amount": 76.9,
-    "transactionId": "7be8f6e3-cead-4a38-b39a-766fb351888c"
+    "amount": "2,186.05",
+    "transactionId": "03d48846-7741-496b-bd55-8e7761cc07c0"
   },
   {
-    "state": "lose",
-    "amount": 33.71,
-    "transactionId": "2df0e05d-8f84-485f-a3b2-ff877e226e3a"
+    "state": "win",
+    "amount": "3,668.35",
+    "transactionId": "85b171b6-3211-4216-a5af-07c9be141c38"
   },
   {
     "state": "win",
-    "amount": 90.53,
-    "transactionId": "47716d39-f2fd-4746-9465-cfdcf0544898"
+    "amount": "1,088.75",
+    "transactionId": "1fe65ead-a10c-41a4-91cf-19e18af2ce3a"
   },
   {
     "state": "lose",
-    "amount": 2.18,
-    "transactionId": "a2e652df-c111-42c8-b89f-f0fab19a3c07"
+    "amount": "3,390.00",
+    "transactionId": "ffaceacd-84be-4761-87c2-0d68b4dbe897"
   },
   {
     "state": "lose",
-    "amount": 96.3,
-    "transactionId": "21caae96-a316-4769-b275-9486e371b9cf"
+    "amount": "1,498.91",
+    "transactionId": "f9704c7e-e15d-4033-b64f-ecd05ecea660"
   },
   {
     "state": "win",
-    "amount": 45,
-    "transactionId": "beb5153d-d2df-4d41-adcc-596cf0487cf2"
+    "amount": "3,357.27",
+    "transactionId": "b07c0f46-b6e0-4783-89dd-351b2d7e0d0f"
   },
   {
     "state": "win",
-    "amount": 51,
-    "transactionId": "2aea4b18-5a00-4bba-9c2b-fb8fd4de6133"
+    "amount": "2,919.71",
+    "transactionId": "f370f207-a9ea-4987-a7aa-0ce7638548d7"
   },
   {
-    "state": "win",
-    "amount": 82.51,
-    "transactionId": "4b352ea5-bb55-4f32-970a-c0bb69dd9324"
+    "state": "lose",
+    "amount": "2,215.14",
+    "transactionId": "b0bc24b4-3856-4436-a7c3-386eac032891"
   },
   {
     "state": "lose",
-    "amount": 22.53,
-    "transactionId": "2057c12f-1f24-489e-b452-a73f1431e27e"
+    "amount": "1,481.22",
+    "transactionId": "9d778b83-28d4-4673-ae33-1b24f31a6007"
   },
   {
-    "state": "win",
-    "amount": 67.6,
-    "transactionId": "24d1dff8-1cd0-46fa-8f55-99333b908558"
+    "state": "lose",
+    "amount": "1,534.59",
+    "transactionId": "ce9fa24c-0048-485f-a793-13b46c71b6ed"
   },
   {
     "state": "lose",
-    "amount": 62.15,
-    "transactionId": "191123f8-e3bf-4810-bdc3-a1bb6c9f7562"
+    "amount": "2,652.47",
+    "transactionId": "009d903d-660f-461a-907c-9036ec0e8520"
   },
   {
     "state": "win",
-    "amount": 57.86,
-    "transactionId": "2e9a2d6f-6e5a-4121-8c53-0ee3ad891a86"
+    "amount": "3,607.56",
+    "transactionId": "456af84b-21f8-4510-b63c-f361a471d501"
   },
   {
-    "state": "win",
-    "amount": 6.98,
-    "transactionId": "8e8dc835-c0d9-4b36-aa01-678ffd340283"
+    "state": "lose",
+    "amount": "3,957.67",
+    "transactionId": "7980a5af-9e00-4896-b7af-c63c26352570"
   },
   {
-    "state": "win",
-    "amount": 48.88,
-    "transactionId": "b20eb646-d254-461b-a462-7519d75ed70a"
+    "state": "lose",
+    "amount": "2,064.56",
+    "transactionId": "a0af3437-1428-42bd-be9e-0849d657580f"
   },
   {
     "state": "win",
-    "amount": 83.3,
-    "transactionId": "db371fa4-d8a3-404a-b4c3-49275076b555"
+    "amount": "3,494.96",
+    "transactionId": "d9dafa6f-bef4-4c43-a068-254dcf2c482c"
   },
   {
     "state": "lose",
-    "amount": 63.72,
-    "transactionId": "2f26f4a4-d536-458f-8b8d-1e9b319e99f8"
+    "amount": "2,526.04",
+    "transactionId": "ddb9118a-58b9-4c6b-a810-6fce29fa6e32"
   },
   {
-    "state": "lose",
-    "amount": 25.56,
-    "transactionId": "713a4140-00ac-4f0c-a205-ac61ffb93f88"
+    "state": "win",
+    "amount": "3,696.83",
+    "transactionId": "897c39f8-b8f2-43be-b50a-a7123ce13ef2"
   },
   {
-    "state": "win",
-    "amount": 76.41,
-    "transactionId": "4f1a0c17-8bdc-497a-9ed4-f3561d66a5fe"
+    "state": "lose",
+    "amount": "2,859.72",
+    "transactionId": "efbad8ce-943c-4127-8ce8-bb277ef60175"
   },
   {
     "state": "win",
-    "amount": 86.19,
-    "transactionId": "0e3b25c0-611d-4c0f-8301-05b25044d059"
+    "amount": "2,290.25",
+    "transactionId": "87d5957a-64ad-41b6-b59b-f31406e48df8"
   },
   {
-    "state": "lose",
-    "amount": 46.2,
-    "transactionId": "065d224b-64b2-42c0-b75c-62806c96a0b3"
+    "state": "win",
+    "amount": "2,197.28",
+    "transactionId": "bf637cbb-d586-4c4f-b20a-d859b4818d68"
   },
   {
     "state": "win",
-    "amount": 99.26,
-    "transactionId": "1aaff954-d91f-4a57-9f71-71736065e35a"
+    "amount": "1,094.61",
+    "transactionId": "d6319364-a5c5-4bed-ba22-b06f27bd2b53"
   },
   {
     "state": "lose",
-    "amount": 30.55,
-    "transactionId": "d22ae6d2-f195-4ac3-8d46-37d3f59c4d92"
+    "amount": "1,349.24",
+    "transactionId": "7f2519bc-d7e7-4873-a135-9396a1bb959b"
   },
   {
     "state": "lose",
-    "amount": 94.96,
-    "transactionId": "184c55be-5b45-4ed7-830a-9a695d0ab8a0"
+    "amount": "2,525.50",
+    "transactionId": "5c09a60e-ab33-440e-8056-3f4d2ccba322"
   },
   {
-    "state": "win",
-    "amount": 21.15,
-    "transactionId": "024cd77c-47dd-407f-9a46-35159579a86a"
-  },
-  {
     "state": "lose",
-    "amount": 7.42,
-    "transactionId": "de91b637-ace8-479b-a1f8-36901f3be840"
-  },
-  {
-    "state": "win",
-    "amount": 5.04,
-    "transactionId": "5599fe7b-2923-4abf-90b3-7572d0863d05"
+    "amount": "3,278.45",
+    "transactionId": "be5fc622-10e8-4f8e-badb-f875db6f8ef0"
   },
   {
     "state": "lose",
-    "amount": 45.52,
-    "transactionId": "0f10432d-2c64-4167-af8e-842d0c74c290"
+    "amount": "3,991.85",
+    "transactionId": "eafc6047-c69f-4471-8ec2-9f61a4657d76"
   },
   {
-    "state": "win",
-    "amount": 25.32,
-    "transactionId": "9017d6e3-8ecf-4b7a-a144-9a2069952194"
+    "state": "lose",
+    "amount": "2,941.45",
+    "transactionId": "66a8a071-b84a-42a6-a2b8-aab20b92ff84"
   },
   {
     "state": "win",
-    "amount": 18.11,
-    "transactionId": "d41917db-48e4-4f80-aec8-d3092243d1ef"
+    "amount": "1,708.48",
+    "transactionId": "d6ad9ce8-9bdf-4c5e-97fa-2f6fbf45ca44"
   },
   {
     "state": "win",
-    "amount": 57.63,
-    "transactionId": "899ee613-efdd-4ae8-bd54-f9a10e251c21"
+    "amount": "2,732.75",
+    "transactionId": "c6eb3eb7-c8b8-402e-92f1-59c9f4132447"
   },
   {
     "state": "win",
-    "amount": 89.41,
-    "transactionId": "517678fb-0f3e-484b-9640-096de45c46e4"
+    "amount": "2,344.86",
+    "transactionId": "507578cc-8aaf-4180-b306-2f38d8cf03b6"
   },
   {
     "state": "lose",
-    "amount": 56.79,
-    "transactionId": "72c0b167-ce01-4c1e-8c31-66871f340fc4"
+    "amount": "3,662.18",
+    "transactionId": "4b624dcf-2237-445b-b75a-e7f55f2685f9"
   },
   {
     "state": "win",
-    "amount": 20.86,
-    "transactionId": "d70d9cc9-548a-426c-8cd6-e191fb895836"
+    "amount": "3,922.55",
+    "transactionId": "2bcbe630-c3fd-440e-ad85-a584eb871fa7"
   },
   {
-    "state": "lose",
-    "amount": 15.33,
-    "transactionId": "f9af6f55-d394-4d73-af5e-8bed9d332591"
+    "state": "win",
+    "amount": "2,040.79",
+    "transactionId": "74d9e0f9-d484-4f09-8b06-807217384fd6"
   },
   {
     "state": "win",
-    "amount": 17.27,
-    "transactionId": "68174cac-22e5-43d2-9f62-1bbc453450b9"
+    "amount": "1,762.69",
+    "transactionId": "dbdd6452-d318-45cb-9bc6-efa512d5015a"
   },
   {
     "state": "lose",
-    "amount": 7.99,
-    "transactionId": "777af57b-c14d-46f9-9c5b-8b509bf50ffe"
+    "amount": "3,301.85",
+    "transactionId": "4f5df840-c5b4-4cf1-81cb-9bd6c5e7961a"
   },
   {
     "state": "win",
-    "amount": 63.46,
-    "transactionId": "6aa87104-a824-4e51-9652-103a07cb7f15"
+    "amount": "2,517.29",
+    "transactionId": "a6a34519-f82b-44c2-bf10-40b725f75893"
   },
   {
     "state": "win",
-    "amount": 73.41,
-    "transactionId": "8f825ea1-c596-4167-b18c-fe1552f4a3d3"
+    "amount": "3,569.36",
+    "transactionId": "62819d63-f814-46cc-9dcc-e3d134bfdfda"
   },
   {
     "state": "win",
-    "amount": 23.66,
-    "transactionId": "4e705385-1965-4c35-974e-c7eaec4e1efa"
+    "amount": "1,583.86",
+    "transactionId": "f97cd405-342d-4f41-93ac-6b934cce8a03"
   },
   {
-    "state": "win",
-    "amount": 73.34,
-    "transactionId": "db468b4d-c124-4ddc-86d1-588982773fc8"
+    "state": "lose",
+    "amount": "2,697.42",
+    "transactionId": "cb2758aa-f77d-4609-b5a4-31ba66c41bf2"
   },
   {
     "state": "win",
-    "amount": 17.86,
-    "transactionId": "bff3d635-1bd8-4e38-9ab8-a581eeaebefa"
+    "amount": "2,948.66",
+    "transactionId": "451abebb-1e53-498a-b773-8f8dc2586843"
   },
   {
-    "state": "win",
-    "amount": 76.15,
-    "transactionId": "84e181c8-609f-4b81-852d-5888519db9e9"
+    "state": "lose",
+    "amount": "1,904.35",
+    "transactionId": "c3398331-d5e4-4cf5-82eb-a06af259cb44"
+  },
+  {
+    "state": "lose",
+    "amount": "2,750.49",
+    "transactionId": "830046cd-17f2-4f63-bc44-fa6ba6c0a52f"
   },
   {
     "state": "win",
-    "amount": 13.94,
-    "transactionId": "9371e448-c3d5-4fc2-977e-dc5115409673"
+    "amount": "2,710.79",
+    "transactionId": "8795085b-5b0d-4ecb-bca8-599e57932318"
   },
   {
     "state": "win",
-    "amount": 19.75,
-    "transactionId": "7b33e465-6551-425f-b75a-95c03c83d5e9"
+    "amount": "3,061.35",
+    "transactionId": "14380ef1-247a-4668-b10d-779f14f82be0"
   },
   {
     "state": "lose",
-    "amount": 24.21,
-    "transactionId": "52ee9d5a-9c82-4dd0-bf3b-32260cf196d4"
+    "amount": "1,063.42",
+    "transactionId": "6c4dd2a8-8879-4498-9f8f-d1b310235282"
   },
   {
-    "state": "win",
-    "amount": 9.21,
-    "transactionId": "f204d08c-c2dc-4449-b4c2-332e99bee8fc"
+    "state": "lose",
+    "amount": "2,917.64",
+    "transactionId": "a8173c48-75eb-4448-b7e3-9ae2dc069a85"
   },
   {
     "state": "win",
-    "amount": 64.67,
-    "transactionId": "2f8cee69-d5d9-49a1-b6df-c574e4c89a33"
+    "amount": "1,409.37",
+    "transactionId": "c481581e-a0e2-495a-bcfb-c6c62a0cef87"
   },
   {
     "state": "win",
-    "amount": 51.12,
-    "transactionId": "84a1f29c-0703-433e-ab14-c276efa8c52a"
+    "amount": "2,085.56",
+    "transactionId": "9e722b6d-c109-4ac1-83a5-bc2c137d2f11"
   },
   {
-    "state": "win",
-    "amount": 95.65,
-    "transactionId": "5c10e4be-cdc0-4eca-9484-bac0c6f5969d"
+    "state": "lose",
+    "amount": "1,992.45",
+    "transactionId": "9ef44939-1e6f-45ef-b150-2d98d00d10a4"
+  },
+  {
+    "state": "lose",
+    "amount": "1,960.14",
+    "transactionId": "685101e5-a7a8-4e53-be37-29bc9e7831e2"
   },
   {
     "state": "win",
-    "amount": 17.21,
-    "transactionId": "c56aa915-586c-4794-b1e1-53c0ed0ee4dc"
+    "amount": "3,636.71",
+    "transactionId": "c93bd7a6-8271-40a6-8152-37380775162b"
   },
   {
     "state": "lose",
-    "amount": 6.49,
-    "transactionId": "3349804b-4c1c-4bc6-87d6-87c0a94c242d"
+    "amount": "1,103.26",
+    "transactionId": "4f12edec-071c-4c3a-aed9-afa07fc002a7"
   },
   {
     "state": "win",
-    "amount": 66.96,
-    "transactionId": "85eac238-966b-46b4-9cdf-e79b4e736359"
+    "amount": "2,146.04",
+    "transactionId": "fd184102-b5ad-4fbe-861c-277a792e3c0f"
   },
   {
+    "state": "lose",
+    "amount": "1,727.81",
+    "transactionId": "619c9a31-c3c6-479e-ab4b-b0ab7a4776e8"
+  },
+  {
     "state": "win",
-    "amount": 64.49,
-    "transactionId": "1cfad132-867a-4fab-b358-5cd00e54d6c0"
+    "amount": "2,133.19",
+    "transactionId": "ff20cbee-fecd-409e-822f-99b31d0b217c"
   },
   {
     "state": "win",
-    "amount": 79.89,
-    "transactionId": "3533e62d-13b0-4803-b8f4-3502ef4b8e08"
+    "amount": "1,447.92",
+    "transactionId": "1a79b7f6-95d0-43e8-bb16-0fa93dd7d59b"
   },
   {
     "state": "lose",
-    "amount": 18.53,
-    "transactionId": "d3963e2c-5a8f-4746-9654-938432944111"
+    "amount": "3,991.76",
+    "transactionId": "e1451fa4-d9c6-4bcf-8a28-b4c5223847e2"
+  },
+  {
+    "state": "win",
+    "amount": "1,289.29",
+    "transactionId": "d3d7e140-a52b-4f8c-aa06-b05c82f548c1"
   },
   {
     "state": "lose",
-    "amount": 94.05,
-    "transactionId": "450e6ae9-95eb-4f01-acd3-a0a755fe3618"
+    "amount": "1,405.79",
+    "transactionId": "ad5dc84b-bc4e-4cf0-94fd-321396d08ea5"
   },
   {
     "state": "lose",
-    "amount": 41.2,
-    "transactionId": "5db03f0f-992a-41b0-99fb-84a79891eae1"
+    "amount": "2,748.78",
+    "transactionId": "a976da25-3185-4fa3-a24a-1f5e70cbbbe8"
   },
   {
     "state": "win",
-    "amount": 78,
-    "transactionId": "39f489ef-43ba-4df1-836f-bb242b1bf40c"
+    "amount": "1,139.30",
+    "transactionId": "3365a2d6-8166-457c-9f70-c88473814331"
   },
   {
     "state": "lose",
-    "amount": 79.96,
-    "transactionId": "cc4b8f1d-f6bc-45a2-b4b1-725e9d0a4a2b"
+    "amount": "2,285.77",
+    "transactionId": "1a801ab9-22e6-4dfa-bd64-b83ef0e25f75"
   },
   {
-    "state": "lose",
-    "amount": 68.98,
-    "transactionId": "d093734f-3fdf-4758-a575-34ebd41e89d4"
+    "state": "win",
+    "amount": "1,444.90",
+    "transactionId": "0e919aac-1e81-4063-993a-70691c0a6e4c"
   },
   {
     "state": "lose",
-    "amount": 19.92,
-    "transactionId": "f3a86bfe-84a4-4cfd-b13c-4b9729390e68"
+    "amount": "1,634.59",
+    "transactionId": "433ee35c-52d3-480a-9103-9743eeaf9924"
   },
   {
     "state": "win",
-    "amount": 97.98,
-    "transactionId": "4f3d7019-205a-409b-9697-fe9ddd045559"
+    "amount": "2,147.84",
+    "transactionId": "54dad892-4902-4581-a89a-c62f97be4639"
   },
   {
     "state": "lose",
-    "amount": 92.86,
-    "transactionId": "2c03ce73-7387-4ecb-8f06-d0b5b1783281"
+    "amount": "2,395.75",
+    "transactionId": "28b09d8d-08e2-4234-be4c-a05a710ec39b"
   },
   {
     "state": "lose",
-    "amount": 12.6,
-    "transactionId": "5a7195e7-600a-40fc-a70b-5712f9fbdcbd"
+    "amount": "2,786.29",
+    "transactionId": "973abca6-c432-46ff-8c7a-3d4a305f4f4f"
   },
   {
     "state": "win",
-    "amount": 37.04,
-    "transactionId": "28ac8b36-a44a-4fdf-9893-8ebc76e06c62"
+    "amount": "3,872.54",
+    "transactionId": "93f0a22c-5b1d-41db-9b76-5ea86a4e377b"
   },
   {
     "state": "lose",
-    "amount": 80.3,
-    "transactionId": "ee582b86-d226-40f3-a988-b011b6d14cd9"
+    "amount": "2,214.67",
+    "transactionId": "87c53664-f30f-46a1-a411-3f62c7d8dbd3"
   },
   {
     "state": "lose",
-    "amount": 65.66,
-    "transactionId": "826b1626-6524-405d-9acc-996dac6d6590"
+    "amount": "1,995.93",
+    "transactionId": "c3f28083-f100-4c8d-ab02-f500706d0ae2"
   },
   {
-    "state": "win",
-    "amount": 9.83,
-    "transactionId": "06a2c5ed-2f2b-486a-aa26-66d2ffde1091"
+    "state": "lose",
+    "amount": "1,828.50",
+    "transactionId": "7369390f-3690-4370-b67d-0daed45fcd21"
   },
   {
     "state": "lose",
-    "amount": 11.71,
-    "transactionId": "8c4f30ec-4522-4c31-8a5b-e2a1b633247c"
+    "amount": "2,466.09",
+    "transactionId": "1a928d61-bf47-4125-bb37-f6c16e46cf67"
   },
   {
     "state": "lose",
-    "amount": 81.32,
-    "transactionId": "088ad334-74ea-4717-9bd1-9070f782f970"
+    "amount": "1,535.02",
+    "transactionId": "4d455f39-0dc8-4370-ac19-e2fd0a5b7b51"
   },
   {
     "state": "lose",
-    "amount": 6.86,
-    "transactionId": "49561730-0a4e-40a0-8718-05c4affa0995"
+    "amount": "3,426.47",
+    "transactionId": "c42ce82f-9e06-47e7-89fd-2409de0d5324"
   },
   {
     "state": "win",
-    "amount": 94.17,
-    "transactionId": "e4e900e5-82b7-4a84-9762-525f4f2fe505"
+    "amount": "2,293.06",
+    "transactionId": "0452907e-7e28-4c87-8b86-568219995b19"
   },
   {
     "state": "win",
-    "amount": 83.72,
-    "transactionId": "7c7a4e76-711e-4230-bd1f-14c49ec09152"
+    "amount": "3,120.54",
+    "transactionId": "5de10509-a0b3-4376-a507-945d25a5a695"
   },
   {
-    "state": "lose",
-    "amount": 26.46,
-    "transactionId": "eec611c2-39d3-4232-8cce-d507e2369da7"
+    "state": "win",
+    "amount": "3,755.56",
+    "transactionId": "a5db216e-86cc-4530-9694-538021e52f5e"
   },
   {
     "state": "lose",
-    "amount": 17.03,
-    "transactionId": "b52996a8-ea5a-46e2-bcdf-805a24a52169"
+    "amount": "2,404.56",
+    "transactionId": "97a5d505-c4de-47bd-bfa8-b0833bdc27c4"
   },
   {
+    "state": "win",
+    "amount": "1,638.10",
+    "transactionId": "4464fefb-fee6-418f-9ca1-7afc67e03912"
+  },
+  {
     "state": "lose",
-    "amount": 18.02,
-    "transactionId": "46cf25b6-1774-40a9-a1a2-c57a89ec8e28"
+    "amount": "3,402.51",
+    "transactionId": "89ed3a82-2446-4266-b9ac-9b042f431c64"
   },
   {
-    "state": "win",
-    "amount": 4.14,
-    "transactionId": "15f7202e-0d9a-4621-849a-4dab515ef3e8"
+    "state": "lose",
+    "amount": "3,206.06",
+    "transactionId": "a6d6b427-0425-49ce-8120-42ba01b99085"
   },
   {
     "state": "win",
-    "amount": 65.8,
-    "transactionId": "3100f84c-2cff-4b82-9d14-b5d0a062df1d"
+    "amount": "3,729.57",
+    "transactionId": "a891de31-ef70-4d75-b5ee-8fa9f6795873"
   },
   {
     "state": "lose",
-    "amount": 27.87,
-    "transactionId": "569d6ff8-9738-46c3-be1f-3930cde755b7"
+    "amount": "2,075.44",
+    "transactionId": "dc5e7459-eeec-44db-af83-071b91f93ab0"
   },
   {
     "state": "lose",
-    "amount": 87.07,
-    "transactionId": "0ae92273-ff0d-4149-a543-67c5b19b3d58"
+    "amount": "3,057.17",
+    "transactionId": "365039bf-987b-48a5-8bf7-af43b451ef36"
   },
   {
-    "state": "win",
-    "amount": 53.48,
-    "transactionId": "d14a609c-361e-43ba-bb80-9cf3e3802f55"
+    "state": "lose",
+    "amount": "1,967.54",
+    "transactionId": "1d87d951-822c-400a-b2d0-63edba88d49c"
   },
   {
     "state": "lose",
-    "amount": 69.1,
-    "transactionId": "00616920-a118-4d62-9dac-c2ab1593e284"
+    "amount": "3,964.16",
+    "transactionId": "60d28b12-9c85-451a-971e-b1d5f3ac5fdf"
   },
   {
     "state": "lose",
-    "amount": 66.54,
-    "transactionId": "7f3901c4-684b-481d-aef6-5a69edbbdd19"
+    "amount": "2,378.38",
+    "transactionId": "d4a289c9-5082-4022-9f62-596c445d660b"
   },
   {
     "state": "win",
-    "amount": 69.5,
-    "transactionId": "420b81dc-89ae-49b9-a1d8-d63989f1ddd0"
+    "amount": "3,383.95",
+    "transactionId": "f7f68476-8dd5-4ef8-b8d6-47e5416c5b8d"
   },
   {
-    "state": "lose",
-    "amount": 36.42,
-    "transactionId": "1ed623b6-5511-473e-9581-ee5a0e78ba6f"
+    "state": "win",
+    "amount": "2,068.46",
+    "transactionId": "ee2c643c-1a49-4404-b9df-1d8a75a1eb86"
   },
   {
     "state": "lose",
-    "amount": 4.61,
-    "transactionId": "66e3524b-4d7f-45d5-8ecd-30c393c339eb"
+    "amount": "1,038.12",
+    "transactionId": "4088d3bf-4388-4ae2-94e9-445fb37bdb7d"
+  },
+  {
+    "state": "win",
+    "amount": "3,229.14",
+    "transactionId": "50968bca-5bea-4166-b0f9-3ab2b497fd44"
   },
   {
     "state": "win",
-    "amount": 68.03,
-    "transactionId": "b9af2748-5fc1-46a4-ba5b-e5511735f29a"
+    "amount": "3,222.38",
+    "transactionId": "93c05026-8bd3-4698-a26b-e9b633f17688"
   },
   {
     "state": "lose",
-    "amount": 99.59,
-    "transactionId": "cbe303ae-2918-4ba1-b680-f3231e0af5ae"
+    "amount": "1,178.39",
+    "transactionId": "d638346c-c5e3-4a88-8a32-41ced720cbf2"
   },
   {
     "state": "win",
-    "amount": 90.73,
-    "transactionId": "5edd4f00-8dec-4b06-b6d1-bbb0826c5ee4"
+    "amount": "2,774.62",
+    "transactionId": "0d40a778-631d-4957-bce8-ef4c0dcdf853"
   },
   {
     "state": "win",
-    "amount": 1.57,
-    "transactionId": "68e83c0e-7a8b-419d-a2a3-076f8a25d95c"
+    "amount": "3,196.69",
+    "transactionId": "18971761-3c17-4d78-a23c-501b889c272b"
   },
   {
+    "state": "lose",
+    "amount": "3,277.61",
+    "transactionId": "3052e88e-b35f-4b36-aa73-c39c217b576c"
+  },
+  {
     "state": "win",
-    "amount": 61.56,
-    "transactionId": "e98ae7e3-7218-496b-a08b-b42c6b308f67"
+    "amount": "1,765.82",
+    "transactionId": "be788141-4b3b-430f-b387-74109f6e9362"
   },
   {
     "state": "lose",
-    "amount": 81.55,
-    "transactionId": "7336ede6-f540-4915-a4fa-2c03a9aa93ff"
+    "amount": "1,006.33",
+    "transactionId": "176bec08-6ce8-45f1-9817-4779c3b6e6b8"
+  },
+  {
+    "state": "win",
+    "amount": "3,049.67",
+    "transactionId": "d504d039-03b9-4ce7-b6d2-e05a899696b1"
   },
   {
     "state": "lose",
-    "amount": 99.39,
-    "transactionId": "b88ae68b-03f6-41f3-8748-da472c112df9"
+    "amount": "3,536.04",
+    "transactionId": "c9308881-9ea1-47ee-a02e-90d556f9064f"
   },
   {
     "state": "win",
-    "amount": 78.01,
-    "transactionId": "f86390b5-99f1-4de2-906c-4f07bd062235"
+    "amount": "3,195.87",
+    "transactionId": "df5efbae-5451-4004-b263-2bc6b2ac3a51"
   },
   {
     "state": "lose",
-    "amount": 27.23,
-    "transactionId": "c3bf8c5e-5ae4-4cba-91e3-85270d11dc5a"
+    "amount": "3,669.70",
+    "transactionId": "e3c0a6d9-95ff-4481-ad97-66d1d0f8792e"
   },
   {
     "state": "win",
-    "amount": 10.67,
-    "transactionId": "d3e977aa-a05d-4341-bb22-d90b8d04fe6c"
+    "amount": "3,347.13",
+    "transactionId": "a0d73556-ccd1-47e7-bb07-aa8d2144b2a1"
   },
   {
-    "state": "lose",
-    "amount": 76.95,
-    "transactionId": "94a2d948-95da-4d33-9211-ee01e7a85dcf"
+    "state": "win",
+    "amount": "1,355.30",
+    "transactionId": "1757b56b-fe5a-472a-91df-26eb8a2b571e"
   },
   {
-    "state": "lose",
-    "amount": 16.9,
-    "transactionId": "251d276f-fcd2-4fbd-bddb-76a71576749d"
+    "state": "win",
+    "amount": "1,273.66",
+    "transactionId": "78552319-d58b-4a6c-99b8-d7ada61a5af3"
   },
   {
     "state": "win",
-    "amount": 46.59,
-    "transactionId": "5f93f5fe-76bc-47e6-a1c2-0749e11036ac"
+    "amount": "3,995.34",
+    "transactionId": "7504ec01-54ad-4750-a2ef-4b68f4c589f1"
   },
   {
     "state": "lose",
-    "amount": 80.99,
-    "transactionId": "7046f689-10f0-40e1-8f6d-a5c26ccf5188"
+    "amount": "2,008.99",
+    "transactionId": "d27d81c9-6c3b-4903-bd54-1b08efa23af8"
   },
   {
     "state": "win",
-    "amount": 97.32,
-    "transactionId": "9f363300-1b7a-46a6-945e-7ae9661ca981"
+    "amount": "3,366.76",
+    "transactionId": "6202a4c8-9a0d-45c3-b0e0-a0c424537eed"
+  },
+  {
+    "state": "lose",
+    "amount": "1,437.83",
+    "transactionId": "f8357976-bd1a-4171-8b0f-1423ece7adf3"
   },
   {
     "state": "win",
-    "amount": 55.75,
-    "transactionId": "2047349a-5f52-490b-976c-ce5d8b5586d7"
+    "amount": "3,109.70",
+    "transactionId": "71943d12-f108-4bf8-a9a8-48ad3637367a"
   },
   {
-    "state": "lose",
-    "amount": 42.71,
-    "transactionId": "4541d647-d1d6-4e7b-aa60-f2c7005aa882"
+    "state": "win",
+    "amount": "1,709.48",
+    "transactionId": "dd9da8e1-678e-4232-a23c-162d8d4f7885"
   },
   {
-    "state": "lose",
-    "amount": 74.51,
-    "transactionId": "c3215e94-594b-42b5-a3c8-c52b427ae6ef"
+    "state": "win",
+    "amount": "3,249.02",
+    "transactionId": "c63e2c96-eb38-44e7-a1d3-70492d40c2e8"
   },
   {
     "state": "lose",
-    "amount": 26.36,
-    "transactionId": "f57af175-1d5f-4e80-9059-c2af4f90e443"
+    "amount": "3,967.80",
+    "transactionId": "3dcb7281-482d-4ab9-86f9-38d3c3b347ca"
   },
   {
     "state": "lose",
-    "amount": 59.74,
-    "transactionId": "8ef5a8c6-2462-4e43-af21-bd5fa6e2d15c"
+    "amount": "3,300.00",
+    "transactionId": "723559c0-16f5-4ce7-9cb8-d736506d2c9c"
   },
   {
-    "state": "lose",
-    "amount": 38.84,
-    "transactionId": "39d0492f-e768-47dc-a7fe-30bb0c5e4867"
+    "state": "win",
+    "amount": "3,249.10",
+    "transactionId": "d702b953-9917-4657-8dfc-0d1cd01c478b"
   },
   {
-    "state": "lose",
-    "amount": 82.46,
-    "transactionId": "5c6cfbc7-a1f2-4f9d-a3aa-97b1288610ef"
+    "state": "win",
+    "amount": "2,497.16",
+    "transactionId": "cef3f73b-b86f-47ce-a0cb-ad4ce762a07b"
   },
   {
     "state": "win",
-    "amount": 22.92,
-    "transactionId": "8bde2d19-7381-4401-87b3-5bd2b9892d07"
+    "amount": "2,162.27",
+    "transactionId": "950a1f2b-9a22-423a-9656-24d1e2acdf43"
   },
   {
     "state": "lose",
-    "amount": 91.12,
-    "transactionId": "15ae49f7-acc5-4f4d-8c97-aa4d23028ebc"
+    "amount": "1,243.09",
+    "transactionId": "4b31fbac-f4df-48c3-ae63-b18ad9e9d7c8"
   },
   {
     "state": "lose",
-    "amount": 42.75,
-    "transactionId": "3522a7d9-3e0e-481d-b06a-5ab2623c3abb"
+    "amount": "1,690.26",
+    "transactionId": "e6f7a280-f5db-43fd-ab8d-74482a9e0092"
   },
   {
     "state": "win",
-    "amount": 97.15,
-    "transactionId": "161515c9-4211-4ff9-8706-5fab48132891"
+    "amount": "1,157.54",
+    "transactionId": "591d3a9b-9473-49c1-b182-b317ad94f77f"
   },
   {
     "state": "lose",
-    "amount": 59.42,
-    "transactionId": "7b371fed-7e95-4ce3-a5b1-5b5c4964ba77"
+    "amount": "3,896.56",
+    "transactionId": "fe57cb88-4a82-4245-aa97-56dd14d15f63"
   },
   {
     "state": "lose",
-    "amount": 10.38,
-    "transactionId": "8bdcf252-be9c-49e8-838b-3648622f97b0"
+    "amount": "3,304.25",
+    "transactionId": "0242821f-7936-48c1-bf42-a602f833e05e"
   },
   {
     "state": "win",
-    "amount": 79.72,
-    "transactionId": "c08f76b1-aee8-41e2-be63-6e87dc63c116"
+    "amount": "2,949.33",
+    "transactionId": "b3176b9e-7684-4cab-9e5d-4a5b3d45636e"
   },
   {
-    "state": "win",
-    "amount": 61.95,
-    "transactionId": "c2e78000-2e53-4569-a4c4-913e0bd34745"
+    "state": "lose",
+    "amount": "2,755.71",
+    "transactionId": "3152fb41-3df6-4da3-a371-dcf227c34c35"
   },
   {
-    "state": "lose",
-    "amount": 93.58,
-    "transactionId": "bbba507a-2f79-4007-b1c0-bfead94ef01d"
+    "state": "win",
+    "amount": "3,439.61",
+    "transactionId": "29a6053c-2973-4b17-8198-90a04c97a22e"
   },
   {
     "state": "win",
-    "amount": 55.24,
-    "transactionId": "c937ea32-3053-4955-bc2c-7912ed920397"
+    "amount": "1,184.52",
+    "transactionId": "78dd87dd-9dda-4622-9b76-de52686011df"
   },
   {
     "state": "win",
-    "amount": 21.07,
-    "transactionId": "ddb27b23-ed82-45ae-8047-6ccd268b7a11"
+    "amount": "3,462.80",
+    "transactionId": "b91cae3a-fe58-485d-80ea-6d00eb337989"
   },
   {
     "state": "lose",
-    "amount": 50,
-    "transactionId": "b2831967-39d3-4990-bcd9-4040fb05ee48"
+    "amount": "2,946.98",
+    "transactionId": "f56f31c4-1752-48f4-84f1-038c2f1e1205"
   },
   {
     "state": "win",
-    "amount": 4.1,
-    "transactionId": "52f00fd7-b7b2-4f2e-a4a6-4f8b7103212c"
+    "amount": "2,573.18",
+    "transactionId": "6d6d3df6-3108-4f59-8460-5bbde257768f"
   },
   {
     "state": "lose",
-    "amount": 79.95,
-    "transactionId": "5fc60d2d-1654-4e22-b76e-0121e505bbec"
+    "amount": "3,461.73",
+    "transactionId": "2ce9f3c9-ef79-4441-a82e-ad2aedc5971c"
   },
   {
     "state": "lose",
-    "amount": 69.11,
-    "transactionId": "c257e138-48e2-4957-af05-b0523532ff99"
+    "amount": "1,177.81",
+    "transactionId": "7e23e99d-1858-49bc-92cb-3769ca33bdbd"
   },
   {
     "state": "win",
-    "amount": 76.94,
-    "transactionId": "3e07252a-7c08-4d50-834c-a6d51b01f71e"
+    "amount": "2,258.68",
+    "transactionId": "2d297b55-238b-4815-a964-2b45d7b0d3dd"
   },
   {
-    "state": "lose",
-    "amount": 13.66,
-    "transactionId": "a9b1440d-1267-43bd-be7a-cd0648d513cc"
+    "state": "win",
+    "amount": "3,084.04",
+    "transactionId": "f969782a-90cd-4446-9e2c-08d935194e99"
   },
   {
-    "state": "win",
-    "amount": 85.3,
-    "transactionId": "c2c3df89-b491-42c8-8acf-3ac5c84b1893"
+    "state": "lose",
+    "amount": "3,221.28",
+    "transactionId": "7ca269f1-bf57-4a9f-9d3e-74cedf218dca"
   },
   {
     "state": "lose",
-    "amount": 5.31,
-    "transactionId": "f3344566-5820-44e8-8331-df3d7116dadb"
+    "amount": "1,425.86",
+    "transactionId": "771bc48c-a68d-480b-a4d0-478fe5c3ab82"
   },
   {
     "state": "win",
-    "amount": 63.03,
-    "transactionId": "a6665462-ecf0-430e-a7f8-89270d10cfd3"
+    "amount": "3,174.70",
+    "transactionId": "0c1b9c84-8db1-49f8-bbff-0304801dab82"
   },
   {
     "state": "lose",
-    "amount": 25.01,
-    "transactionId": "e635d703-d04d-46f7-a1ae-d510736998c4"
+    "amount": "1,198.30",
+    "transactionId": "c0cc3faa-19c6-42dd-96a7-36de27904b21"
   },
   {
-    "state": "win",
-    "amount": 66.12,
-    "transactionId": "605d19d1-5ff3-4056-ae82-039503ab9f51"
+    "state": "lose",
+    "amount": "1,153.50",
+    "transactionId": "612350df-38a7-42f4-9ded-2ce93fd4e492"
   },
   {
-    "state": "win",
-    "amount": 65.66,
-    "transactionId": "d0978e22-e81e-4283-be1b-76deff139ca1"
+    "state": "lose",
+    "amount": "1,841.77",
+    "transactionId": "1d80a1b6-532b-4897-b17c-cdbbff2130fd"
   },
   {
     "state": "win",
-    "amount": 13.82,
-    "transactionId": "2c534b46-8e34-4838-9fbc-551481d1f88c"
+    "amount": "1,087.88",
+    "transactionId": "e773bd38-5aee-4234-bdae-d16e389be0c3"
   },
   {
     "state": "win",
-    "amount": 84.5,
-    "transactionId": "945a42e8-2d81-4d85-a471-8e93e462d3ea"
+    "amount": "1,650.38",
+    "transactionId": "632d7ddf-7ba8-4661-a4df-720cf4c38f74"
   },
   {
     "state": "lose",
-    "amount": 63.73,
-    "transactionId": "70cce11f-3364-46f2-a66c-73de60761d4b"
+    "amount": "1,545.88",
+    "transactionId": "b8658783-18be-4528-9273-ac77c0391d90"
   },
   {
     "state": "lose",
-    "amount": 81.5,
-    "transactionId": "f5e2dd57-226b-471e-924c-75dffb417f8c"
+    "amount": "2,741.95",
+    "transactionId": "0d610288-a7f4-4ee1-8110-fd1e26b14a67"
   },
   {
     "state": "lose",
-    "amount": 81.39,
-    "transactionId": "17c9e77a-de42-4923-8cc3-debb41d89f04"
+    "amount": "1,107.96",
+    "transactionId": "786d9dd1-b164-4922-9686-02c493ab5164"
   },
   {
     "state": "win",
-    "amount": 69.24,
-    "transactionId": "8b6d8a24-e14c-4331-8eff-8445ed93651f"
+    "amount": "3,282.91",
+    "transactionId": "c962afbe-7484-4e5a-84b6-c6d75bce80d4"
   },
   {
     "state": "lose",
-    "amount": 82.48,
-    "transactionId": "acfcd126-8590-44ac-a374-f32ab3b3a323"
+    "amount": "3,803.92",
+    "transactionId": "3370e3b1-5d0b-40f0-9e80-5de6a4f1b0b8"
   },
   {
-    "state": "win",
-    "amount": 36.34,
-    "transactionId": "e00350c5-1f29-4e91-a56f-6eeaa8234d6c"
+    "state": "lose",
+    "amount": "1,970.78",
+    "transactionId": "3aa3d3a1-be8c-4c24-b992-fd0fc3810b4e"
   },
   {
     "state": "win",
-    "amount": 79.39,
-    "transactionId": "7f9ef460-676d-4582-878f-25c31edc436b"
+    "amount": "3,631.22",
+    "transactionId": "a66e2cf6-8040-4634-8d1d-222810175816"
+  },
+  {
+    "state": "lose",
+    "amount": "1,176.27",
+    "transactionId": "a4988e96-eebb-45db-b291-f71d41b59602"
   },
   {
     "state": "win",
-    "amount": 80.86,
-    "transactionId": "00e4ea37-bc73-4f60-9413-3e67c36fec24"
+    "amount": "1,817.80",
+    "transactionId": "403edc21-3919-49e7-9db1-4facd6dfde72"
   },
   {
     "state": "win",
-    "amount": 17.96,
-    "transactionId": "67bb649a-bd8b-4b90-ba98-2c4fddaf316d"
+    "amount": "3,912.62",
+    "transactionId": "f67a5b63-982c-441a-ab06-7b9813b2fb46"
   },
   {
     "state": "lose",
-    "amount": 15.05,
-    "transactionId": "f29ddf86-0d6b-4d61-ac42-15c80adcfcf3"
+    "amount": "3,232.59",
+    "transactionId": "de26bea9-eae4-4270-a685-308493b603bf"
   },
   {
     "state": "win",
-    "amount": 30.64,
-    "transactionId": "0c077aa4-8148-48e0-8ac5-abcafd819e2e"
+    "amount": "2,730.46",
+    "transactionId": "a941731f-b9aa-4bac-89e4-3eacdbecfeca"
   },
   {
-    "state": "lose",
-    "amount": 86.79,
-    "transactionId": "b0f69668-74ac-4909-91c0-74c2df82b484"
+    "state": "win",
+    "amount": "3,130.55",
+    "transactionId": "f11aad6a-b863-4d80-bcdc-8c4a3ec5efbd"
   },
   {
-    "state": "lose",
-    "amount": 87.56,
-    "transactionId": "99ddc265-5ca4-40bc-af4e-7874c6e23d3a"
+    "state": "win",
+    "amount": "1,135.84",
+    "transactionId": "5ba05c75-1676-4a0c-ae93-97ac06699f61"
   },
   {
     "state": "lose",
-    "amount": 44.93,
-    "transactionId": "a81068ab-7aa1-4c02-9f4e-6d4783b8f83a"
+    "amount": "2,713.57",
+    "transactionId": "0be6caa9-0a5d-4b35-9b6e-3840d28df434"
   },
   {
-    "state": "lose",
-    "amount": 2.59,
-    "transactionId": "57646893-b478-4803-86ea-fa4acf4e158f"
+    "state": "win",
+    "amount": "3,763.67",
+    "transactionId": "5041bdf7-4f30-4db0-9dc9-676c9d56951c"
   },
   {
+    "state": "win",
+    "amount": "2,946.65",
+    "transactionId": "64b20c3a-0191-4a9a-a86a-a91b63f140e1"
+  },
+  {
     "state": "lose",
-    "amount": 14.84,
-    "transactionId": "5e546ee8-16bc-4375-8e3d-da20e9d683d5"
+    "amount": "2,521.65",
+    "transactionId": "be7ed77c-3ab9-446f-b182-0923175ee36d"
   },
   {
     "state": "win",
-    "amount": 95.17,
-    "transactionId": "dc2f7b99-3810-4de2-afea-17133769dc78"
+    "amount": "2,411.97",
+    "transactionId": "813e8024-3683-4482-9dcb-c0f8097f8661"
   },
   {
-    "state": "lose",
-    "amount": 77.21,
-    "transactionId": "b1947e03-d75c-4ffc-a694-0090098e3662"
+    "state": "win",
+    "amount": "1,589.83",
+    "transactionId": "d7a593ee-3fa0-4d0f-928a-277ba26dc759"
   },
   {
     "state": "lose",
-    "amount": 4.78,
-    "transactionId": "19a8376d-95bf-41ce-b861-b27c5adb567b"
+    "amount": "1,979.57",
+    "transactionId": "10ead6fd-5974-4a31-86cc-58640f29a7ac"
   },
   {
-    "state": "win",
-    "amount": 95.4,
-    "transactionId": "858c2779-17a5-4675-96d5-b63372d6813d"
+    "state": "lose",
+    "amount": "1,249.99",
+    "transactionId": "576c73ae-6da6-473a-ab7e-2714605682cf"
   },
   {
     "state": "win",
-    "amount": 79.77,
-    "transactionId": "a5807ccc-7784-4745-9357-ccfc3370fb36"
+    "amount": "3,812.37",
+    "transactionId": "4f477da0-cabe-46f5-b811-a5e0cfc5bdba"
   },
   {
     "state": "win",
-    "amount": 67.25,
-    "transactionId": "666ed4e3-7fdf-4515-b116-e19dfca4f5df"
+    "amount": "1,788.45",
+    "transactionId": "c4c4f9f5-df29-4809-a551-dfc94d7b4100"
   },
   {
     "state": "lose",
-    "amount": 93.65,
-    "transactionId": "208a15d7-116f-4ff5-8c16-fe8afdc3255b"
+    "amount": "3,887.46",
+    "transactionId": "58bd6900-af12-4ad6-9f52-5f46687ff2e0"
   },
   {
     "state": "lose",
-    "amount": 89.34,
-    "transactionId": "d6b50090-78e7-4e16-a309-9ff251cf2fd5"
+    "amount": "3,386.98",
+    "transactionId": "e0f46b69-117b-4705-97eb-9730e019d1e6"
   },
   {
     "state": "win",
-    "amount": 26.89,
-    "transactionId": "22a7e458-2894-4180-94f6-7ea05e6fee86"
+    "amount": "1,488.14",
+    "transactionId": "a35914b4-af98-432a-9f79-cec2026f0ec7"
   },
   {
     "state": "lose",
-    "amount": 50.73,
-    "transactionId": "c64d5459-e9b6-41d3-bda1-567accdacc06"
+    "amount": "1,209.56",
+    "transactionId": "5773af93-92f7-4df1-a84f-2a180746758a"
   },
   {
     "state": "lose",
-    "amount": 87.51,
-    "transactionId": "f8ac0f86-f9a0-4825-8e95-8764243ceb5f"
+    "amount": "2,191.61",
+    "transactionId": "92243237-0b96-483d-af8c-7bb7834095b4"
   },
   {
-    "state": "lose",
-    "amount": 9.14,
-    "transactionId": "389cdedd-9539-4b1e-9b7f-736f89e0f5e5"
+    "state": "win",
+    "amount": "1,975.25",
+    "transactionId": "bdcf5b6f-fea6-4d31-af1c-03030bd635c1"
   },
   {
     "state": "win",
-    "amount": 77.07,
-    "transactionId": "ccd36a0c-d559-427c-87f3-c63af69e916a"
+    "amount": "2,155.50",
+    "transactionId": "245b6431-e994-418d-8543-e3215f2ea535"
   },
   {
-    "state": "win",
-    "amount": 29.98,
-    "transactionId": "2b9a8a88-022d-47f7-b469-0bed4c5abb31"
+    "state": "lose",
+    "amount": "1,910.10",
+    "transactionId": "e4e9d377-b71f-4cca-902c-0271db537040"
   },
   {
-    "state": "win",
-    "amount": 67.92,
-    "transactionId": "a01cb894-eff2-4803-84f2-165fd0872d6f"
+    "state": "lose",
+    "amount": "3,778.62",
+    "transactionId": "3033d490-675b-4bdd-b404-414ac183c804"
   },
   {
-    "state": "win",
-    "amount": 4.17,
-    "transactionId": "8818214d-b9dd-4f67-ab4b-c6fb14b07c64"
+    "state": "lose",
+    "amount": "3,873.88",
+    "transactionId": "ebe5b229-24f8-4427-83c0-4cb2448183e9"
   },
   {
     "state": "win",
-    "amount": 95.61,
-    "transactionId": "d1d46d95-ac2f-4bd8-b7f2-524eb11e24f3"
+    "amount": "3,634.12",
+    "transactionId": "4977633b-3249-428a-8a56-08f382130be1"
   },
   {
     "state": "win",
-    "amount": 67.39,
-    "transactionId": "debf9b8f-891c-404c-845c-7751109b70b6"
+    "amount": "3,072.10",
+    "transactionId": "d46db59f-cddc-4ae0-929c-38bbef10d317"
   },
   {
     "state": "lose",
-    "amount": 26.71,
-    "transactionId": "52334988-8abc-4533-935e-7cb4b0065eab"
+    "amount": "3,087.52",
+    "transactionId": "d24ba3a6-0a20-4c1f-96f6-c5519ead585f"
   },
   {
-    "state": "lose",
-    "amount": 30.28,
-    "transactionId": "15723218-44d9-413b-ac69-1bd7829faf53"
+    "state": "win",
+    "amount": "2,069.86",
+    "transactionId": "dda8829c-50f6-4dd0-94eb-9be92b4ae525"
   },
   {
-    "state": "lose",
-    "amount": 94.18,
-    "transactionId": "a61b2935-f81d-4406-807a-f658290b249b"
+    "state": "win",
+    "amount": "2,502.46",
+    "transactionId": "98617d90-74ab-4343-80d6-c83354fdfec7"
   },
   {
     "state": "lose",
-    "amount": 20.31,
-    "transactionId": "521171ab-1165-46d7-88fe-745a460065f1"
+    "amount": "1,973.16",
+    "transactionId": "aaf97201-07c7-4d24-a3ce-085665dd5e2a"
   },
   {
     "state": "lose",
-    "amount": 11.3,
-    "transactionId": "ac66ca7b-9bc1-4fc7-a4d5-38bcef7ad623"
+    "amount": "1,709.62",
+    "transactionId": "189aa732-d4df-4807-b36a-20f60743a92a"
   },
   {
     "state": "lose",
-    "amount": 36.58,
-    "transactionId": "831c1048-2339-4158-a1ea-2a0b848dcdfc"
+    "amount": "2,050.46",
+    "transactionId": "1d4162f8-64de-4a05-8eea-297d58a9b94b"
   },
   {
     "state": "lose",
-    "amount": 62.02,
-    "transactionId": "0b5966fd-c5ec-4c73-b810-55f716ff3fe5"
+    "amount": "2,535.65",
+    "transactionId": "26e6dc0d-8de5-4628-9223-848654105d8a"
   },
   {
     "state": "win",
-    "amount": 65.74,
-    "transactionId": "63b13b81-6c26-4b30-85d8-fadb777f9412"
+    "amount": "1,852.30",
+    "transactionId": "a36877e6-873b-44a9-aead-fdde81086f20"
   },
   {
     "state": "win",
-    "amount": 90.76,
-    "transactionId": "dd496f3d-2e2e-4d3b-bd0f-74bbd4e3a414"
+    "amount": "1,470.11",
+    "transactionId": "d96a1e9f-5b99-4d22-9670-63cb94bf1f19"
   },
   {
     "state": "lose",
-    "amount": 98.63,
-    "transactionId": "e44dd856-ca3a-4a5e-a696-963fb4d06186"
+    "amount": "3,996.63",
+    "transactionId": "d832e6bb-86b9-49a7-8aec-18a9ece79215"
   },
   {
-    "state": "win",
-    "amount": 46.74,
-    "transactionId": "3eb0c81b-bd81-4098-b639-1f837ba90942"
+    "state": "lose",
+    "amount": "1,581.96",
+    "transactionId": "3de811b4-601a-4086-9050-7dd6894ec207"
   },
   {
     "state": "lose",
-    "amount": 91.37,
-    "transactionId": "def8a630-4c37-4884-8a88-a2cdbd557878"
+    "amount": "3,035.02",
+    "transactionId": "bd9b285c-f8fa-480a-9406-32d6d3f0133b"
   },
   {
-    "state": "lose",
-    "amount": 63.93,
-    "transactionId": "4d72e756-ce1c-4cf8-81eb-8a08c7de5072"
+    "state": "win",
+    "amount": "1,057.65",
+    "transactionId": "b6b71c16-9d44-46e6-a210-216d7a3a21bf"
   },
   {
     "state": "lose",
-    "amount": 8.21,
-    "transactionId": "b1f9b4a2-c208-4c14-89f2-6c385c936311"
+    "amount": "2,218.16",
+    "transactionId": "ba788532-8c89-4305-965c-933b41ed917a"
   },
   {
-    "state": "win",
-    "amount": 75.75,
-    "transactionId": "a9f23fc6-95f5-487e-b2dd-a9393aed9ff7"
+    "state": "lose",
+    "amount": "2,115.23",
+    "transactionId": "9c86b428-b002-45cb-b813-596e056298a9"
   },
   {
     "state": "win",
-    "amount": 77.72,
-    "transactionId": "6db5f835-b1a1-4d80-a681-1fc1c54e9adf"
+    "amount": "3,601.22",
+    "transactionId": "44b04910-0c07-4ad2-8a35-26aee47bb865"
   },
   {
-    "state": "lose",
-    "amount": 30.21,
-    "transactionId": "120939df-6447-4aeb-97c8-a582a522d4a3"
+    "state": "win",
+    "amount": "1,788.01",
+    "transactionId": "6fb7fcab-ac4e-4ade-993e-2775fe07a0a1"
   },
   {
     "state": "win",
-    "amount": 99.6,
-    "transactionId": "699772d8-6408-495f-a5aa-886b43847fe2"
+    "amount": "3,486.52",
+    "transactionId": "f4460c7b-c5d3-4279-a069-8a8e92cd354b"
   },
   {
     "state": "lose",
-    "amount": 66.57,
-    "transactionId": "2fc0298d-af12-4ada-803c-34c1d16b9cf6"
+    "amount": "3,090.31",
+    "transactionId": "1b20b8fe-e23f-4f7c-a4d8-8036b8c033db"
   },
   {
     "state": "lose",
-    "amount": 2.87,
-    "transactionId": "f5e1aa93-c7f7-44df-abf9-006f734912ee"
-  },
-  {
-    "state": "win",
-    "amount": 41.31,
-    "transactionId": "c56b57ff-d41b-405f-86ab-f3830851ecea"
+    "amount": "2,434.70",
+    "transactionId": "eeb5a576-ca7b-464d-b7c5-eb7310583236"
   },
   {
     "state": "lose",
-    "amount": 74.32,
-    "transactionId": "451c99e0-83f3-4c2d-82c1-f8066849cd2c"
-  },
-  {
-    "state": "win",
-    "amount": 33.46,
-    "transactionId": "a0fdcb47-47b3-4d47-a952-1f29a045d901"
+    "amount": "3,830.51",
+    "transactionId": "5905e188-4127-4f20-b07a-640e0bb1128b"
   },
   {
-    "state": "win",
-    "amount": 62.08,
-    "transactionId": "63041df5-48a5-4b98-b7d8-47fa987b5046"
+    "state": "lose",
+    "amount": "3,240.67",
+    "transactionId": "d4474cde-ebce-40ae-9393-c1de33bbfd72"
   },
   {
     "state": "lose",
-    "amount": 6.43,
-    "transactionId": "b0eda805-21f9-416e-aacb-3aad38df8225"
+    "amount": "3,851.40",
+    "transactionId": "78c5753e-9b22-4b5e-a467-4f15c0cc908c"
   },
   {
     "state": "win",
-    "amount": 75.77,
-    "transactionId": "64f8a8e0-3601-4fce-8672-687ee6a8f73b"
+    "amount": "1,468.22",
+    "transactionId": "b2ad9c98-d0b8-415e-91f8-fbad18d5c557"
   },
   {
     "state": "lose",
-    "amount": 4.29,
-    "transactionId": "fea09afa-143b-4d07-9229-35a334dfe231"
+    "amount": "1,164.98",
+    "transactionId": "7d1d858a-fd6a-43f9-a971-8e0ef18d6f83"
   },
   {
-    "state": "win",
-    "amount": 6.54,
-    "transactionId": "7fad0a8c-84f4-434d-9d41-8ac411874af8"
+    "state": "lose",
+    "amount": "2,114.84",
+    "transactionId": "6fd39996-dcc9-4629-b03b-5e85ce40693c"
   },
   {
     "state": "win",
-    "amount": 4.62,
-    "transactionId": "4034d491-7f3d-4580-99d2-6e37e6f91a49"
-  },
-  {
-    "state": "lose",
-    "amount": 61.93,
-    "transactionId": "9442bd0d-9a88-4721-b67d-7492ec55da47"
+    "amount": "3,096.02",
+    "transactionId": "38e61253-273d-487e-abd2-9c638c837c91"
   },
   {
     "state": "lose",
-    "amount": 65.95,
-    "transactionId": "a80c616e-92a1-4af0-bd61-3ba679f0a3eb"
+    "amount": "3,639.85",
+    "transactionId": "78b82b01-d50c-4ae7-ab54-1a4cb44ef166"
   },
   {
     "state": "lose",
-    "amount": 55.54,
-    "transactionId": "cb4441fe-ab83-4b5a-8636-5ece57ddb8b5"
+    "amount": "2,765.69",
+    "transactionId": "a805280c-08a7-49f6-b494-76ade67574be"
   },
   {
     "state": "win",
-    "amount": 7.41,
-    "transactionId": "3cd26ecb-647e-4209-83bf-1ca84d249063"
+    "amount": "1,842.52",
+    "transactionId": "84eef08e-2d81-4c4c-a606-edc6233409fb"
   },
   {
     "state": "lose",
-    "amount": 89.76,
-    "transactionId": "46beb362-863d-4771-bb92-b828ccacd757"
+    "amount": "3,393.87",
+    "transactionId": "3bc227b8-9d8f-461d-b18f-8da1b47fc0cd"
   },
   {
     "state": "win",
-    "amount": 65.18,
-    "transactionId": "9b50065c-cd3b-4990-8ce3-f248acf0fdb2"
+    "amount": "2,215.14",
+    "transactionId": "46549646-e457-4f66-9efc-27f83d2893e0"
   },
   {
     "state": "win",
-    "amount": 56.96,
-    "transactionId": "42fcb4bd-d056-42b1-92d6-ec52f4689616"
+    "amount": "3,940.13",
+    "transactionId": "d1df3a78-9c23-4fe0-845b-eda59c8288c4"
   },
   {
-    "state": "lose",
-    "amount": 50.12,
-    "transactionId": "ca075672-713b-42e7-88d0-5cce8edc24b1"
+    "state": "win",
+    "amount": "3,555.29",
+    "transactionId": "900f87c9-a644-4b72-b291-3860f9d8d614"
   },
   {
     "state": "win",
-    "amount": 25.15,
-    "transactionId": "d0fa1458-8432-4f74-9280-ea012cdd903c"
+    "amount": "2,070.34",
+    "transactionId": "752c97de-e79f-4e97-9016-424c34fd848b"
   },
   {
     "state": "lose",
-    "amount": 86.76,
-    "transactionId": "9ce85639-c95b-4268-876f-3e5dd22294cb"
+    "amount": "1,492.86",
+    "transactionId": "d5e680bf-f20a-438f-a347-3c9400207866"
   },
   {
     "state": "win",
-    "amount": 1.71,
-    "transactionId": "baf73b74-85a0-4f58-b646-5b98391531b7"
+    "amount": "2,928.85",
+    "transactionId": "0ef53c46-cca4-41e7-af3f-6e2836895d63"
   },
   {
     "state": "lose",
-    "amount": 43.31,
-    "transactionId": "8ed639fe-4a01-452e-9916-94f5cb08a97f"
+    "amount": "2,050.31",
+    "transactionId": "1136e347-8385-4b52-8a36-2331b3d8b199"
   },
   {
     "state": "lose",
-    "amount": 92.29,
-    "transactionId": "149c3be3-4df5-4248-9b9d-065986c9a9de"
+    "amount": "2,988.87",
+    "transactionId": "93a17a48-2a23-4a0f-a2f0-5f1d241dca72"
   },
   {
     "state": "win",
-    "amount": 26.4,
-    "transactionId": "45ac249b-2e8e-493f-91be-8deb2fbf10f5"
+    "amount": "2,984.88",
+    "transactionId": "62bb270e-f66f-4ed5-9a19-27e7149b88b7"
   },
   {
+    "state": "lose",
+    "amount": "2,321.83",
+    "transactionId": "2e0a12cd-31e2-46ef-bbc7-1826f05e8369"
+  },
+  {
     "state": "win",
-    "amount": 95.18,
-    "transactionId": "eae185bf-4a65-4019-a244-c58f6658ee4d"
+    "amount": "1,729.61",
+    "transactionId": "ab84bd22-bbac-40ce-855f-cee749f74941"
   },
   {
     "state": "lose",
-    "amount": 18.18,
-    "transactionId": "cf91944a-94d8-44cf-9037-071616b4ad37"
+    "amount": "3,924.11",
+    "transactionId": "4f71ff57-ada4-4593-ba50-36d0c7ded168"
   },
   {
-    "state": "lose",
-    "amount": 85.75,
-    "transactionId": "814c2151-83e8-4948-b8f4-9bf09997ba4b"
+    "state": "win",
+    "amount": "3,908.49",
+    "transactionId": "65688958-da84-4d4e-b27c-b9bae920873a"
   },
   {
     "state": "lose",
-    "amount": 40.06,
-    "transactionId": "8f106302-faac-4e82-b7e7-19088f33efe4"
+    "amount": "2,312.41",
+    "transactionId": "9389f0ae-33f3-4a93-9e7c-c77371cd5d82"
   },
   {
     "state": "win",
-    "amount": 81.66,
-    "transactionId": "f961da26-e357-46f9-bef9-e545457fa753"
+    "amount": "2,198.50",
+    "transactionId": "847ecaed-f9a5-4cca-b576-23f59d57a156"
   },
   {
     "state": "win",
-    "amount": 57.59,
-    "transactionId": "477a5cb9-dcce-4782-8f89-42cc1da07f41"
+    "amount": "2,923.09",
+    "transactionId": "02a33a15-cc5d-4a7e-a14e-739098e36cdc"
   },
   {
     "state": "win",
-    "amount": 91.96,
-    "transactionId": "f28ab97a-be48-4dd1-9bce-d5f30c861ae2"
+    "amount": "3,811.59",
+    "transactionId": "d56eb98c-81fe-49b3-80cc-1f0454d33d5c"
+  },
+  {
+    "state": "lose",
+    "amount": "2,373.97",
+    "transactionId": "0ac0f016-fc4e-4953-a207-3f4797d92d14"
   },
   {
     "state": "lose",
-    "amount": 36.51,
-    "transactionId": "259972b4-b184-448e-8a71-c9dbf24672ea"
+    "amount": "3,765.61",
+    "transactionId": "1964c035-b143-46e9-a37f-20499800f8cf"
   },
   {
     "state": "win",
-    "amount": 16.88,
-    "transactionId": "84e6df2f-597a-45a8-9287-73311e3a3e7c"
+    "amount": "2,576.65",
+    "transactionId": "5fdc63c6-9410-4db0-882b-bce2b2190b01"
   },
   {
     "state": "lose",
-    "amount": 47.32,
-    "transactionId": "1f62f75f-52b3-4c53-bb13-1faf16446c60"
+    "amount": "1,097.83",
+    "transactionId": "8db67331-dc3b-403a-9beb-3fc9e0834c02"
   },
   {
     "state": "win",
-    "amount": 0.75,
-    "transactionId": "22456a11-30b9-4d37-90ca-4c118af4bbed"
+    "amount": "2,599.28",
+    "transactionId": "417b54b1-32ad-4b8a-814e-89c99f19d5cc"
   },
   {
-    "state": "win",
-    "amount": 90.17,
-    "transactionId": "6931cfb7-aa9b-423b-8933-bd4a2d298c27"
+    "state": "lose",
+    "amount": "2,511.32",
+    "transactionId": "e9394964-052e-4319-b448-df648aaa8e60"
   },
   {
-    "state": "win",
-    "amount": 67.82,
-    "transactionId": "a4381227-2451-4545-bbaa-2fab2ba0b5e4"
+    "state": "lose",
+    "amount": "1,184.71",
+    "transactionId": "541165c5-2d3a-4f03-b8ae-7d2586771c81"
   },
   {
     "state": "win",
-    "amount": 96.88,
-    "transactionId": "f309fc8e-bea5-4edd-9d43-ecd7dc483686"
+    "amount": "1,031.75",
+    "transactionId": "487125e6-0ecc-4827-8f60-8ec763e59c80"
   },
   {
     "state": "win",
-    "amount": 52.68,
-    "transactionId": "0a6fb879-b6cd-4914-991e-a4ec30982b08"
+    "amount": "2,568.94",
+    "transactionId": "c05c0e31-37c1-4bc7-a198-c9e89407e196"
   },
   {
     "state": "lose",
-    "amount": 11.74,
-    "transactionId": "aa947e05-7278-4419-801c-86e9333fb9e8"
+    "amount": "3,114.08",
+    "transactionId": "5d3d6e60-c346-4c23-809e-114763a20950"
   },
   {
     "state": "win",
-    "amount": 8.7,
-    "transactionId": "031045a4-60b7-4efa-be38-84f85886f520"
-  },
-  {
-    "state": "lose",
-    "amount": 83.82,
-    "transactionId": "44712620-3995-464d-8a79-bb535ca364f6"
+    "amount": "2,463.49",
+    "transactionId": "ec9955a1-06b5-4c5e-8415-2c92fc3ea07c"
   },
   {
     "state": "lose",
-    "amount": 51.71,
-    "transactionId": "69e597a8-225a-422b-8bb1-d672f8d39221"
+    "amount": "1,453.17",
+    "transactionId": "ba28ea99-4191-47be-8c69-eb9ddc711f50"
   },
   {
-    "state": "lose",
-    "amount": 65.91,
-    "transactionId": "cc97b057-3eec-4064-9e3d-921d3f5ee633"
+    "state": "win",
+    "amount": "3,350.95",
+    "transactionId": "9d76dddf-ac24-47b4-b9dd-8a3b9ba4f745"
   },
   {
     "state": "lose",
-    "amount": 30.88,
-    "transactionId": "ab6f6d6c-6012-4aac-aa86-50bb9ba3f0b3"
+    "amount": "1,685.84",
+    "transactionId": "725d20b1-4da1-47cb-823e-9783998b6a26"
   },
   {
     "state": "win",
-    "amount": 17.72,
-    "transactionId": "bbed7ea3-114a-4095-b082-c6c757b3d4fa"
+    "amount": "1,837.49",
+    "transactionId": "ddf6cefb-d0d4-442d-af15-378f059b3709"
   },
   {
     "state": "lose",
-    "amount": 70.02,
-    "transactionId": "c4c07385-c0fe-4772-b8b2-9079e3c0de60"
+    "amount": "1,425.23",
+    "transactionId": "a67b2f42-12df-4395-85bb-6e06d10719cd"
   },
   {
-    "state": "lose",
-    "amount": 91.41,
-    "transactionId": "e6e50f72-0654-4452-886b-47d838e29c9e"
+    "state": "win",
+    "amount": "1,324.82",
+    "transactionId": "4628e5a4-4137-4a18-95f1-655ee9fdb163"
   },
   {
     "state": "win",
-    "amount": 83.34,
-    "transactionId": "66a8e3cf-0b19-40bd-b2d9-f9d59394bc50"
+    "amount": "2,841.34",
+    "transactionId": "4a53388c-03bf-4ace-a416-51d41da2a11a"
   },
   {
-    "state": "win",
-    "amount": 45.6,
-    "transactionId": "9815f03f-a06c-4142-93b4-f93722d5105d"
+    "state": "lose",
+    "amount": "1,251.41",
+    "transactionId": "3f5ad090-6a42-43ef-a0d6-59975f80f57f"
   },
   {
     "state": "win",
-    "amount": 36.53,
-    "transactionId": "eff0aac8-c1e0-4742-90c1-f224522df15e"
+    "amount": "3,563.16",
+    "transactionId": "86c90a83-73fe-432b-a487-218f1c912d8d"
   },
   {
-    "state": "lose",
-    "amount": 97.21,
-    "transactionId": "e015d8d5-13c1-4d1c-aeb3-f93aefacfa84"
+    "state": "win",
+    "amount": "3,729.57",
+    "transactionId": "7dcec45a-bfda-44c1-b673-93bd156b3ea7"
   },
   {
-    "state": "win",
-    "amount": 73.32,
-    "transactionId": "7093a04f-325d-4f9e-b7ac-9ff24b47117d"
+    "state": "lose",
+    "amount": "3,998.20",
+    "transactionId": "7a2f2229-da65-4b09-9a27-0740e3a24e2d"
   },
   {
     "state": "lose",
-    "amount": 94.05,
-    "transactionId": "078dd2f5-5038-4c52-ba65-09c8a84207af"
+    "amount": "1,437.44",
+    "transactionId": "fd8dccb0-c036-42e9-9e81-acd122cd3800"
   },
   {
     "state": "win",
-    "amount": 92,
-    "transactionId": "def67d8e-ffe4-4a79-b91d-a9e0f240f02e"
+    "amount": "2,449.46",
+    "transactionId": "a7fce126-4723-408d-bdc7-e3a4e54a83db"
   },
   {
     "state": "win",
-    "amount": 84.24,
-    "transactionId": "95399e2f-e995-4aff-a007-4bff8fab6391"
+    "amount": "1,355.96",
+    "transactionId": "cd6ad5f3-008d-4ba9-810f-18b1f1133348"
   },
   {
     "state": "lose",
-    "amount": 56,
-    "transactionId": "37e324fa-3322-4e5c-bac5-92f56d3b61d4"
+    "amount": "1,105.88",
+    "transactionId": "25940266-81dc-4646-9923-e40313915cd8"
   },
   {
     "state": "win",
-    "amount": 50.89,
-    "transactionId": "b2d5acfd-178c-4274-8cf2-b84fa324eb0c"
+    "amount": "1,060.28",
+    "transactionId": "411dc689-8f9e-4f01-9e03-82c9f0bd7d28"
   },
   {
     "state": "win",
-    "amount": 96.32,
-    "transactionId": "9aa612f4-608e-49e6-8f86-7039d29f695e"
+    "amount": "1,077.64",
+    "transactionId": "4b6958d9-a6e1-4d02-a6f0-f2ae6ab3f9b0"
+  },
+  {
+    "state": "lose",
+    "amount": "2,102.70",
+    "transactionId": "2671418c-51a3-474c-923f-588a2d12c2dd"
   },
   {
     "state": "win",
-    "amount": 53.38,
-    "transactionId": "ae9f5296-a022-4654-b7c5-a3f9ee810ea3"
+    "amount": "1,859.04",
+    "transactionId": "a9457cd1-e572-4c49-a2c4-ac2bf2d6797a"
   },
   {
-    "state": "lose",
-    "amount": 85.57,
-    "transactionId": "7bc168f5-e685-4c9b-928a-5dc4920b12e9"
+    "state": "win",
+    "amount": "2,807.38",
+    "transactionId": "941c27f6-007b-4939-89db-6b99f1391ba2"
   },
   {
     "state": "lose",
-    "amount": 65.54,
-    "transactionId": "cc1a0133-f995-40d7-bfe8-8ac56f058517"
+    "amount": "3,073.27",
+    "transactionId": "3e4f863d-fb95-4e70-8372-a1193e909d00"
   },
   {
     "state": "lose",
-    "amount": 55.24,
-    "transactionId": "30d5c4d8-496f-4f71-8cff-20783c525d55"
+    "amount": "1,729.34",
+    "transactionId": "b12458d0-d675-4e75-bee0-027c7d8d589c"
   },
   {
     "state": "win",
-    "amount": 88.52,
-    "transactionId": "63cd986b-74f7-4435-b894-9654fd5db629"
+    "amount": "2,473.89",
+    "transactionId": "e0dcf7be-c5f0-4a42-b16c-b73e74946373"
   },
   {
-    "state": "win",
-    "amount": 2.78,
-    "transactionId": "cf5f8571-64c8-4d54-869b-512aeddb976c"
+    "state": "lose",
+    "amount": "2,202.02",
+    "transactionId": "e88f1ec2-98fe-438c-84db-a16e432dd767"
   },
   {
     "state": "win",
-    "amount": 72.09,
-    "transactionId": "17d34772-732e-4ce4-9da5-83ce0690c45c"
+    "amount": "2,117.00",
+    "transactionId": "6edbf8b9-9860-40fc-a089-1d2b837343a4"
   },
   {
     "state": "lose",
-    "amount": 79.83,
-    "transactionId": "ded6aa08-2dbb-4740-a11d-6c8bf8b083b8"
+    "amount": "3,021.21",
+    "transactionId": "8d584fb2-e190-4251-baa2-2421e6cf8305"
   },
   {
-    "state": "win",
-    "amount": 45.02,
-    "transactionId": "bd83e8f1-a30f-4061-8189-ccd8198d0a02"
+    "state": "lose",
+    "amount": "2,806.37",
+    "transactionId": "da447b4e-b2e7-4429-a02f-02e64c86d9d3"
   },
   {
-    "state": "win",
-    "amount": 94.5,
-    "transactionId": "b7c36fcb-4afa-4efb-9409-518693e1158c"
+    "state": "lose",
+    "amount": "2,398.37",
+    "transactionId": "eb8b1536-d6dc-4caa-ad54-88a292a56dbd"
   },
   {
     "state": "win",
-    "amount": 67.79,
-    "transactionId": "66d32655-3e83-4df5-93e6-d33079bd4b76"
+    "amount": "1,945.64",
+    "transactionId": "2bb4803c-dd7b-44ff-bb18-ab72a9a1bc8d"
   },
   {
     "state": "win",
-    "amount": 27.64,
-    "transactionId": "7a636ed2-441d-4417-b4f8-67f000a75474"
+    "amount": "1,623.35",
+    "transactionId": "f27c7bf6-ac1e-45d4-b02d-3d6b866e34b2"
   },
   {
     "state": "lose",
-    "amount": 28.72,
-    "transactionId": "49a05424-3338-4e10-9c99-306823704077"
+    "amount": "2,609.10",
+    "transactionId": "614663aa-bf3c-4f35-880b-461937a9fabc"
   },
   {
-    "state": "win",
-    "amount": 91.27,
-    "transactionId": "7698c9f6-57c6-43e4-b190-a17cd8ead930"
+    "state": "lose",
+    "amount": "1,896.85",
+    "transactionId": "5b638764-ea75-4cb0-9400-0c99c30962a6"
   },
   {
     "state": "win",
-    "amount": 89.7,
-    "transactionId": "f95b956e-434a-424b-aaed-f7a83882b3a9"
+    "amount": "1,652.88",
+    "transactionId": "97042082-7fb1-4348-9c8d-cbd2ab459a8c"
   },
   {
-    "state": "win",
-    "amount": 7.65,
-    "transactionId": "418c6496-83c5-47fd-9c5d-f54f95c36c35"
+    "state": "lose",
+    "amount": "1,623.79",
+    "transactionId": "d785ef96-00e4-4e4f-8538-69aa6d13cb06"
   },
   {
     "state": "lose",
-    "amount": 21.45,
-    "transactionId": "b2ec7c0b-2333-4605-a380-8b5d80faa12b"
+    "amount": "2,577.08",
+    "transactionId": "800a7699-e30e-4b94-8d00-95d5a64982a9"
   },
   {
     "state": "win",
-    "amount": 90.62,
-    "transactionId": "c5513459-3f46-4d16-a0b4-829009f25dd5"
+    "amount": "1,192.80",
+    "transactionId": "5037df13-362b-4bc0-af3e-9a04eebabf99"
   },
   {
     "state": "lose",
-    "amount": 81.46,
-    "transactionId": "4ad8a80c-334b-443c-940e-23f8c96d20f1"
+    "amount": "1,368.45",
+    "transactionId": "3932e358-bb27-45d9-ba72-9a66af13ddf1"
   },
   {
-    "state": "lose",
-    "amount": 27.75,
-    "transactionId": "84e909d7-1e38-473f-adb7-c1c0731e80f4"
+    "state": "win",
+    "amount": "3,847.19",
+    "transactionId": "392b86c3-d220-4146-89ed-80d73bcb469c"
   },
   {
     "state": "lose",
-    "amount": 88.3,
-    "transactionId": "79a84e7d-cabd-45ac-89ea-61a15c484651"
+    "amount": "3,643.03",
+    "transactionId": "46cc203c-63a7-4e33-9832-003fb3ec20dd"
   },
   {
     "state": "lose",
-    "amount": 20.82,
-    "transactionId": "50d22853-a711-43b4-a5f6-a80bdfe0df09"
+    "amount": "2,992.05",
+    "transactionId": "12857cc6-74bf-4549-99c4-4e9a5f036e26"
   },
   {
     "state": "lose",
-    "amount": 2.99,
-    "transactionId": "f6a2c2e2-3ad2-4ab0-891a-522598e1ab07"
+    "amount": "3,226.53",
+    "transactionId": "3c2eb14a-29f4-4f9a-919e-15a7802795eb"
   },
   {
     "state": "lose",
-    "amount": 36.9,
-    "transactionId": "e02693c3-dbab-4538-83d4-413cf80b5479"
+    "amount": "3,048.83",
+    "transactionId": "98eb2f73-a11a-410a-9fcd-018911b33e47"
   },
   {
     "state": "win",
-    "amount": 46.6,
-    "transactionId": "15a7b652-658e-41d4-bf27-e68340489240"
+    "amount": "3,783.32",
+    "transactionId": "bc9fb698-0393-47bc-935c-db26e4b17ec1"
   },
   {
     "state": "lose",
-    "amount": 17.95,
-    "transactionId": "555d8826-0f8a-45c8-8f57-3505433a42ce"
+    "amount": "2,765.66",
+    "transactionId": "0c482997-1315-4945-9fda-b00031b5bcf2"
   },
   {
-    "state": "lose",
-    "amount": 56.66,
-    "transactionId": "e60a74e8-7304-475e-b3bd-53cf46c33af0"
+    "state": "win",
+    "amount": "2,615.12",
+    "transactionId": "56f86e09-b2a6-448c-b63c-fcf04320fd9a"
   },
   {
     "state": "win",
-    "amount": 80.37,
-    "transactionId": "b64eff1f-1210-43e0-8827-f8d78698052c"
+    "amount": "1,848.53",
+    "transactionId": "e7207ab3-530b-4602-8487-672b14c05eaf"
   },
   {
     "state": "lose",
-    "amount": 90.31,
-    "transactionId": "1aa2aa41-63c8-4822-a60c-ba72903d10b1"
+    "amount": "2,045.70",
+    "transactionId": "cdaa3c48-3c50-4327-a010-e9d350f9c3de"
   },
   {
-    "state": "win",
-    "amount": 72.18,
-    "transactionId": "f1401807-686e-4946-bff1-e40fe35a8a10"
+    "state": "lose",
+    "amount": "2,185.23",
+    "transactionId": "8f352ad4-ee26-421c-b1c6-d5d8e8368dde"
   },
   {
     "state": "lose",
-    "amount": 73.54,
-    "transactionId": "de3c5b26-d99f-4686-8e75-7c2abcf4f7a9"
+    "amount": "1,168.74",
+    "transactionId": "87e18bfb-5c75-414e-b68c-ee8d2918509e"
   },
   {
+    "state": "lose",
+    "amount": "2,417.68",
+    "transactionId": "1d249bea-f1a0-40c8-9459-0969b1d0c0fd"
+  },
+  {
     "state": "win",
-    "amount": 36.06,
-    "transactionId": "1b96ae6a-e9cc-42ea-a33f-da87e7cd1bed"
+    "amount": "3,367.07",
+    "transactionId": "9407624e-7ca1-460e-a9ef-80af0cf1f354"
   },
   {
     "state": "lose",
-    "amount": 43.44,
-    "transactionId": "473a6881-7c9f-44e8-a270-bc2090b5d692"
+    "amount": "1,369.45",
+    "transactionId": "73c37ef3-3101-4426-af06-156bd5e642f0"
   },
   {
     "state": "lose",
-    "amount": 86.77,
-    "transactionId": "1abaae3e-c5ba-4639-992f-47b2bac80f68"
+    "amount": "1,914.15",
+    "transactionId": "90e6ee69-f2c3-4a2c-8360-88ea2e7b59e4"
   },
   {
     "state": "lose",
-    "amount": 33.33,
-    "transactionId": "81262cb1-1354-42a7-b0a4-3e2d19529fa1"
+    "amount": "1,914.77",
+    "transactionId": "955aa712-665c-4fd1-801c-427ba8815e8f"
   },
   {
     "state": "lose",
-    "amount": 79.47,
-    "transactionId": "14b66ddf-1105-433e-9ab6-95aa5b2457dd"
+    "amount": "2,036.86",
+    "transactionId": "e3c21bf0-3377-4582-84e9-0e48f1927c10"
+  },
+  {
+    "state": "win",
+    "amount": "3,172.49",
+    "transactionId": "f6c85314-6b41-4406-af48-51951c2f232e"
   },
   {
     "state": "lose",
-    "amount": 33.99,
-    "transactionId": "8b57662f-cc51-46cf-a47c-d8a23a5ea4e0"
+    "amount": "3,566.89",
+    "transactionId": "c6097043-5ea8-46f1-a655-4888b461f726"
   },
   {
     "state": "win",
-    "amount": 67.36,
-    "transactionId": "4bd3d049-b95e-46f6-b881-6f32efd08623"
+    "amount": "3,705.97",
+    "transactionId": "24958c3b-d624-4af5-8234-7c494a5e28f6"
   },
   {
     "state": "win",
-    "amount": 75.66,
-    "transactionId": "ad6a2f8f-a60b-44c5-afe8-d52120c2247f"
+    "amount": "1,661.47",
+    "transactionId": "d6115641-5efe-4158-9ed9-7c689c082d87"
   },
   {
     "state": "win",
-    "amount": 77.87,
-    "transactionId": "d6c1c272-d036-44a3-8e20-ea4a140dfa4d"
+    "amount": "3,617.10",
+    "transactionId": "7c750c6a-96c6-49e7-b801-2e7490dead93"
   },
   {
     "state": "lose",
-    "amount": 1.52,
-    "transactionId": "1de8c68c-a388-4e6c-9080-6cfdae9b46f0"
+    "amount": "2,206.59",
+    "transactionId": "c31062db-983b-405b-9470-0841e12496f9"
   },
   {
     "state": "win",
-    "amount": 3.31,
-    "transactionId": "b082c966-a272-4b4a-a0ec-386c967a9852"
+    "amount": "1,151.17",
+    "transactionId": "1b0eefba-ecd6-44c6-bd4c-df4b6d275c5d"
+  },
+  {
+    "state": "lose",
+    "amount": "2,280.73",
+    "transactionId": "c805f9f5-5fa0-42a8-8256-cd9b2b0e8c26"
   },
   {
     "state": "win",
-    "amount": 71.71,
-    "transactionId": "8683cd8d-a8ad-4c5f-9eba-42205e411363"
+    "amount": "2,769.11",
+    "transactionId": "6a611a41-c430-4047-960d-7e23e93ec123"
   },
   {
-    "state": "lose",
-    "amount": 22.17,
-    "transactionId": "4955f77b-8a99-4f97-a030-ed983fa5266a"
+    "state": "win",
+    "amount": "3,063.11",
+    "transactionId": "1df4c5b7-4199-49c4-bd52-093e45b74c8b"
   },
   {
     "state": "win",
-    "amount": 24.45,
-    "transactionId": "fc2d3961-f99c-42a8-821f-7c8799cce910"
+    "amount": "1,630.28",
+    "transactionId": "2468192d-1737-4d66-acc7-af9881692861"
   },
   {
     "state": "win",
-    "amount": 83.91,
-    "transactionId": "7241f8fa-fecb-4d17-a2d9-b30ddde357cb"
+    "amount": "1,835.97",
+    "transactionId": "0fd75544-01f1-4e7f-90a6-960d7d304bf4"
   },
   {
-    "state": "lose",
-    "amount": 0.59,
-    "transactionId": "acad9e35-e926-44b5-b36d-e97f30ef10de"
+    "state": "win",
+    "amount": "1,486.82",
+    "transactionId": "904523b6-bc14-4a4f-87c9-feeb32a5fc92"
   },
   {
     "state": "lose",
-    "amount": 26.06,
-    "transactionId": "84009c92-cda8-4978-9769-6f4a0492e238"
+    "amount": "3,057.62",
+    "transactionId": "fa811a4c-9475-4da7-ac06-466ee4b1284f"
   },
   {
     "state": "win",
-    "amount": 9.53,
-    "transactionId": "061dd7d4-9e76-40af-8f67-4eed63e670a3"
+    "amount": "2,102.82",
+    "transactionId": "540d4511-6144-4ad4-9e8d-bbc5fb84f103"
   },
   {
-    "state": "lose",
-    "amount": 51.12,
-    "transactionId": "372802b2-a072-44fb-955c-62d14340241d"
+    "state": "win",
+    "amount": "2,666.76",
+    "transactionId": "565a4849-50dd-46ec-8beb-811aeb42edfa"
   },
   {
-    "state": "lose",
-    "amount": 2.29,
-    "transactionId": "9cdd5208-5ac6-4529-831c-f79e95d9fbe0"
+    "state": "win",
+    "amount": "3,499.96",
+    "transactionId": "91cfaf93-1d35-4c96-95e2-f4be4c406373"
   },
   {
     "state": "win",
-    "amount": 43.88,
-    "transactionId": "5e4f424f-5dea-4304-982f-33a14da7df0d"
+    "amount": "3,536.55",
+    "transactionId": "d408f1e4-3223-4476-bc0a-09cac955d522"
+  },
+  {
+    "state": "lose",
+    "amount": "3,305.15",
+    "transactionId": "12b0ac96-41c1-4cc9-914e-491d45695853"
   },
   {
     "state": "lose",
-    "amount": 82.94,
-    "transactionId": "b5964cba-4890-49ae-b86d-3bda5fbb4c74"
+    "amount": "2,035.64",
+    "transactionId": "9c252624-87a8-4cdd-a6ad-2b53514314c7"
   },
   {
     "state": "lose",
-    "amount": 28.45,
-    "transactionId": "1eea68e8-a21b-4401-a5c9-69961ae4c0e3"
+    "amount": "1,785.13",
+    "transactionId": "e30f51d5-f1d7-40c5-95fc-0821fb7f5ae5"
   },
   {
     "state": "lose",
-    "amount": 97.08,
-    "transactionId": "d7ab5d0d-7d17-49d9-abd6-0af8c509ca62"
+    "amount": "1,927.86",
+    "transactionId": "bf9fdb11-e801-4602-b5c4-6abeffc9a13c"
   },
   {
     "state": "win",
-    "amount": 38.61,
-    "transactionId": "fd1754f6-2b34-4208-846f-67bcf3c6cde6"
+    "amount": "3,278.27",
+    "transactionId": "5002bb9d-df30-4f77-a969-b2272f8e572e"
   },
   {
     "state": "win",
-    "amount": 79.89,
-    "transactionId": "a4fa80ce-001e-4aca-9f8e-5ba137f13be0"
+    "amount": "1,133.89",
+    "transactionId": "e597c97c-58d4-4bc6-8bb9-2b99925bc058"
   },
   {
     "state": "win",
-    "amount": 40.81,
-    "transactionId": "a1fcf513-a18a-43c6-858c-d9a32d6c124a"
+    "amount": "2,066.59",
+    "transactionId": "9e035fd9-38c9-4415-a9d1-2edad857fb57"
   },
   {
     "state": "lose",
-    "amount": 73.91,
-    "transactionId": "7c8cefda-e467-40a3-afaf-327f496e1056"
+    "amount": "1,130.49",
+    "transactionId": "fa5fbcc1-f675-4d8e-9c68-20d838e429a1"
   },
   {
-    "state": "win",
-    "amount": 98.83,
-    "transactionId": "9f691679-5a87-4ce9-886d-1c23835e5038"
+    "state": "lose",
+    "amount": "3,459.84",
+    "transactionId": "6990462f-7aae-4ec0-85ac-02555f2854f0"
   },
   {
     "state": "win",
-    "amount": 93.3,
-    "transactionId": "cf27e993-a40a-491d-be3f-0fafdf5cb9cb"
+    "amount": "1,073.42",
+    "transactionId": "fb5e51e6-e301-424a-93b6-06c2dd93ba5b"
   },
   {
-    "state": "win",
-    "amount": 2.72,
-    "transactionId": "be9a11cb-7896-4c30-b689-7ac983d06218"
+    "state": "lose",
+    "amount": "3,741.95",
+    "transactionId": "e34e14cb-885e-4b19-a0a7-b7e54e0a7a00"
+  },
+  {
+    "state": "lose",
+    "amount": "3,541.82",
+    "transactionId": "e6e75a79-7067-42fd-a7fc-d9a370949d83"
   },
   {
     "state": "win",
-    "amount": 47.02,
-    "transactionId": "e09fcb30-29f6-40f2-8046-bd62bbb21505"
+    "amount": "1,298.21",
+    "transactionId": "0a96e2a4-d185-425c-99d3-c732ae115e32"
   },
   {
-    "state": "lose",
-    "amount": 24.55,
-    "transactionId": "767d36ad-34ac-4e57-a26d-519b9be44e09"
+    "state": "win",
+    "amount": "3,893.65",
+    "transactionId": "51199ce0-891b-424f-9922-66d8c5d016c8"
   },
   {
     "state": "win",
-    "amount": 8.74,
-    "transactionId": "53521e97-0f42-4d95-8b10-dfce7a1adf03"
+    "amount": "2,849.78",
+    "transactionId": "aacfb30b-c5e8-4f1a-b32d-155a22b4841b"
   },
   {
     "state": "lose",
-    "amount": 5.62,
-    "transactionId": "0a6b1a1d-c004-4e6c-8715-d0ea17ef7f12"
+    "amount": "3,138.64",
+    "transactionId": "551f50f2-f450-459c-9cfb-b1b231b9d623"
   },
   {
     "state": "win",
-    "amount": 60.5,
-    "transactionId": "1f4f51df-d465-4e14-838d-ae006b3cccc2"
+    "amount": "1,054.32",
+    "transactionId": "b3df4500-2f08-4a33-899d-f1db5da56a96"
   },
   {
-    "state": "lose",
-    "amount": 1.66,
-    "transactionId": "3c0c8cf1-2747-4823-b6d3-d66b97e125e2"
+    "state": "win",
+    "amount": "2,836.19",
+    "transactionId": "ecaa546e-d73c-4afb-85c8-0dc30b922f49"
   },
   {
     "state": "win",
-    "amount": 92.47,
-    "transactionId": "e931c9ab-4e44-4bbe-970e-e948136bf3a9"
+    "amount": "2,404.55",
+    "transactionId": "e3b3372e-4a04-4f9a-9a52-fd384c2b854f"
   },
   {
-    "state": "lose",
-    "amount": 93.93,
-    "transactionId": "60ab5a42-edff-45c2-bbf0-1abb663ab03b"
+    "state": "win",
+    "amount": "2,472.35",
+    "transactionId": "d67757da-81c2-45fc-92b1-22f8df4e8b10"
   },
   {
-    "state": "lose",
-    "amount": 43.89,
-    "transactionId": "ded4ef28-9b2c-4e24-8450-d8b4645a7d82"
+    "state": "win",
+    "amount": "2,054.30",
+    "transactionId": "fbb200b9-55af-4338-838b-8b8c457201f9"
   },
   {
     "state": "lose",
-    "amount": 28.18,
-    "transactionId": "477c8cde-17f5-43f0-af5a-61dfe6201271"
+    "amount": "3,892.90",
+    "transactionId": "912d5325-f843-4198-944c-379423fe2941"
   },
   {
-    "state": "lose",
-    "amount": 15.1,
-    "transactionId": "65745b23-731f-4951-bc3d-8ec1f87fb24e"
+    "state": "win",
+    "amount": "1,004.07",
+    "transactionId": "b08ab281-205d-4b02-a304-f8011ec7f961"
   },
   {
     "state": "win",
-    "amount": 25.47,
-    "transactionId": "334f9562-ea22-427d-8c54-2f5ac2ceea1a"
+    "amount": "3,912.23",
+    "transactionId": "16e44736-7cce-4a9d-9631-4b84ce73ae22"
   },
   {
     "state": "lose",
-    "amount": 3.4,
-    "transactionId": "0aa44ff1-fcfd-42d7-b540-305cd3fb4956"
+    "amount": "2,394.09",
+    "transactionId": "30746c7a-2b0b-4ab0-8543-fa3862806a4c"
   },
   {
     "state": "lose",
-    "amount": 83.84,
-    "transactionId": "822028eb-a7c6-46b7-b88a-4fb3efbf326d"
+    "amount": "1,358.63",
+    "transactionId": "93b03bc3-b208-416e-a7b2-93beb59a6478"
   },
   {
     "state": "lose",
-    "amount": 59.91,
-    "transactionId": "818f6b49-d856-41fe-b46c-7998b7b6de98"
+    "amount": "3,156.06",
+    "transactionId": "4ad90f29-075b-44d0-8e1c-198a1f75927e"
   },
   {
-    "state": "win",
-    "amount": 48.56,
-    "transactionId": "2e03b494-de32-49f3-8ea1-5dcf9196207b"
+    "state": "lose",
+    "amount": "2,576.32",
+    "transactionId": "cbdadb5a-b601-4096-9794-adaddf2c54f9"
   },
   {
-    "state": "lose",
-    "amount": 98.49,
-    "transactionId": "ac631c30-4f3c-485a-9473-5b93d9fee312"
+    "state": "win",
+    "amount": "3,538.00",
+    "transactionId": "5ffb9775-2a0a-4935-898c-b9ab5c9d977c"
   },
   {
     "state": "win",
-    "amount": 9.48,
-    "transactionId": "ed146ad5-cd1a-45f4-abe9-dc6bb6e62ba4"
+    "amount": "1,960.91",
+    "transactionId": "284d2754-7021-4f86-ab5d-739adf7cb8df"
   },
   {
-    "state": "lose",
-    "amount": 49.91,
-    "transactionId": "c02284b7-4033-4199-99a3-1fe55b721190"
+    "state": "win",
+    "amount": "1,199.72",
+    "transactionId": "956bd498-6e27-40f2-a55b-f34b1fee23fb"
   },
   {
     "state": "lose",
-    "amount": 2.13,
-    "transactionId": "26b024cf-c8bf-49ba-871f-b023ac3db662"
+    "amount": "3,626.71",
+    "transactionId": "79dce787-10a5-40f5-8903-baff13601b8f"
   },
   {
     "state": "win",
-    "amount": 80.89,
-    "transactionId": "09bd364f-205d-446b-be47-24306262cfcb"
+    "amount": "3,144.17",
+    "transactionId": "0ae56192-b928-4589-98a5-eff23fa54204"
   },
   {
+    "state": "lose",
+    "amount": "1,266.13",
+    "transactionId": "4e5fdf21-5e7e-4c9b-8f15-559f18886769"
+  },
+  {
     "state": "win",
-    "amount": 35.49,
-    "transactionId": "73421aec-8c09-423a-bb7f-c681297e5575"
+    "amount": "2,201.63",
+    "transactionId": "e66d1043-c7b1-46d9-bc21-7cc958391459"
   },
   {
     "state": "lose",
-    "amount": 0.64,
-    "transactionId": "b7261eae-0374-48af-8468-ed5aa74859c5"
+    "amount": "2,329.78",
+    "transactionId": "b386dc65-6bcc-4bc9-b6a4-d911b413b1e0"
   },
   {
     "state": "win",
-    "amount": 38.51,
-    "transactionId": "080a52da-218a-49e9-b323-184b4f00f17e"
+    "amount": "3,174.95",
+    "transactionId": "0a0b9e29-f3aa-4624-88dd-2aac33b866a4"
   },
   {
     "state": "win",
-    "amount": 6.35,
-    "transactionId": "ee157f18-d138-433e-8aa9-db80b489bb1b"
+    "amount": "1,595.73",
+    "transactionId": "cdc31d24-e82d-408f-843f-d7ffdf44609b"
   },
   {
     "state": "lose",
-    "amount": 96.05,
-    "transactionId": "6284c812-e99a-48b5-9d5c-fbef74a41ef4"
+    "amount": "3,504.07",
+    "transactionId": "5a66f0ae-3861-4106-894a-4f877746c038"
   },
   {
-    "state": "win",
-    "amount": 38.83,
-    "transactionId": "a55de45f-0168-4d14-84e5-a29ff3f91e09"
+    "state": "lose",
+    "amount": "1,446.90",
+    "transactionId": "26374c91-4c6b-4523-a453-21dbc99f8bfc"
   },
   {
     "state": "lose",
-    "amount": 70.63,
-    "transactionId": "381af1fc-d5d0-42ad-89ba-731abc3bef98"
+    "amount": "2,448.05",
+    "transactionId": "8403ccbc-6bfd-47ff-a222-26366eba223a"
   },
   {
     "state": "lose",
-    "amount": 24.12,
-    "transactionId": "2791f116-48fd-4008-9893-4054681b019a"
+    "amount": "2,943.35",
+    "transactionId": "9333616b-1330-40b6-aac6-3eac9cd9e97a"
   },
   {
-    "state": "lose",
-    "amount": 43.29,
-    "transactionId": "fed381ea-f6b3-4651-8425-e24ddd0a5b82"
+    "state": "win",
+    "amount": "1,591.67",
+    "transactionId": "02089b36-1e13-4e68-bfd2-fc1a1de5a1ee"
   },
   {
-    "state": "lose",
-    "amount": 8.51,
-    "transactionId": "5b42d95d-3374-4fe4-974b-f8db116fb499"
+    "state": "win",
+    "amount": "1,753.08",
+    "transactionId": "7134fe7d-5153-404b-834a-bd2f680dcc70"
   },
   {
     "state": "win",
-    "amount": 43.83,
-    "transactionId": "5fed4042-60e0-4ecf-b0d7-c9068a15ef99"
+    "amount": "1,332.97",
+    "transactionId": "a3dcf5a7-421e-4407-9c58-e6d91925e7a5"
   },
   {
     "state": "lose",
-    "amount": 35.07,
-    "transactionId": "d575bdcf-f36c-4bd2-be12-9d84e1dec25e"
+    "amount": "3,866.98",
+    "transactionId": "10157147-56cf-45d9-b5c4-f6ca077ab45b"
   },
   {
-    "state": "win",
-    "amount": 12.7,
-    "transactionId": "6d65f3e9-1c70-4d69-bf26-8c3ad38faa36"
+    "state": "lose",
+    "amount": "1,064.44",
+    "transactionId": "eeb61275-ce8d-40d4-bcda-34371f077983"
   },
   {
-    "state": "win",
-    "amount": 55.23,
-    "transactionId": "a1fd211a-f266-4a28-980b-ac9a6a179b40"
+    "state": "lose",
+    "amount": "3,414.89",
+    "transactionId": "0952f8f2-90bb-4d4a-a866-d972bf8e057b"
   },
   {
     "state": "win",
-    "amount": 23.22,
-    "transactionId": "08001a95-b7f6-4996-ae4d-57f217f8ed22"
+    "amount": "2,423.03",
+    "transactionId": "267d46e8-a8f2-4905-b586-d1e4feedd15b"
   },
   {
     "state": "win",
-    "amount": 53.27,
-    "transactionId": "62f045ef-b4cf-4fc3-972e-3c352c9464c6"
+    "amount": "1,896.91",
+    "transactionId": "7fc15001-5f86-49f3-8157-72569ce49ecc"
   },
   {
-    "state": "lose",
-    "amount": 8.03,
-    "transactionId": "da22372e-6242-432a-a671-deafa603de7d"
+    "state": "win",
+    "amount": "1,550.53",
+    "transactionId": "aff517e9-7975-4f81-aea6-caaa6f7f8ef6"
   },
   {
     "state": "lose",
-    "amount": 92.83,
-    "transactionId": "977efc8b-3770-4045-8073-b0d7fefa691f"
+    "amount": "1,497.35",
+    "transactionId": "744ead75-01a7-446b-881e-3bedf54a27d1"
   },
   {
-    "state": "win",
-    "amount": 42.67,
-    "transactionId": "7b05041c-0caf-48dd-9794-8488996431e2"
+    "state": "lose",
+    "amount": "3,037.08",
+    "transactionId": "3760065e-990b-4a5e-9962-a7da2ef1b115"
   },
   {
-    "state": "win",
-    "amount": 81.35,
-    "transactionId": "4d78f21b-8aea-4fff-9588-b15a2db9cc5a"
+    "state": "lose",
+    "amount": "1,946.76",
+    "transactionId": "5e919130-70d1-4cad-b721-e968f3e40d0f"
   },
   {
     "state": "lose",
-    "amount": 49.15,
-    "transactionId": "5f2b646c-3c8f-484a-9d0e-bc762ef74d05"
+    "amount": "2,872.53",
+    "transactionId": "e39f6e5a-f4db-4b77-8c3a-5ee46f0dd162"
   },
   {
-    "state": "lose",
-    "amount": 28.98,
-    "transactionId": "baa7011c-f2de-4a66-af0a-17a728ead23f"
+    "state": "win",
+    "amount": "1,495.55",
+    "transactionId": "dba2fac1-21d7-4948-b4cb-83fe7e61353a"
   },
   {
     "state": "win",
-    "amount": 16.98,
-    "transactionId": "ca86ee94-7758-40ba-ae26-5b917c9ae4ee"
+    "amount": "2,320.70",
+    "transactionId": "9cf9a728-a676-4e28-b576-924a3f76e947"
   },
   {
     "state": "lose",
-    "amount": 92.61,
-    "transactionId": "4d3bde1a-d208-447d-aa74-ef82fc381563"
+    "amount": "3,514.27",
+    "transactionId": "7bde7768-889a-4ff2-b92e-5f4f579dac02"
   },
   {
     "state": "win",
-    "amount": 83.27,
-    "transactionId": "ddb2d3c4-5c62-4f97-a8fa-3e7976cbbaed"
+    "amount": "2,101.43",
+    "transactionId": "2794bf32-a052-4947-bfb3-4e810236fd8f"
   },
   {
     "state": "win",
-    "amount": 60.67,
-    "transactionId": "3f550f6f-12dc-42b7-81cf-8ebf8df7bd9a"
+    "amount": "2,476.77",
+    "transactionId": "195bffc1-5129-4068-940a-7f13a50d3237"
   },
   {
     "state": "win",
-    "amount": 10.17,
-    "transactionId": "adc7b75d-1f71-4dbe-b408-bb8a82d3354b"
+    "amount": "3,907.13",
+    "transactionId": "3483ee43-7e78-4853-83c5-e0e4d2353c63"
   },
   {
     "state": "lose",
-    "amount": 91.66,
-    "transactionId": "5f05b0e3-0ca5-4e3a-87cc-ab656b099946"
+    "amount": "3,181.09",
+    "transactionId": "8f779e91-fb1c-4482-a00d-90f447ec1527"
   },
   {
-    "state": "lose",
-    "amount": 58.84,
-    "transactionId": "cfd7163b-4c95-4dfb-9073-0d4ebfbc6fca"
+    "state": "win",
+    "amount": "1,942.30",
+    "transactionId": "389a5043-dcd3-48ec-bbca-add4f83f9057"
   },
   {
     "state": "win",
-    "amount": 29.54,
-    "transactionId": "d3eadbc3-b963-4dc9-b8b4-f2c4a4f2ee43"
+    "amount": "3,090.80",
+    "transactionId": "c25c3ddd-e935-4862-8eeb-b2e57424f4e2"
   },
   {
     "state": "win",
-    "amount": 76.92,
-    "transactionId": "f96a67f6-a1e4-4879-960c-b4ebb6ec7c4b"
+    "amount": "2,406.97",
+    "transactionId": "49777721-1d81-4928-8f71-357a80a806a5"
   },
   {
-    "state": "win",
-    "amount": 78.1,
-    "transactionId": "5092f6f9-b2b2-4839-8e53-fea51cfb21e0"
+    "state": "lose",
+    "amount": "1,938.58",
+    "transactionId": "37d832d6-0e4a-4be2-b5aa-82031474e278"
   },
   {
     "state": "lose",
-    "amount": 95.82,
-    "transactionId": "b8a9b9f5-f82e-4473-9803-2f5fb7bab3c4"
+    "amount": "1,600.58",
+    "transactionId": "6a0126ba-9a8e-45c7-9635-df9e22c94872"
   },
   {
     "state": "win",
-    "amount": 68.76,
-    "transactionId": "48ecc401-df44-438c-a33a-cac41e758f50"
+    "amount": "3,529.14",
+    "transactionId": "d1531cd6-cc80-4d48-a139-70cda2abf641"
   },
   {
     "state": "lose",
-    "amount": 46.45,
-    "transactionId": "f21ff541-7d5e-45c2-b5e9-0ea6de148abd"
+    "amount": "2,338.11",
+    "transactionId": "d0548ff1-be6a-4b9e-9873-874ac7f69175"
   },
   {
     "state": "lose",
-    "amount": 75.75,
-    "transactionId": "e5dceed8-c46d-4577-98b8-a57d3369b0e0"
+    "amount": "1,939.45",
+    "transactionId": "df2b57df-45a7-4efa-801d-86ca52c186a9"
   },
   {
     "state": "lose",
-    "amount": 97.39,
-    "transactionId": "6a1b1b5f-03d9-450b-a495-0886685beff2"
+    "amount": "1,673.41",
+    "transactionId": "fadddf49-aa5b-4ab1-90b4-87f2dc4f6faa"
   },
   {
-    "state": "win",
-    "amount": 83.7,
-    "transactionId": "aaaabccb-0050-4cae-a6f0-e830cf7aa7ed"
+    "state": "lose",
+    "amount": "2,739.74",
+    "transactionId": "3f2c53ed-a214-4cc3-b063-e11bea42c281"
   },
   {
     "state": "win",
-    "amount": 27.41,
-    "transactionId": "86be3eb5-48fb-4dbf-a855-77f7ef072de0"
+    "amount": "1,778.58",
+    "transactionId": "c9820ddd-35bd-43ac-9177-b78af66c58cc"
   },
   {
     "state": "win",
-    "amount": 67.75,
-    "transactionId": "32ef937e-0536-40a6-ade5-946b46422bed"
+    "amount": "3,264.55",
+    "transactionId": "12a4a199-3019-4905-b0ed-01fa8a9716fd"
   },
   {
     "state": "lose",
-    "amount": 51.8,
-    "transactionId": "590c0083-4582-465d-ad2b-3b90df060f52"
+    "amount": "3,732.49",
+    "transactionId": "121df20f-7fdf-4f27-b76d-4e2aae0e54bf"
   },
   {
-    "state": "win",
-    "amount": 9.59,
-    "transactionId": "ad9e65e0-86c5-47da-b362-3bff7d500f8d"
+    "state": "lose",
+    "amount": "3,816.91",
+    "transactionId": "97f234ff-142d-44ad-a026-0fbc43f297c9"
   },
   {
     "state": "lose",
-    "amount": 9.9,
-    "transactionId": "8ed15f54-3b07-4e0f-b9e6-28ccd9304df0"
+    "amount": "3,261.87",
+    "transactionId": "d2455f91-c348-4939-a612-32e0e1889d51"
+  },
+  {
+    "state": "win",
+    "amount": "2,562.04",
+    "transactionId": "16b38abb-dd59-45aa-ac00-0a4849bf99aa"
   },
   {
     "state": "lose",
-    "amount": 68.66,
-    "transactionId": "0cb10d0a-c3e7-433c-9660-be2e725b84a0"
+    "amount": "3,301.22",
+    "transactionId": "1dd5c7b3-be76-44e4-8421-d5f17cf8a008"
   },
   {
-    "state": "win",
-    "amount": 78.17,
-    "transactionId": "6fca614f-129e-451c-bc66-f9d326eba8f4"
+    "state": "lose",
+    "amount": "1,182.01",
+    "transactionId": "ad373399-c6e3-4438-a84f-236e6957d591"
   },
   {
     "state": "win",
-    "amount": 68.84,
-    "transactionId": "3c6cb894-6bb9-45f4-a7e6-be6bb97f9847"
+    "amount": "1,001.78",
+    "transactionId": "c69c9089-5168-4815-b408-b4edf2735ace"
   },
   {
     "state": "lose",
-    "amount": 62.35,
-    "transactionId": "e422a294-5d18-46d2-a92b-43c137b14798"
+    "amount": "2,824.77",
+    "transactionId": "2804a0b3-9157-40a7-99d8-ba2ae4584981"
   },
   {
     "state": "win",
-    "amount": 54.47,
-    "transactionId": "7177200c-0a1c-4a10-a78b-b860287a85d6"
+    "amount": "2,753.19",
+    "transactionId": "7e6e5ff7-4fd3-4481-99c0-fc668800feee"
   },
   {
     "state": "win",
-    "amount": 90.3,
-    "transactionId": "ec71196f-19f7-4a35-9300-8ac77bd83044"
+    "amount": "1,347.95",
+    "transactionId": "a6411ff4-03d8-4482-b0b0-3b74bc0bf22a"
   },
   {
     "state": "win",
-    "amount": 48.4,
-    "transactionId": "aa0b93c4-0420-48e0-a11f-a9c763d7a3b2"
+    "amount": "1,963.87",
+    "transactionId": "50251568-9a6a-45ee-ad51-34edb0fdcc9b"
   },
   {
     "state": "lose",
-    "amount": 5.07,
-    "transactionId": "03119abe-4b5c-4b3a-8924-388c2cb6b805"
+    "amount": "2,820.23",
+    "transactionId": "34d346f5-fd16-4ce8-a8d4-296d88ed5e23"
   },
   {
     "state": "lose",
-    "amount": 2.21,
-    "transactionId": "d5eb555a-5bd5-4550-9f9a-f668356699ef"
-  },
-  {
-    "state": "win",
-    "amount": 75.8,
-    "transactionId": "5bff1509-be55-4565-a75b-49d6b4426e94"
+    "amount": "2,798.91",
+    "transactionId": "c1dd332e-cb0b-43b2-b3b6-34f7ee4614dc"
   },
   {
-    "state": "win",
-    "amount": 44.2,
-    "transactionId": "3072d2a1-15db-40ce-9dec-fc3faa3587be"
+    "state": "lose",
+    "amount": "1,688.39",
+    "transactionId": "7bb280e1-559a-4c81-b8c2-e87730709809"
   },
   {
     "state": "win",
-    "amount": 88.74,
-    "transactionId": "fb328b72-0c7a-4d36-97f7-7629c41b0610"
+    "amount": "2,598.13",
+    "transactionId": "12952ffb-02af-4ef6-b3d3-886dfa8d47a6"
   },
   {
     "state": "win",
-    "amount": 66.71,
-    "transactionId": "d3d3d65f-5381-4858-9b60-585a0aee3873"
+    "amount": "1,108.61",
+    "transactionId": "3961aa1d-3ca5-4e64-af40-b6c0b88f9133"
   },
   {
     "state": "lose",
-    "amount": 70.03,
-    "transactionId": "61aa8cae-b7ef-4359-a214-9da0192120f0"
+    "amount": "1,607.99",
+    "transactionId": "1e9d3797-1f48-44df-b1d2-edadd692dfe1"
   },
   {
     "state": "win",
-    "amount": 78.56,
-    "transactionId": "b820c9af-b1b9-4362-9a5e-21022ad34396"
+    "amount": "3,867.74",
+    "transactionId": "df6da640-e4b9-4dfc-80da-4904d7769de9"
   },
   {
     "state": "win",
-    "amount": 52.43,
-    "transactionId": "c7502387-0c2b-48c1-b17b-b14173a2f2f2"
+    "amount": "2,629.33",
+    "transactionId": "826fa0a2-5a42-4c26-bc85-9ccd54e1bae2"
   },
   {
     "state": "lose",
-    "amount": 25.18,
-    "transactionId": "8fb0ba76-e657-407e-9a71-ed7f3b349dc9"
+    "amount": "1,453.07",
+    "transactionId": "847d85ac-4364-4d6a-a15d-c3be018da0c0"
   },
   {
+    "state": "lose",
+    "amount": "2,544.12",
+    "transactionId": "bee79212-ce61-4b13-9a44-6367b7694228"
+  },
+  {
     "state": "win",
-    "amount": 74.46,
-    "transactionId": "bf7bc48a-7ee2-412e-8723-5b99cfc3c513"
+    "amount": "1,456.75",
+    "transactionId": "6fd06656-3fd1-4602-bcc0-03134366a825"
   },
   {
     "state": "win",
-    "amount": 13.73,
-    "transactionId": "45b86265-d58e-4054-96af-c5cb0f556efb"
+    "amount": "1,023.86",
+    "transactionId": "c85771f9-909b-4614-ab8b-fb9fba990895"
   },
   {
     "state": "win",
-    "amount": 22.44,
-    "transactionId": "750d6883-cebf-441c-8cc8-46ccc8e126d0"
+    "amount": "1,907.09",
+    "transactionId": "3b2df1b1-05d6-47d4-b3d9-776d0367268f"
   },
   {
     "state": "lose",
-    "amount": 82.8,
-    "transactionId": "f8bd3747-1a32-455f-a3c4-7290bf83d899"
+    "amount": "2,967.70",
+    "transactionId": "fffe421e-a44b-44c4-88eb-2cd52d3dbcb3"
   },
   {
-    "state": "lose",
-    "amount": 11.21,
-    "transactionId": "70f595f2-4bb7-4083-a398-cc89a45a2072"
+    "state": "win",
+    "amount": "2,521.59",
+    "transactionId": "0b96fa3f-c2db-4be8-bfbb-0787c6ce6472"
   },
   {
     "state": "lose",
-    "amount": 56.38,
-    "transactionId": "cf9b948e-c302-4df9-9497-6e65bf95033e"
+    "amount": "2,425.98",
+    "transactionId": "91f69c41-fcf2-4444-b359-b4ed2f4bf267"
   },
   {
     "state": "lose",
-    "amount": 69.89,
-    "transactionId": "451ebe35-6b0d-4497-b6f9-3fc6cbdf0e1c"
+    "amount": "2,419.22",
+    "transactionId": "dac6f64b-0f98-434a-91fa-bf55923af202"
   },
   {
-    "state": "win",
-    "amount": 88.95,
-    "transactionId": "c9c3ab3b-5824-4bce-984c-be059a9b4e30"
+    "state": "lose",
+    "amount": "1,861.63",
+    "transactionId": "d82eddcc-d132-44a0-9884-e0345b9a17ce"
   },
   {
     "state": "lose",
-    "amount": 0.11,
-    "transactionId": "5f154190-7a68-48d5-a80f-e61dfb7a0901"
+    "amount": "3,231.48",
+    "transactionId": "61659e24-f0b2-4e96-b557-2959c043865d"
   },
   {
-    "state": "win",
-    "amount": 80.5,
-    "transactionId": "aabfa109-9450-4519-baff-71b5b2a013d4"
+    "state": "lose",
+    "amount": "3,520.78",
+    "transactionId": "4d91f96f-298a-4d3f-a64d-ea3b4296c873"
   },
   {
     "state": "win",
-    "amount": 46.22,
-    "transactionId": "634b5a6b-1fec-4c93-a787-b3a34ba778c8"
+    "amount": "1,142.01",
+    "transactionId": "01d6ee1c-16c1-43ab-88b1-4063d0c76163"
   },
   {
-    "state": "lose",
-    "amount": 41.1,
-    "transactionId": "7c092e05-63cb-4022-8889-2f037210888a"
+    "state": "win",
+    "amount": "3,306.97",
+    "transactionId": "03c7c5a5-22ef-4b1f-a2ed-50ae0221599a"
   },
   {
     "state": "lose",
-    "amount": 87.06,
-    "transactionId": "f2ab6a8a-5f1c-40e3-8e61-fff2c4f955a2"
+    "amount": "3,033.41",
+    "transactionId": "5023558c-f69c-4b6d-bbe7-76d70dcf6a0c"
   },
   {
     "state": "lose",
-    "amount": 89.57,
-    "transactionId": "a707b6e4-ac4d-475b-93d1-60c46c1b6711"
+    "amount": "2,366.73",
+    "transactionId": "fccd3647-2a71-4af1-8551-1e0b381f1780"
   },
   {
-    "state": "lose",
-    "amount": 35.04,
-    "transactionId": "0f6a441e-118f-4db8-b95f-2ce75feaeb03"
+    "state": "win",
+    "amount": "2,993.38",
+    "transactionId": "42fe4e0d-fcae-48d0-a7c9-d72d8b41f902"
   },
   {
     "state": "win",
-    "amount": 64.26,
-    "transactionId": "1d94a1d3-1aae-4457-b916-1a0db4414500"
+    "amount": "2,779.23",
+    "transactionId": "0f4f662e-ece1-4b5f-a070-b29e580a84fa"
   },
   {
     "state": "lose",
-    "amount": 22.08,
-    "transactionId": "fcb60365-79f5-4dad-b1a6-37c209686bee"
+    "amount": "1,720.41",
+    "transactionId": "f551fad2-de98-430e-8f27-efce61a36ada"
   },
   {
     "state": "lose",
-    "amount": 32.06,
-    "transactionId": "b3082a58-7a2a-4ada-b7fe-39e21e9c8d09"
+    "amount": "2,821.70",
+    "transactionId": "2647097d-db4a-4073-a9fe-9c4c23123909"
   },
   {
-    "state": "lose",
-    "amount": 5.49,
-    "transactionId": "ea0c662f-53c3-4e6a-80fb-9ba045f266d8"
+    "state": "win",
+    "amount": "1,518.73",
+    "transactionId": "b9e6d4dc-c556-4da6-a7a2-8e8d987a510e"
   },
   {
     "state": "lose",
-    "amount": 77.93,
-    "transactionId": "751f42ed-b6e2-4461-9b1e-072335cf31c1"
+    "amount": "1,690.80",
+    "transactionId": "ff849504-b9df-4dc1-a030-754d135c7992"
   },
   {
     "state": "win",
-    "amount": 70.65,
-    "transactionId": "01104d0a-a9bf-4486-b4dc-44c0d92cefdb"
+    "amount": "1,662.21",
+    "transactionId": "51f7ef86-9f11-4cfd-ae59-ceed0728ae75"
   },
   {
     "state": "lose",
-    "amount": 64.71,
-    "transactionId": "cc830c0f-3aca-4f08-a92d-ddd9fe55732f"
+    "amount": "2,821.02",
+    "transactionId": "187bd18c-7c62-4e33-a1cf-9db647b6ce18"
   },
   {
     "state": "lose",
-    "amount": 56.09,
-    "transactionId": "630cca9b-2021-48dd-919a-e8b2eb981335"
+    "amount": "2,082.56",
+    "transactionId": "cbd234f8-d21d-4884-9fb6-8f1ac16934f8"
   },
   {
-    "state": "lose",
-    "amount": 40.02,
-    "transactionId": "81bfaeba-e4a2-46ac-afbe-66cee32ab033"
+    "state": "win",
+    "amount": "2,151.13",
+    "transactionId": "9650d216-2d9a-4755-bf0e-5ab07092ffa9"
   },
   {
-    "state": "win",
-    "amount": 52.62,
-    "transactionId": "d0fdeeb3-f49c-4170-a698-ef2c74b4bf3b"
+    "state": "lose",
+    "amount": "1,712.35",
+    "transactionId": "65d43b84-ea83-4c12-a469-02dec9c5b19b"
   },
   {
-    "state": "win",
-    "amount": 92.37,
-    "transactionId": "4c919216-2ce0-4342-bac1-daff4536c69e"
+    "state": "lose",
+    "amount": "2,838.27",
+    "transactionId": "8b6d43de-f56b-4fea-9bc5-8fd2ddfc17a7"
   },
   {
     "state": "win",
-    "amount": 28.83,
-    "transactionId": "b52b7fb5-2a38-4a2f-903a-13d642679fdf"
+    "amount": "3,598.10",
+    "transactionId": "f637beb7-7288-49a6-9b55-1a3b932d17b5"
   },
   {
     "state": "lose",
-    "amount": 72.15,
-    "transactionId": "89e207ea-79fd-4fb3-9b6f-baf1102823f7"
+    "amount": "1,246.02",
+    "transactionId": "9ffe598a-d16b-4601-9419-72e0aeb2a3bd"
   },
   {
     "state": "win",
-    "amount": 19.59,
-    "transactionId": "c9c7356c-5be4-46b8-8af0-aff739e3e79f"
+    "amount": "2,718.75",
+    "transactionId": "1be3613d-583c-4859-b3c7-f158aaf6de53"
   },
   {
     "state": "lose",
-    "amount": 67.95,
-    "transactionId": "ba9d355c-cfa1-45dc-b595-04385c5ec576"
+    "amount": "1,409.42",
+    "transactionId": "45937e25-cc62-4b72-9c1d-3dc8e78a8efc"
   },
   {
     "state": "lose",
-    "amount": 89.09,
-    "transactionId": "ebadec94-0e7d-463d-827e-6eb53d5271fb"
+    "amount": "2,619.01",
+    "transactionId": "6ac2f8fb-acbc-488d-a254-687f8aec78e9"
   },
   {
-    "state": "win",
-    "amount": 27.4,
-    "transactionId": "eaabe7e3-b696-4ef2-a8f7-3d764a9b001e"
+    "state": "lose",
+    "amount": "2,661.61",
+    "transactionId": "d6938aa3-484b-4a09-afb6-82af2f4e9be5"
   },
   {
-    "state": "win",
-    "amount": 30.93,
-    "transactionId": "a1cbb346-5835-41b4-a39e-330bb9bb380a"
+    "state": "lose",
+    "amount": "3,342.23",
+    "transactionId": "dd6a9302-1048-4be2-a2f8-2b1c52f2f28f"
   },
   {
     "state": "win",
-    "amount": 96.22,
-    "transactionId": "80a364d6-eac1-4693-bd17-b718f1da7aaf"
+    "amount": "3,636.01",
+    "transactionId": "04e9a165-0587-4a74-a9ee-061adfa078fc"
   },
   {
     "state": "win",
-    "amount": 30.79,
-    "transactionId": "fe0d7c4b-d69b-4304-aea7-2ab8ce1319dc"
+    "amount": "3,704.28",
+    "transactionId": "7b642f06-d02d-4613-93bb-0386db83028b"
   },
   {
     "state": "lose",
-    "amount": 32.09,
-    "transactionId": "d73572d6-9d03-4d21-a07d-a116329f784b"
+    "amount": "1,352.29",
+    "transactionId": "98c44153-c1b7-430c-9384-841ad9d35128"
   },
   {
     "state": "win",
-    "amount": 59.26,
-    "transactionId": "4786286d-b297-4d7d-a17c-b3b0434baae0"
+    "amount": "2,979.51",
+    "transactionId": "db2c347e-9726-493b-9065-98498902ea9d"
   },
   {
     "state": "win",
-    "amount": 65.11,
-    "transactionId": "d4e57fec-8b32-449a-9a83-4854cf87e03b"
+    "amount": "2,218.30",
+    "transactionId": "638b6d60-55dc-4d88-a32f-4eb17c322d08"
   },
   {
     "state": "win",
-    "amount": 61.21,
-    "transactionId": "e97e5b6e-1850-447e-afc6-d664634dd0c1"
+    "amount": "2,113.64",
+    "transactionId": "eb4310a8-8675-419f-90d2-4d1603667fa6"
   },
   {
     "state": "win",
-    "amount": 12.22,
-    "transactionId": "e0abc1f2-bdde-44d3-b587-ba194a88578c"
+    "amount": "2,093.26",
+    "transactionId": "3312dbf5-2a55-434f-b18b-a1fc0c9c221f"
   },
   {
     "state": "lose",
-    "amount": 39.26,
-    "transactionId": "d7214c12-63b3-4b46-b37e-29cca29f4d04"
+    "amount": "2,797.07",
+    "transactionId": "c26a708b-187c-4b21-8443-65bbfeeed1a5"
   },
   {
     "state": "win",
-    "amount": 19.11,
-    "transactionId": "c5173b54-bbbd-4c02-8d6c-f1169df1911f"
+    "amount": "1,022.30",
+    "transactionId": "587be099-9d00-4df3-ad9f-e8e239e66dd8"
   },
   {
-    "state": "win",
-    "amount": 46.56,
-    "transactionId": "1f96d9b7-99cd-403a-a7f4-1a46f2bd9096"
+    "state": "lose",
+    "amount": "3,527.52",
+    "transactionId": "2a03850d-72cf-4ad0-8718-e7e05d4fa49f"
   },
   {
     "state": "lose",
-    "amount": 87.22,
-    "transactionId": "5c1b30bf-601f-49eb-bd6d-ac99d746d0e4"
+    "amount": "3,837.34",
+    "transactionId": "daccd890-64f7-42df-8316-9305c9e9826e"
   },
   {
     "state": "win",
-    "amount": 90.27,
-    "transactionId": "b07463a0-f448-4698-a806-9f1d0de79dfa"
+    "amount": "1,783.37",
+    "transactionId": "cc2e1928-4d14-441e-936a-02c0b063f6b9"
   },
   {
     "state": "win",
-    "amount": 50.57,
-    "transactionId": "7ccfa4ee-4cd6-4f73-a21c-b5b66706fe1b"
+    "amount": "2,853.45",
+    "transactionId": "f0ced5af-75f4-4dad-bf57-532cac42fa75"
   },
   {
-    "state": "lose",
-    "amount": 46.53,
-    "transactionId": "f8b6b012-5516-401c-9113-dfaa2cf99296"
+    "state": "win",
+    "amount": "1,960.02",
+    "transactionId": "086ca1b3-c69e-4424-ab29-10a29517d7c7"
   },
   {
     "state": "lose",
-    "amount": 73.43,
-    "transactionId": "4331fb2f-c85d-4945-8a2b-c1dc52a64468"
+    "amount": "2,922.28",
+    "transactionId": "97924010-f653-4689-9c5b-cf9d25351c71"
   },
   {
-    "state": "lose",
-    "amount": 65.81,
-    "transactionId": "5ce8afb8-1b36-45b2-80a1-e025db09ca67"
+    "state": "win",
+    "amount": "2,956.71",
+    "transactionId": "ea13f1b6-c057-4790-b1b7-f697f1292607"
   },
   {
-    "state": "lose",
-    "amount": 69.07,
-    "transactionId": "0449bbc2-25de-48b1-af75-44828efc456b"
+    "state": "win",
+    "amount": "3,659.68",
+    "transactionId": "1be7e9f9-612f-40b0-9c21-0e951bc9086a"
   },
   {
     "state": "win",
-    "amount": 90.61,
-    "transactionId": "652ffdea-90d8-4eea-a788-60d46dc49773"
+    "amount": "1,348.94",
+    "transactionId": "c5296553-2834-4906-af43-99e3792f3388"
   },
   {
     "state": "win",
-    "amount": 54.69,
-    "transactionId": "b788fb24-4283-4849-9497-234e483f0c68"
+    "amount": "3,883.76",
+    "transactionId": "cd67ab51-f1cd-4675-8baf-7d31842e8713"
   },
   {
     "state": "lose",
-    "amount": 79.66,
-    "transactionId": "95ddd317-0444-4dd4-bbad-c96c7c51de3a"
-  },
-  {
-    "state": "win",
-    "amount": 86.2,
-    "transactionId": "e8514ed3-b62d-4043-84d8-c43d79fcd49e"
+    "amount": "3,944.07",
+    "transactionId": "a55924c4-d786-4150-bafa-d4ffc1c5f74b"
   },
   {
     "state": "lose",
-    "amount": 3.06,
-    "transactionId": "ff029026-4590-4719-8ca3-987dfe4586d5"
+    "amount": "3,688.52",
+    "transactionId": "71a7a97e-5cde-420c-94d5-dc7541966ea1"
   },
   {
-    "state": "lose",
-    "amount": 55.39,
-    "transactionId": "184e7b45-6a4f-4fab-a6a4-175379025e5d"
+    "state": "win",
+    "amount": "3,852.32",
+    "transactionId": "f6e7ecca-161f-45b0-b471-7419892c4a7c"
   },
   {
     "state": "lose",
-    "amount": 56.58,
-    "transactionId": "6984670d-77d5-4913-95f0-418244c2bffa"
+    "amount": "2,497.24",
+    "transactionId": "2543848c-8121-4754-a1c1-1cd1f7c6f1da"
   },
   {
     "state": "lose",
-    "amount": 31.33,
-    "transactionId": "5fa7c774-4eef-4ebb-ae1b-e3ff053f678a"
+    "amount": "2,978.07",
+    "transactionId": "2d6333c0-e388-4323-9844-b42b4ed700d7"
   },
   {
-    "state": "lose",
-    "amount": 73.8,
-    "transactionId": "e5425afb-b83a-47e0-a61f-25f43112b627"
+    "state": "win",
+    "amount": "3,512.21",
+    "transactionId": "b562a887-d200-4976-8b7c-31c128b3e6be"
   },
   {
-    "state": "lose",
-    "amount": 76.62,
-    "transactionId": "a7982f15-2e3f-4b1e-99c7-6beaaba83b6f"
+    "state": "win",
+    "amount": "3,591.78",
+    "transactionId": "45d47d82-132e-40f3-8e3e-6046294fd3cc"
   },
   {
     "state": "lose",
-    "amount": 19.37,
-    "transactionId": "2b7af244-13a6-480d-9a00-787d15d89c8a"
+    "amount": "3,492.69",
+    "transactionId": "9ae5852f-29cb-4d3a-bb99-bd580e765150"
   },
   {
     "state": "lose",
-    "amount": 97.24,
-    "transactionId": "44a70107-8c99-4145-a2c8-37267b14626d"
+    "amount": "2,000.60",
+    "transactionId": "1a79bf1d-57e5-4810-bf86-35853a48b744"
   },
   {
     "state": "lose",
-    "amount": 55.75,
-    "transactionId": "28e35620-6e4e-43e6-be94-30ec9c997feb"
+    "amount": "2,225.96",
+    "transactionId": "768a4efc-f530-462e-9f90-9854fb29651a"
   },
   {
-    "state": "win",
-    "amount": 40.14,
-    "transactionId": "63bc7801-622e-4148-981a-129f11e98f2e"
+    "state": "lose",
+    "amount": "2,702.24",
+    "transactionId": "f6fd7676-1c5c-4f8c-864b-84a862670ca6"
   },
   {
     "state": "lose",
-    "amount": 24.4,
-    "transactionId": "9dbd37b4-3086-42f4-bbf9-90bc3aab2391"
+    "amount": "2,579.74",
+    "transactionId": "263fbd18-ef62-45f8-b251-3ff54cfa62c7"
   },
   {
-    "state": "win",
-    "amount": 27.69,
-    "transactionId": "5e9cb4ff-2895-4db4-9863-f45ca1502f08"
+    "state": "lose",
+    "amount": "3,894.05",
+    "transactionId": "883bc590-f258-48b4-b63f-7661defeba81"
   },
   {
-    "state": "win",
-    "amount": 66.36,
-    "transactionId": "b6d39e5a-05a4-4b9e-8ce4-1258a034b1f7"
+    "state": "lose",
+    "amount": "2,605.04",
+    "transactionId": "44da7e8d-77fa-4372-ab3f-73aebc462118"
   },
   {
     "state": "lose",
-    "amount": 34.06,
-    "transactionId": "77bdc561-afac-4267-921d-e89e5158c7d9"
+    "amount": "2,987.03",
+    "transactionId": "17d5da56-d021-4a5b-9871-bb80e362e7cb"
   },
   {
     "state": "win",
-    "amount": 68.76,
-    "transactionId": "f335d89a-0be7-4c75-b004-3f0dcdfef49d"
+    "amount": "3,344.21",
+    "transactionId": "8ec88493-2ab9-47f1-9714-0edf6292d51c"
   },
   {
-    "state": "win",
-    "amount": 52.62,
-    "transactionId": "1f899b24-c3af-46e8-8ee9-f9fbd70e5d2a"
+    "state": "lose",
+    "amount": "2,511.11",
+    "transactionId": "e771970e-8c4a-48b9-a74e-23dabbdd29c5"
   },
   {
     "state": "win",
-    "amount": 3.8,
-    "transactionId": "f3926aee-7910-406e-b6f6-f95c1273f02b"
+    "amount": "3,222.41",
+    "transactionId": "17ad6dec-49db-4a9b-9386-185a5d37a295"
   },
   {
     "state": "win",
-    "amount": 9.78,
-    "transactionId": "663581de-5a00-4e40-a5f2-18bc3d77b2a5"
+    "amount": "3,758.16",
+    "transactionId": "9799c097-5e80-45f0-a3ee-7e47a3da359b"
   },
   {
     "state": "lose",
-    "amount": 39.84,
-    "transactionId": "9b2dcfca-3b89-4256-8e86-daed8eab7efb"
+    "amount": "3,737.38",
+    "transactionId": "bddd7b3a-24fb-43c0-8751-fd8b265554b6"
   },
   {
-    "state": "lose",
-    "amount": 55.05,
-    "transactionId": "e549a1c3-7ec3-4fab-a0a8-9df6d068da1d"
-  },
-  {
     "state": "win",
-    "amount": 23.64,
-    "transactionId": "e19a4ae9-3016-41a5-9ac8-58fd740763bb"
+    "amount": "2,296.34",
+    "transactionId": "3a066b7e-aee2-46d4-9f10-98e7bb95870e"
   },
   {
-    "state": "win",
-    "amount": 70.11,
-    "transactionId": "4229ef38-1230-4dc8-96e2-065474896766"
-  },
-  {
     "state": "lose",
-    "amount": 29.48,
-    "transactionId": "0a98bf80-0cbe-422a-af3d-93cdf2b84926"
+    "amount": "3,408.50",
+    "transactionId": "f9faaa2d-ad80-47ae-94cb-9db3897f4508"
   },
   {
     "state": "win",
-    "amount": 72.58,
-    "transactionId": "7971178d-9b7b-4942-9567-ab2895259ed2"
+    "amount": "2,202.37",
+    "transactionId": "013964af-df16-4577-8238-e5981b7b907b"
   },
   {
     "state": "win",
-    "amount": 89.9,
-    "transactionId": "7adf1bcb-d7c2-4f61-b918-4ed0d59cc0ec"
-  },
-  {
-    "state": "lose",
-    "amount": 98.33,
-    "transactionId": "55bf98e2-9707-45cc-bf56-87a9b9266403"
+    "amount": "2,467.27",
+    "transactionId": "7860364c-2679-413f-a6e8-8c2e5e062bba"
   },
   {
     "state": "win",
-    "amount": 53.61,
-    "transactionId": "66f79322-ff39-4118-8f7d-37b415616bd6"
+    "amount": "1,109.85",
+    "transactionId": "71888d22-1a25-4908-a8e9-27583b77bea0"
   },
   {
     "state": "lose",
-    "amount": 46.05,
-    "transactionId": "e9fd4784-916d-4be9-b606-c04c65596b9e"
+    "amount": "1,650.06",
+    "transactionId": "9f6060f3-36e7-4a91-a588-05fb41d1a631"
   },
   {
     "state": "lose",
-    "amount": 32.27,
-    "transactionId": "85e0ec81-49c2-43c6-8214-fa37d4856ae1"
+    "amount": "1,530.26",
+    "transactionId": "ed8392d5-72f3-42ad-96bb-d7957064a3e4"
   },
   {
     "state": "lose",
-    "amount": 36.68,
-    "transactionId": "ff701a20-b679-492c-870a-d8513764c06d"
+    "amount": "2,706.42",
+    "transactionId": "4a6ec1e5-2b40-441b-804e-8b85e7a45343"
   },
   {
     "state": "lose",
-    "amount": 1.35,
-    "transactionId": "2a75c60b-5bc5-4068-8cde-b68ac5b815ee"
+    "amount": "1,079.19",
+    "transactionId": "2b5b14da-093b-41f9-914b-80dddc2a992b"
   },
   {
     "state": "win",
-    "amount": 99.27,
-    "transactionId": "0a53acf5-65cd-4189-8de3-70e0e634ae37"
+    "amount": "2,996.12",
+    "transactionId": "9241bb7f-fa11-47e0-8685-7e38568a9574"
   },
   {
     "state": "win",
-    "amount": 88.48,
-    "transactionId": "e340fda3-e8ca-4863-ae50-15ca7deb0d79"
+    "amount": "3,365.13",
+    "transactionId": "3c0f64c2-2515-476f-ab9b-e840ba6856d3"
   },
   {
     "state": "lose",
-    "amount": 75.13,
-    "transactionId": "e4214a37-d646-4c18-81f8-7c3480b171f5"
-  },
-  {
-    "state": "win",
-    "amount": 64.36,
-    "transactionId": "efb8c327-095a-4b15-ae98-1e3a9b3b5e3c"
+    "amount": "2,049.94",
+    "transactionId": "ed8d3b30-15bc-44f5-b07a-0b18a9a54308"
   },
   {
     "state": "lose",
-    "amount": 27.49,
-    "transactionId": "f9bd8f79-3815-4371-b905-d63715a3b846"
-  },
-  {
-    "state": "win",
-    "amount": 99.37,
-    "transactionId": "3e69c964-b84e-4ecd-baf9-e63b17c071c2"
+    "amount": "2,173.45",
+    "transactionId": "202e2e3b-6437-4255-a500-441f403d0f03"
   },
   {
-    "state": "win",
-    "amount": 12.74,
-    "transactionId": "98aad84e-f6c0-4294-a109-3bbc53f201eb"
+    "state": "lose",
+    "amount": "1,793.48",
+    "transactionId": "9e8927f2-beb9-44ef-909e-1bd3ae98e1f1"
   },
   {
     "state": "lose",
-    "amount": 5.58,
-    "transactionId": "96cd4762-af23-48bc-8f2b-12b936c89dd6"
+    "amount": "3,990.63",
+    "transactionId": "8259e020-a780-45c1-a542-6e6840c8526e"
   },
   {
     "state": "win",
-    "amount": 63.15,
-    "transactionId": "a64b99e4-11ec-45de-849e-a752f0efce06"
+    "amount": "2,120.78",
+    "transactionId": "af9b5602-c442-4e49-9385-12d671521d46"
   },
   {
     "state": "win",
-    "amount": 3.15,
-    "transactionId": "52f56858-ccd0-4b72-a61a-7bbf62b5b0d3"
+    "amount": "1,524.59",
+    "transactionId": "39542c8a-e49f-4304-916e-cb89b5e66e15"
   },
   {
     "state": "win",
-    "amount": 97.98,
-    "transactionId": "2dcc3913-75b4-47b0-9710-a763aa1c5296"
+    "amount": "3,826.69",
+    "transactionId": "35e58924-d0b0-4492-a7e5-8cb54cd3a57b"
   },
   {
     "state": "win",
-    "amount": 66.84,
-    "transactionId": "7a3e7777-5b59-46b0-ab33-a517b9a3b737"
+    "amount": "2,382.89",
+    "transactionId": "7bf98a47-6999-45c0-9752-7dd5eeebad3b"
   },
   {
     "state": "win",
-    "amount": 21.51,
-    "transactionId": "484593bd-5dc3-4ae7-ac5f-5b3e2a5f6d9a"
+    "amount": "2,559.52",
+    "transactionId": "2f52ee6d-9aa6-4593-ad3d-faacd5afcdf2"
   },
   {
     "state": "win",
-    "amount": 94.34,
-    "transactionId": "0ba43536-22fa-4e5a-bb37-d7509b96e0e7"
+    "amount": "1,624.66",
+    "transactionId": "82e866e3-3a2d-47ec-9f5b-43585e413156"
   },
   {
     "state": "lose",
-    "amount": 49.36,
-    "transactionId": "f1ad3026-d7ce-4dcc-b8c9-2d7f5bd5cab0"
+    "amount": "3,417.70",
+    "transactionId": "ba223a5f-214c-48f5-bbd1-865b125860a2"
   },
   {
-    "state": "win",
-    "amount": 18.42,
-    "transactionId": "ecaea5b3-9ae6-4b9a-9be2-7c7eec06ee34"
+    "state": "lose",
+    "amount": "1,359.84",
+    "transactionId": "ee1ac178-f4a2-4d33-b4b8-5357810c3168"
   },
   {
     "state": "win",
-    "amount": 72.74,
-    "transactionId": "aaf344f4-9c6a-4e59-8568-e49022718343"
+    "amount": "2,738.08",
+    "transactionId": "e689806a-b36e-4931-afa3-130b8970f8d3"
   },
   {
     "state": "lose",
-    "amount": 72.78,
-    "transactionId": "db0d65b6-7f2c-4f1f-a7a3-dc4151e6819b"
+    "amount": "1,687.70",
+    "transactionId": "9940525a-ba1a-44a9-acd6-2f840c65997b"
   },
   {
     "state": "lose",
-    "amount": 12.97,
-    "transactionId": "1ee9feca-cc15-4843-9280-de4ac442bfb1"
+    "amount": "1,902.45",
+    "transactionId": "96ca731d-25ff-4541-ab0b-b23025d804b1"
   },
   {
     "state": "win",
-    "amount": 40.63,
-    "transactionId": "535440d9-38dd-43cb-a6f1-c64b3c6196d4"
+    "amount": "2,196.79",
+    "transactionId": "37e8d2af-d1b0-4734-b90c-729d00fd3a80"
   },
   {
     "state": "lose",
-    "amount": 20.58,
-    "transactionId": "9513de58-327d-4490-bb95-44e4e78b1f7a"
+    "amount": "2,385.13",
+    "transactionId": "dc57fe58-e3b4-4d28-863b-fe403ca58cb2"
   },
   {
     "state": "lose",
-    "amount": 33.39,
-    "transactionId": "c35c44da-4c07-488c-8052-fe45ca737a5b"
+    "amount": "2,410.06",
+    "transactionId": "d9a41f4e-02f9-481c-8d60-06a0d90ff6c6"
   },
   {
     "state": "win",
-    "amount": 71.05,
-    "transactionId": "2eaf0c18-f2cd-425c-aa07-e6d2c397e7fa"
+    "amount": "3,798.58",
+    "transactionId": "9ef15c2d-3e59-47bb-aa8f-63bac66ec8a3"
   },
   {
-    "state": "win",
-    "amount": 49.68,
-    "transactionId": "bc361a6e-f183-4310-b19a-c40975e5b63d"
+    "state": "lose",
+    "amount": "1,831.45",
+    "transactionId": "59d84220-6371-4502-aef9-f1d2a6cf9b62"
   },
   {
     "state": "lose",
-    "amount": 84.59,
-    "transactionId": "7705568b-4bc0-4f74-b9af-bec2a79c1149"
+    "amount": "3,530.22",
+    "transactionId": "643a15bf-fb0a-45af-954a-c57e993708c5"
   },
   {
     "state": "lose",
-    "amount": 53.53,
-    "transactionId": "4a31841b-5ccb-48e9-bef9-79331d2cffee"
+    "amount": "1,651.79",
+    "transactionId": "8f681c93-e6d3-4588-9f38-4aca41c67dac"
   },
   {
-    "state": "win",
-    "amount": 96.37,
-    "transactionId": "970806df-7e13-47b2-8bf3-7cf66509d9df"
+    "state": "lose",
+    "amount": "1,467.17",
+    "transactionId": "e7e164fa-12c1-4ce2-9265-484a9479911f"
   },
   {
-    "state": "win",
-    "amount": 33.24,
-    "transactionId": "ab61b35e-4e83-47fe-923d-dfac75de4afa"
+    "state": "lose",
+    "amount": "3,623.59",
+    "transactionId": "ecab7f73-e43b-40a5-ae9e-6add065617d0"
   },
   {
     "state": "win",
-    "amount": 76.94,
-    "transactionId": "d3b2a2bc-dafb-4163-9e2e-dc6ee44e72e3"
+    "amount": "2,749.45",
+    "transactionId": "6305f562-5095-4318-9de7-b6dc6ebb5ae1"
   },
   {
-    "state": "lose",
-    "amount": 29.26,
-    "transactionId": "35deac64-d45e-42e3-8606-19b39e059814"
-  },
-  {
     "state": "win",
-    "amount": 13.23,
-    "transactionId": "f9ed80d5-6d81-4a71-92f1-e887e65cd06c"
+    "amount": "3,188.34",
+    "transactionId": "39786720-8335-4057-8565-a62395b3e5e3"
   },
   {
-    "state": "lose",
-    "amount": 1.18,
-    "transactionId": "033ead23-0573-4fe3-b24b-becc4087cd7e"
+    "state": "win",
+    "amount": "1,195.69",
+    "transactionId": "25f0f089-016b-482c-a66b-17048112c672"
   },
   {
     "state": "win",
-    "amount": 94.63,
-    "transactionId": "f5816114-93df-455e-a7f7-5f26edf3b4c1"
+    "amount": "3,006.14",
+    "transactionId": "c26baa5e-a002-4770-850e-a0eace6f09b0"
   },
   {
     "state": "lose",
-    "amount": 24.72,
-    "transactionId": "115a20c6-864a-43bb-a26e-c06c325b8ac8"
+    "amount": "3,233.04",
+    "transactionId": "06263124-8350-42f1-99ab-cf07c0f2910c"
   },
   {
-    "state": "win",
-    "amount": 98.47,
-    "transactionId": "0ffce26d-1862-492f-82c1-ea15d687177d"
+    "state": "lose",
+    "amount": "3,321.16",
+    "transactionId": "648aea6f-2bc5-433b-959e-e0ced2fedff6"
   },
   {
     "state": "lose",
-    "amount": 100,
-    "transactionId": "e7bc944e-27ad-48f2-9f80-555f3dc7f3b8"
+    "amount": "1,836.65",
+    "transactionId": "3b6a9ebe-1f51-473d-957a-a924ac7e882f"
   },
   {
     "state": "win",
-    "amount": 58.21,
-    "transactionId": "4a75f18e-243b-4691-ab9d-cfdd55b990ec"
+    "amount": "3,709.27",
+    "transactionId": "d0271c2c-f1e1-40ad-a928-b4d9009886c8"
   },
   {
     "state": "lose",
-    "amount": 88.46,
-    "transactionId": "e826ac8f-2ed5-4745-8e96-a312b5366174"
+    "amount": "1,471.85",
+    "transactionId": "d867b563-abe8-4920-8387-27f942d1bee5"
   },
   {
     "state": "lose",
-    "amount": 28.73,
-    "transactionId": "3bd56a27-e365-45f3-97e3-282458055576"
+    "amount": "2,785.82",
+    "transactionId": "7ddfa4a1-3b67-4133-82bd-2ee8e78bb5fe"
   },
   {
-    "state": "win",
-    "amount": 19.11,
-    "transactionId": "ff925cda-f338-45ba-a77f-8e40cc69330e"
-  },
-  {
     "state": "lose",
-    "amount": 28.21,
-    "transactionId": "23306e83-ea3d-4978-98d4-48edf5a5721d"
+    "amount": "2,302.01",
+    "transactionId": "008a8fae-de62-4162-b4e4-1b802aa4fcc2"
   },
   {
     "state": "lose",
-    "amount": 31.22,
-    "transactionId": "e32da796-a091-4053-abf5-61d182649da6"
-  },
-  {
-    "state": "win",
-    "amount": 16.43,
-    "transactionId": "123569a1-4f40-439d-950e-5f811edcda06"
+    "amount": "2,195.31",
+    "transactionId": "1d6439ef-df3a-4f03-b26a-a7e72547c111"
   },
   {
-    "state": "win",
-    "amount": 53.02,
-    "transactionId": "1d9c2399-6d03-4440-b1d1-aa923af3f6a9"
+    "state": "lose",
+    "amount": "3,867.35",
+    "transactionId": "919c4a0f-3256-44b2-a45c-977e4edef8e0"
   },
   {
     "state": "win",
-    "amount": 58.69,
-    "transactionId": "11f31390-b688-4671-9df7-c0518dde1014"
+    "amount": "3,492.25",
+    "transactionId": "4ffb0a47-cd39-4b2c-a3c8-6601fa7cedde"
   },
   {
     "state": "lose",
-    "amount": 61.86,
-    "transactionId": "8c75a2ac-7e73-4f80-b15c-88d1d84dbd11"
+    "amount": "1,581.12",
+    "transactionId": "611e774a-c828-40ec-b60e-2aa483ed4a3d"
   },
   {
     "state": "lose",
-    "amount": 27.91,
-    "transactionId": "af5e59cc-b6a1-49a4-9b0e-309cb657c3d3"
+    "amount": "3,572.93",
+    "transactionId": "d844eb6a-f0e7-4394-a122-d3aa5eaf64a0"
   },
   {
-    "state": "lose",
-    "amount": 26.57,
-    "transactionId": "d1507b49-15c8-40e7-8923-8528ef8825da"
+    "state": "win",
+    "amount": "1,846.99",
+    "transactionId": "154e311a-96c7-4ace-b9b3-bf2c59579c8d"
   },
   {
     "state": "lose",
-    "amount": 72.37,
-    "transactionId": "0c0532ae-1101-4daf-bfa2-e19fb19e487e"
+    "amount": "2,051.90",
+    "transactionId": "0a4b2ac9-2c53-41ba-aef9-15951bb4d720"
   },
   {
     "state": "win",
-    "amount": 20.35,
-    "transactionId": "24a7d16f-7dbf-426d-a710-53559b5558cc"
+    "amount": "3,183.49",
+    "transactionId": "16c121bb-f1c7-4974-9a04-aa5eb0836678"
   },
   {
     "state": "lose",
-    "amount": 47.75,
-    "transactionId": "f7cfc49b-d034-4ae8-bfea-17eee95aafdb"
+    "amount": "1,948.53",
+    "transactionId": "ddd3990a-764b-44d4-88d6-2405801811d8"
   },
   {
     "state": "win",
-    "amount": 81.42,
-    "transactionId": "03e08a82-59a8-41a6-86c6-07c7c9e09eba"
-  },
-  {
-    "state": "lose",
-    "amount": 28.84,
-    "transactionId": "a61cf4ce-5629-4b9c-bc7b-fc9d9fc2817c"
+    "amount": "2,692.82",
+    "transactionId": "05414c59-9711-4a53-b693-0e89226bca64"
   },
   {
     "state": "win",
-    "amount": 42.57,
-    "transactionId": "008e45a3-f442-4e35-9ed6-d458c0188cb4"
+    "amount": "2,775.08",
+    "transactionId": "103d30fc-2a95-4cdb-be34-735f4018b351"
   },
   {
     "state": "lose",
-    "amount": 74.05,
-    "transactionId": "10eb4416-97d9-4447-b2fa-1d0bf542d28d"
-  },
-  {
-    "state": "win",
-    "amount": 85.32,
-    "transactionId": "cbc930f3-90d9-463e-8746-86afd00d6312"
+    "amount": "1,996.29",
+    "transactionId": "43a0cd85-7ff7-4ece-9918-d5fe18c63edf"
   },
   {
-    "state": "win",
-    "amount": 20.62,
-    "transactionId": "bb57907e-9d38-4727-99bd-381ffa54aa04"
+    "state": "lose",
+    "amount": "1,459.79",
+    "transactionId": "5eb85453-3979-4f16-95ca-a2f2c5d43535"
   },
   {
     "state": "win",
-    "amount": 33.98,
-    "transactionId": "65982cbc-328e-4cef-be97-b23480f466aa"
+    "amount": "2,487.52",
+    "transactionId": "9fbb548b-7081-47fc-9d11-3e04293a63cb"
   },
   {
     "state": "win",
-    "amount": 67.45,
-    "transactionId": "b0af4920-7c25-4d64-9c22-905eaeccbeb8"
+    "amount": "3,273.09",
+    "transactionId": "86ba08ea-a5a4-46ae-a6e2-033c6bfd6031"
   },
   {
     "state": "lose",
-    "amount": 57.35,
-    "transactionId": "cfef19cb-b255-4a34-a6cb-b6b448773c65"
+    "amount": "2,534.69",
+    "transactionId": "75c05e64-9470-422a-a73b-fc5d6261c82b"
   },
   {
     "state": "win",
-    "amount": 6.05,
-    "transactionId": "5ee585f4-b75d-44e9-bf4f-9467f221201f"
+    "amount": "1,668.84",
+    "transactionId": "b368bd48-a9af-4588-84cc-ff9ac2a929c1"
   },
   {
     "state": "win",
-    "amount": 35.62,
-    "transactionId": "2cfca440-4311-4044-a52c-6e1898f2b1ba"
+    "amount": "3,451.88",
+    "transactionId": "61ad7ee4-4120-4a38-bd98-4984a01391d6"
   },
   {
     "state": "lose",
-    "amount": 83.69,
-    "transactionId": "ba49e664-4e96-4ed0-b419-f6a0f5975fb4"
+    "amount": "2,701.98",
+    "transactionId": "a33ba455-abce-4b16-8671-b3b6574562e0"
   },
   {
-    "state": "win",
-    "amount": 88,
-    "transactionId": "24fda39f-a779-4c31-91c3-1ff1245e0b2b"
-  },
-  {
-    "state": "win",
-    "amount": 48.94,
-    "transactionId": "fa24e133-3ee7-42fd-84bb-bf49509f1c61"
-  },
-  {
     "state": "lose",
-    "amount": 14.5,
-    "transactionId": "c87d3db5-f7b5-4df2-bbd8-3a8f9747189f"
+    "amount": "1,953.50",
+    "transactionId": "6c7bf9cd-ec23-4323-be5a-2814cb054e81"
   },
   {
-    "state": "win",
-    "amount": 33.65,
-    "transactionId": "68aef509-bd78-4c62-9838-c502b08e21b8"
+    "state": "lose",
+    "amount": "3,250.53",
+    "transactionId": "edea6d3b-6587-4da3-81ad-9198b2691a63"
   },
   {
     "state": "lose",
-    "amount": 42.01,
-    "transactionId": "79e5052f-184d-48ff-9885-44daf3c13e74"
+    "amount": "1,689.65",
+    "transactionId": "16e815de-5b4a-4f3b-9b0d-df65298a1054"
   },
   {
     "state": "win",
-    "amount": 42.27,
-    "transactionId": "d244cd8f-6850-4382-8252-43bc19450b09"
+    "amount": "1,904.04",
+    "transactionId": "8c3e5fab-f22d-49f3-89a1-0d0fe4aa58a6"
   },
   {
     "state": "lose",
-    "amount": 87.19,
-    "transactionId": "45787470-c35e-42cf-bf46-2ad5388047b6"
-  },
-  {
-    "state": "win",
-    "amount": 70.65,
-    "transactionId": "4f258a5a-ea39-46dc-9850-ab987da749f3"
+    "amount": "3,916.81",
+    "transactionId": "b599cf1a-f846-4486-b013-cb000bc8b9b0"
   },
   {
     "state": "win",
-    "amount": 1.13,
-    "transactionId": "0d9a601a-21af-43c6-8515-c66f14b13c2b"
+    "amount": "1,577.57",
+    "transactionId": "fb72e784-1c99-477a-89be-626e159da82a"
   },
   {
     "state": "win",
-    "amount": 39.85,
-    "transactionId": "9e820628-fc46-47f3-8629-b30973ef863e"
+    "amount": "1,561.26",
+    "transactionId": "255557fe-989b-4193-9e5a-7a5fba422a10"
   },
   {
     "state": "lose",
-    "amount": 40.86,
-    "transactionId": "14b2e0c5-372a-4831-a14f-1b83a08adae8"
+    "amount": "3,835.29",
+    "transactionId": "65e22f68-5b80-4387-a1fe-5abe6c9073e4"
   },
   {
     "state": "win",
-    "amount": 25.08,
-    "transactionId": "7b76fe66-ad03-4d0c-9ec1-7f43399b1b8d"
+    "amount": "3,011.64",
+    "transactionId": "02cb32d5-6a11-4ec1-984f-4d4a2e0d9641"
   },
   {
     "state": "win",
-    "amount": 6.46,
-    "transactionId": "e4f1c197-fe61-4251-beb6-41309c7104dc"
+    "amount": "3,816.03",
+    "transactionId": "82ff55cf-7c92-4115-93c3-ca7190d83685"
   },
   {
     "state": "win",
-    "amount": 56.86,
-    "transactionId": "9a7b2cda-0a72-443f-be3b-9ff3ab5f9a1e"
+    "amount": "3,370.84",
+    "transactionId": "66be4a1f-4389-4e82-8fe7-7956ec42e631"
   },
   {
     "state": "win",
-    "amount": 92.96,
-    "transactionId": "8c609f14-0f5d-4c02-b055-3c153c2b0554"
+    "amount": "1,533.11",
+    "transactionId": "ee5aab9c-99d9-4d95-940c-8419db7e46e4"
   },
   {
     "state": "win",
-    "amount": 93.74,
-    "transactionId": "40f782a4-fde7-4ce0-8c21-e75f7a443b92"
+    "amount": "3,462.55",
+    "transactionId": "b64fdab1-be4a-4d28-b1eb-5fe919acf3ea"
   },
   {
     "state": "win",
-    "amount": 67.09,
-    "transactionId": "dbdafbdc-c063-485f-bb22-01e39426568c"
+    "amount": "1,177.58",
+    "transactionId": "e827a95c-a438-4774-9d00-01de9767f350"
   },
   {
     "state": "win",
-    "amount": 87.73,
-    "transactionId": "61296815-eadd-4d36-afc4-76213690fefc"
+    "amount": "1,177.72",
+    "transactionId": "28fb914d-d1eb-487d-b422-bcfb923dcf65"
   },
   {
     "state": "lose",
-    "amount": 49.2,
-    "transactionId": "c760da1f-3d30-41ba-a96f-a4408f137912"
+    "amount": "2,855.59",
+    "transactionId": "480d9dae-17ec-423b-90fb-4fffad90b07f"
   },
   {
     "state": "lose",
-    "amount": 8.78,
-    "transactionId": "cf3d62a6-ffb7-4aa9-b61c-868be885f1fc"
+    "amount": "1,072.78",
+    "transactionId": "2b56f280-7d99-4ce7-8f1b-b326cdac03fe"
   },
   {
     "state": "win",
-    "amount": 32.07,
-    "transactionId": "d85533f0-b992-4b8b-b7cd-6d6d53817dd3"
+    "amount": "2,058.03",
+    "transactionId": "b578e4a8-f25b-4c40-9921-0394aaabeca2"
   },
   {
     "state": "lose",
-    "amount": 10.18,
-    "transactionId": "eb739d8e-80a9-42d4-a32a-eb661e84ba61"
+    "amount": "3,557.00",
+    "transactionId": "312916f6-308e-4f96-9c18-8181a504c103"
   },
   {
     "state": "win",
-    "amount": 16.14,
-    "transactionId": "607a8c36-79d8-467f-b457-877f7974af15"
-  },
-  {
-    "state": "lose",
-    "amount": 75.03,
-    "transactionId": "3223c08b-afae-4f81-aa84-6ae8cf81235c"
+    "amount": "2,914.86",
+    "transactionId": "ff71348e-1e5a-4005-867e-4968574db15e"
   },
   {
     "state": "lose",
-    "amount": 28.28,
-    "transactionId": "5c4248a7-3b93-4149-9274-49bf43252e8d"
+    "amount": "2,278.79",
+    "transactionId": "03713947-f2d7-4db1-b876-addf6c5bd99e"
   },
   {
-    "state": "lose",
-    "amount": 11.42,
-    "transactionId": "b1b0202c-cc94-4c9b-9724-eee56b6931a0"
+    "state": "win",
+    "amount": "1,002.17",
+    "transactionId": "96b6c8b9-68ee-4959-beac-b44cfcba1477"
   },
   {
     "state": "lose",
-    "amount": 66.08,
-    "transactionId": "358aac20-af1b-401f-a546-d7348c143538"
+    "amount": "1,713.45",
+    "transactionId": "19bf0fe6-08c5-456a-bf7b-b62ea86655fb"
   },
   {
     "state": "lose",
-    "amount": 26.23,
-    "transactionId": "3027e3af-8b00-483e-acd7-2e5be069800f"
-  },
-  {
-    "state": "win",
-    "amount": 6.07,
-    "transactionId": "8bb82553-9507-4537-b403-5f65cd2ac0fd"
+    "amount": "2,738.25",
+    "transactionId": "597e3c21-f1aa-4d44-ad5b-a40e4d65f708"
   },
   {
     "state": "lose",
-    "amount": 3.61,
-    "transactionId": "443b3905-7e16-45b0-bc04-6d3be298f3c7"
+    "amount": "3,373.11",
+    "transactionId": "467e5a4e-2b18-408a-8654-ce1f8d775ca8"
   },
   {
     "state": "lose",
-    "amount": 2.06,
-    "transactionId": "9ccacf46-55f3-43c1-b944-f91adbea3caf"
+    "amount": "3,822.79",
+    "transactionId": "a4c3b812-75d4-4839-b7aa-f1ff8a493508"
   },
   {
     "state": "win",
-    "amount": 40.13,
-    "transactionId": "2b080f9e-8c1e-4fd3-b7db-62930d457016"
+    "amount": "2,880.57",
+    "transactionId": "9ed61133-f876-4142-a71c-e3a7d6358085"
   },
   {
     "state": "win",
-    "amount": 10.35,
-    "transactionId": "dbaf4cfe-54c3-4c43-8943-ddbbfd9b41be"
+    "amount": "2,540.95",
+    "transactionId": "64e9c170-fd16-49e0-b951-8130a83ebf64"
   },
   {
     "state": "lose",
-    "amount": 83.65,
-    "transactionId": "cff4d1e4-c9d4-4850-84c1-9daa69a94052"
+    "amount": "2,038.34",
+    "transactionId": "49d31519-8b02-46ac-b5cc-9f630d09e0cc"
   },
   {
     "state": "lose",
-    "amount": 53.49,
-    "transactionId": "04741d77-f6cf-4431-a6fd-086e25d3eb32"
+    "amount": "3,462.95",
+    "transactionId": "a62b6548-a85a-4119-9b1e-27d660ae229e"
   },
   {
     "state": "win",
-    "amount": 65.68,
-    "transactionId": "c7e5b198-72e9-4219-bca6-a5d345a3e44c"
+    "amount": "3,686.53",
+    "transactionId": "8dd4beb0-783f-4085-b3d8-70925e10eb38"
   },
   {
-    "state": "lose",
-    "amount": 31.86,
-    "transactionId": "7c5787c2-06f3-4e8f-9833-47d538999260"
+    "state": "win",
+    "amount": "2,676.90",
+    "transactionId": "c3ed9cac-9b9d-425f-8ce5-e4afb200fd1d"
   },
   {
     "state": "lose",
-    "amount": 57.47,
-    "transactionId": "a7610fb3-16ce-4f6f-9818-91ebd6f6a8b5"
+    "amount": "1,723.13",
+    "transactionId": "c8f9037f-9d89-4c44-aa94-2ea1ba937580"
   },
   {
     "state": "win",
-    "amount": 76.01,
-    "transactionId": "c1715d85-b730-415a-a6f0-d8bb6d47c716"
+    "amount": "1,000.85",
+    "transactionId": "f1961e3c-fac0-4e27-8a08-390f6a4f7522"
   },
   {
     "state": "win",
-    "amount": 23.92,
-    "transactionId": "2fbd4d6d-7408-40ff-a25d-87dcc0f83ddc"
+    "amount": "2,043.12",
+    "transactionId": "a86fa69f-9570-43a8-aa9f-c2e325e9fe6f"
   },
   {
-    "state": "lose",
-    "amount": 97.36,
-    "transactionId": "57d6c0dd-c223-4631-bebe-a382a2aff1cc"
-  },
-  {
-    "state": "lose",
-    "amount": 68.34,
-    "transactionId": "a7a0040c-cf4a-425b-b250-583ea09a2d7f"
-  },
-  {
     "state": "win",
-    "amount": 30.15,
-    "transactionId": "d6e7cae8-17db-464d-882a-c64c4fe67931"
+    "amount": "2,220.89",
+    "transactionId": "34a3ac2d-73db-4275-851a-4cd2d4d2d70d"
   },
   {
     "state": "win",
-    "amount": 76.97,
-    "transactionId": "9843bc2c-3fbf-4faf-acf2-7085b430970e"
+    "amount": "2,255.83",
+    "transactionId": "ea5067f4-1713-4015-a4c8-654948e96297"
   },
   {
-    "state": "win",
-    "amount": 10.71,
-    "transactionId": "bb38f518-6c7e-4f5b-ac46-990fe475ffb7"
+    "state": "lose",
+    "amount": "3,391.12",
+    "transactionId": "97bc322f-7e9e-480c-9004-dc17bb2214a7"
   },
   {
-    "state": "win",
-    "amount": 82.24,
-    "transactionId": "f3ad0f9a-4c2a-401a-b49a-4450af0bcb86"
+    "state": "lose",
+    "amount": "3,742.73",
+    "transactionId": "ca68bcdb-b743-46b2-b4e0-c60b67528660"
   },
   {
     "state": "win",
-    "amount": 46.24,
-    "transactionId": "9b70a5e6-fe25-4bc9-9dd3-d3b808232a77"
+    "amount": "1,244.42",
+    "transactionId": "64c0c251-1191-4625-aaf5-28da1fe433c0"
   },
   {
     "state": "win",
-    "amount": 30.67,
-    "transactionId": "35b9f21a-08cd-4cf3-9fb9-123ac6e068d8"
+    "amount": "3,825.29",
+    "transactionId": "35fbec9c-6623-49bd-a0a2-fe3495da27b9"
   },
   {
     "state": "lose",
-    "amount": 93.81,
-    "transactionId": "ffda086b-b760-4d4b-bdf5-7c89122079e9"
+    "amount": "2,955.25",
+    "transactionId": "91d8becc-c57e-42c8-b6c0-006decb2839e"
   },
   {
     "state": "lose",
-    "amount": 8.45,
-    "transactionId": "e77b23ac-27ea-4d69-805b-728390362d25"
-  },
-  {
-    "state": "win",
-    "amount": 72.89,
-    "transactionId": "59c4641a-553a-4064-97ab-2bd226985e00"
+    "amount": "1,414.24",
+    "transactionId": "48571d86-8cfe-44a5-b585-d24bf522ca7c"
   },
   {
     "state": "win",
-    "amount": 2.72,
-    "transactionId": "cbaaad7e-495b-419b-a2ce-3f02ba401d99"
+    "amount": "2,284.36",
+    "transactionId": "997dc060-5d16-4398-8d88-b34013c30a8b"
   },
   {
     "state": "lose",
-    "amount": 7.37,
-    "transactionId": "b1af5674-fd50-492a-ba34-e31e94779c49"
+    "amount": "1,978.42",
+    "transactionId": "adf725ec-981c-40b9-aac7-0d5d71d28a94"
   },
   {
-    "state": "win",
-    "amount": 3.06,
-    "transactionId": "52aedc19-5917-40d4-ad8b-a60d265dbed5"
+    "state": "lose",
+    "amount": "1,215.71",
+    "transactionId": "cbf1b18c-0d82-42b6-be97-8ede723b6bbf"
   },
   {
     "state": "win",
-    "amount": 27.85,
-    "transactionId": "ab9222b8-1238-4570-a206-44d88511c6bf"
+    "amount": "3,234.89",
+    "transactionId": "de86dbe7-d379-4c2a-bce3-20a27cef6c40"
   },
   {
     "state": "lose",
-    "amount": 71.45,
-    "transactionId": "1367d73e-bc22-449e-885d-d60c5238c351"
+    "amount": "1,070.09",
+    "transactionId": "6616c35e-9a04-4d0e-9e03-db32332087c5"
   },
   {
     "state": "win",
-    "amount": 33.86,
-    "transactionId": "29c0a5c4-e95c-4336-94b6-89f7d530820e"
+    "amount": "1,106.34",
+    "transactionId": "12499a4d-fbe1-484c-8451-ef51a12855de"
   },
   {
     "state": "win",
-    "amount": 11.45,
-    "transactionId": "1d476edb-0565-41a1-9dc4-e74c207a2ecd"
+    "amount": "3,786.47",
+    "transactionId": "491b6078-f3c2-493c-aabf-7ddd14f2caf5"
   },
   {
     "state": "win",
-    "amount": 39.66,
-    "transactionId": "82508d54-4d6e-4217-b347-7586b5dc0628"
+    "amount": "3,135.08",
+    "transactionId": "10d39323-30cb-4899-bf72-0ddd3aa37801"
   },
   {
     "state": "lose",
-    "amount": 86.13,
-    "transactionId": "a53a1852-00c6-416e-a838-59fb7e90c50a"
+    "amount": "1,965.49",
+    "transactionId": "0072406c-a164-4c37-a8de-e60f19fafa44"
   },
   {
+    "state": "lose",
+    "amount": "3,039.16",
+    "transactionId": "3912ed9b-522f-4e18-87e3-f2fff95dd5a9"
+  },
+  {
     "state": "win",
-    "amount": 38.33,
-    "transactionId": "8f081aed-9f7b-41b0-a8c1-ebf531ec5889"
+    "amount": "1,435.40",
+    "transactionId": "b22e2cbf-9259-409d-aa46-66b9f64cd114"
   },
   {
     "state": "win",
-    "amount": 90.43,
-    "transactionId": "663102d9-92bf-4389-9a44-27d81bebf40c"
+    "amount": "2,028.18",
+    "transactionId": "c657b949-9195-4387-adf6-b0b941a10f8a"
   },
   {
     "state": "win",
-    "amount": 69.68,
-    "transactionId": "aade50a1-89e2-4b5c-be88-0b24dc7f3d6d"
+    "amount": "3,269.87",
+    "transactionId": "f41edffb-68e0-4304-9c9b-1848677a5dd2"
   },
   {
     "state": "lose",
-    "amount": 71.45,
-    "transactionId": "2eb99a5b-3efc-4054-9d8b-4ffa613855f8"
+    "amount": "1,412.19",
+    "transactionId": "3d2ea80e-d078-41c9-8fcc-d38b5dfa5038"
   },
   {
     "state": "lose",
-    "amount": 70.9,
-    "transactionId": "d1dc70e1-5f8b-4a5e-b05a-c7fc5afc7a84"
+    "amount": "2,926.00",
+    "transactionId": "4c9e7253-e40d-4b27-83aa-7c6bb393ed74"
   },
   {
+    "state": "win",
+    "amount": "1,121.17",
+    "transactionId": "fb16f3e3-7199-4f0b-978f-5586e8b0672d"
+  },
+  {
     "state": "lose",
-    "amount": 50.67,
-    "transactionId": "d5cbc2b6-2c6c-483f-b507-0c0dc51858a1"
+    "amount": "3,493.24",
+    "transactionId": "92b93fcb-f448-4da9-b562-8e20a2a31e9b"
   },
   {
     "state": "win",
-    "amount": 2.46,
-    "transactionId": "479b3ae6-543c-4e6c-af5e-d4bd7c931438"
+    "amount": "1,446.07",
+    "transactionId": "5d70cd66-a662-4d09-ac39-8c8223b698bf"
   },
   {
     "state": "win",
-    "amount": 7.22,
-    "transactionId": "e360f442-9267-45a9-9732-51f755e97f88"
+    "amount": "3,498.63",
+    "transactionId": "d67f9d03-3259-4348-824c-7fbc74ffb001"
   },
   {
     "state": "lose",
-    "amount": 2.54,
-    "transactionId": "20cef485-8b0f-4555-9642-4307860ed94c"
+    "amount": "1,829.29",
+    "transactionId": "a0eac237-11f2-4756-a788-b0cb4c13875d"
   },
   {
-    "state": "win",
-    "amount": 46.07,
-    "transactionId": "6ed1aba4-70ee-46e4-87c1-37db6a7430bd"
+    "state": "lose",
+    "amount": "1,953.42",
+    "transactionId": "a90a1e33-f891-4a7f-92d1-d98cf42f8097"
   },
   {
     "state": "lose",
-    "amount": 24.89,
-    "transactionId": "42558063-c0cf-4952-956a-2ee582ff328e"
+    "amount": "3,967.28",
+    "transactionId": "8d5e0a52-9cf1-4355-a310-e045140ffeb1"
   },
   {
     "state": "lose",
-    "amount": 69.06,
-    "transactionId": "fa1a6722-817a-4e49-a6b8-fd4977bd6bcf"
+    "amount": "1,704.85",
+    "transactionId": "09efd2e5-a667-4a6b-8f4e-94c271837bcf"
   },
   {
     "state": "win",
-    "amount": 66.51,
-    "transactionId": "f934d592-1745-4470-8013-eecc1265615d"
+    "amount": "1,741.69",
+    "transactionId": "8ecd2273-e6ff-4426-8ede-5ab2aadc4d2d"
   },
   {
     "state": "lose",
-    "amount": 10.67,
-    "transactionId": "a69c4696-d734-4ba9-988b-bdc2a91e9a63"
+    "amount": "2,339.02",
+    "transactionId": "476ef16e-d5a1-4b2b-96f3-ead44f6d256c"
   },
   {
     "state": "lose",
-    "amount": 86.67,
-    "transactionId": "55cb38a7-1600-4d5e-8ff6-9a2dd2103005"
+    "amount": "3,784.40",
+    "transactionId": "85f3b6f7-411a-489f-aa72-fb8a5a2d75cc"
+  },
+  {
+    "state": "win",
+    "amount": "1,417.40",
+    "transactionId": "18fd3c0f-fdbc-4b2e-adef-297eed9545e9"
   },
   {
     "state": "lose",
-    "amount": 6.54,
-    "transactionId": "63cfd4e8-2d7b-49bf-85b7-4a7e9badcf9f"
+    "amount": "3,829.47",
+    "transactionId": "253c4139-80ae-4de0-acc6-aad10e33ddb9"
   },
   {
-    "state": "win",
-    "amount": 78.47,
-    "transactionId": "a07a5bd2-4676-4137-87a5-0e634c7d4528"
+    "state": "lose",
+    "amount": "1,354.61",
+    "transactionId": "d759cc9c-8407-40ae-bc1f-8b04963393dd"
   },
   {
-    "state": "win",
-    "amount": 69.8,
-    "transactionId": "774fb0d5-1cb0-4531-a979-4bfbefb51ae8"
+    "state": "lose",
+    "amount": "2,559.60",
+    "transactionId": "e6a3fd28-9afd-475b-bf46-ba397d1fbe0a"
   },
   {
     "state": "win",
-    "amount": 7.3,
-    "transactionId": "f5bf5c2d-0fe4-4375-ae43-c99fe3eef5ff"
+    "amount": "2,861.25",
+    "transactionId": "ed2efb15-2714-43a2-bb69-9e44aab56065"
   },
   {
-    "state": "win",
-    "amount": 75.36,
-    "transactionId": "12c29f8a-d664-4594-b86a-c6b3d555109f"
+    "state": "lose",
+    "amount": "3,423.47",
+    "transactionId": "e058893a-7f16-4a82-aa09-9a6408e0f3b3"
   },
   {
     "state": "win",
-    "amount": 91.56,
-    "transactionId": "a64233a2-8125-4eba-ba6e-70c8d1403ed9"
+    "amount": "2,631.36",
+    "transactionId": "8f430573-ba1e-4027-bfc2-94aae93a6e71"
   },
   {
     "state": "win",
-    "amount": 13.47,
-    "transactionId": "f8358871-3571-49ff-911b-5ba6f305c76f"
+    "amount": "3,430.33",
+    "transactionId": "474d2461-b544-4532-a831-1992d5b5adf3"
   },
   {
+    "state": "lose",
+    "amount": "2,679.48",
+    "transactionId": "7986497c-7c01-40bc-8700-bbf1cc30efac"
+  },
+  {
     "state": "win",
-    "amount": 71.99,
-    "transactionId": "ceef2792-44fe-48e1-873d-6f48aa27fc8c"
+    "amount": "3,757.57",
+    "transactionId": "2882103f-1aeb-4ae3-9e0c-4fb56f3823a9"
   },
   {
     "state": "lose",
-    "amount": 43.09,
-    "transactionId": "5c2d915c-44d7-462c-b505-ac77273a5be4"
+    "amount": "3,613.47",
+    "transactionId": "8f55dd38-42d8-4977-b26b-5fd0f43b562f"
   },
   {
     "state": "lose",
-    "amount": 52.95,
-    "transactionId": "39dd139e-668a-4c4d-b6e2-12291cee0343"
+    "amount": "1,564.72",
+    "transactionId": "221fe24a-81cb-4fad-bcc1-ccfc7de30635"
   },
   {
-    "state": "win",
-    "amount": 87.25,
-    "transactionId": "5498de5d-4ba5-4d3e-847c-e9a60c9be14a"
+    "state": "lose",
+    "amount": "2,611.18",
+    "transactionId": "00145bf0-09fc-4004-91f1-7f6957537271"
   },
   {
     "state": "win",
-    "amount": 37.17,
-    "transactionId": "35c26d00-90fa-4ae1-9555-a46bc218c14f"
+    "amount": "2,466.63",
+    "transactionId": "a052e434-9c22-4d7d-ae79-12f22fdec934"
   },
   {
     "state": "lose",
-    "amount": 75.39,
-    "transactionId": "d521a8df-3ea1-4984-bc01-6ba8f33d462d"
+    "amount": "3,045.47",
+    "transactionId": "37f5d8b6-35bc-4970-ad74-f4c57bec7c0f"
   },
   {
-    "state": "win",
-    "amount": 88.93,
-    "transactionId": "4d21b19a-18f3-4240-86c0-bf46acf93293"
+    "state": "lose",
+    "amount": "3,675.72",
+    "transactionId": "66918058-ea47-47a3-834d-33e8b448b708"
   },
   {
     "state": "win",
-    "amount": 4.06,
-    "transactionId": "180195e5-a914-429e-a32f-cdf2039a0c23"
+    "amount": "2,364.16",
+    "transactionId": "562a86af-3fa1-452f-92b1-81a0c3b9bfac"
   },
   {
-    "state": "win",
-    "amount": 93.19,
-    "transactionId": "af171093-6b46-4799-90f6-1864b3f4d023"
+    "state": "lose",
+    "amount": "2,508.25",
+    "transactionId": "e25d7b25-88be-4e35-b6d8-01c8ae2c79be"
   },
   {
     "state": "lose",
-    "amount": 4.34,
-    "transactionId": "daf7d93c-ac7f-4fe5-8465-8832117fa54b"
+    "amount": "2,621.33",
+    "transactionId": "55689a68-d82f-4aa4-ac06-5680f704ff34"
   },
   {
     "state": "lose",
-    "amount": 66.96,
-    "transactionId": "b1cb64f1-f419-4e25-b407-b3bec357ba81"
+    "amount": "1,674.60",
+    "transactionId": "1e02dfb6-53ea-43c9-b566-41f2929909c8"
   },
   {
     "state": "win",
-    "amount": 0.92,
-    "transactionId": "e44047c6-e7f5-45de-bb58-25411caf98c4"
+    "amount": "1,464.60",
+    "transactionId": "6104e689-4b0b-4449-aad6-468e56ac5017"
   },
   {
-    "state": "lose",
-    "amount": 66.72,
-    "transactionId": "ec727f2c-165a-4cd5-8a3e-930eb6cf83af"
+    "state": "win",
+    "amount": "1,621.77",
+    "transactionId": "74e05a99-74cc-4605-9c86-a11d08d06b20"
   },
   {
     "state": "lose",
-    "amount": 86.68,
-    "transactionId": "12218f53-d8a3-42a0-af69-1dbfcff3dcc7"
+    "amount": "2,968.14",
+    "transactionId": "d6f5c1f2-bf33-4829-8e6e-100baa773af6"
   },
   {
     "state": "lose",
-    "amount": 66.84,
-    "transactionId": "f753fc90-7c18-4164-a114-b0c20e28fc4e"
+    "amount": "1,322.85",
+    "transactionId": "48bf0ef1-2253-4c0f-bf8a-5428e077fb4e"
   },
   {
     "state": "win",
-    "amount": 74.19,
-    "transactionId": "6a9f9507-426b-46f6-9226-c96a853d6f13"
+    "amount": "3,958.54",
+    "transactionId": "3d7236ee-c9b6-494f-9425-b7e652b38ed0"
   },
   {
-    "state": "win",
-    "amount": 90.25,
-    "transactionId": "ea0cc16c-7685-4c51-8f37-cf24a0ca9bc7"
+    "state": "lose",
+    "amount": "3,064.19",
+    "transactionId": "07054cfd-ad13-4389-aabe-3c95c22d3108"
   },
   {
-    "state": "win",
-    "amount": 79.14,
-    "transactionId": "ab417608-9a60-4585-9afa-914a014698fa"
+    "state": "lose",
+    "amount": "3,358.55",
+    "transactionId": "25508ac9-4b7d-4d0c-8ae0-dc13487ca967"
   },
   {
     "state": "win",
-    "amount": 46.94,
-    "transactionId": "676b3cc4-f9a8-47e4-915b-cbbabd987cf0"
-  },
-  {
-    "state": "lose",
-    "amount": 88.13,
-    "transactionId": "4ffd7a1f-03a4-47c2-9d38-30fd25ef07e4"
+    "amount": "2,700.78",
+    "transactionId": "072c0d09-6bd2-49b9-b309-cdf77d77e612"
   },
   {
     "state": "lose",
-    "amount": 77.56,
-    "transactionId": "321a949c-c996-4277-a194-b72edd1a95ce"
+    "amount": "3,793.99",
+    "transactionId": "11692651-10f6-4338-bdc9-aea69c54f506"
   },
   {
     "state": "win",
-    "amount": 79.44,
-    "transactionId": "ef3ea8c0-7706-4694-b82c-53c2e57757c6"
+    "amount": "1,073.90",
+    "transactionId": "c07bd755-3237-40bf-a440-a93529dfe01d"
   },
   {
     "state": "lose",
-    "amount": 22.3,
-    "transactionId": "f940773c-8e3d-4143-8041-46c9872ff8e3"
+    "amount": "2,384.33",
+    "transactionId": "d6c7ccd5-c35f-4ac3-9d41-682eb6d4b12a"
   },
   {
     "state": "win",
-    "amount": 41.43,
-    "transactionId": "2744dda6-50ed-4660-8893-3e98c45b6de3"
+    "amount": "3,494.12",
+    "transactionId": "71f7c480-ea99-4dc1-9b49-306e368fc98c"
   },
   {
     "state": "win",
-    "amount": 42.21,
-    "transactionId": "19e3b607-c839-4448-aa68-f9f674a814ae"
+    "amount": "3,067.76",
+    "transactionId": "db6a37bf-24f3-4a34-92d2-cfa2b902f756"
   },
   {
-    "state": "lose",
-    "amount": 98.68,
-    "transactionId": "bef13feb-5d51-40c2-9d09-7fc2a07e193b"
+    "state": "win",
+    "amount": "2,221.30",
+    "transactionId": "b25b1be6-5820-459b-b3b7-d2265f9a78b9"
   },
   {
     "state": "lose",
-    "amount": 40.87,
-    "transactionId": "53219b38-a794-464e-9699-66ab5ad6f1a3"
+    "amount": "3,378.09",
+    "transactionId": "6b010701-5e42-4f5f-8cc6-dd531d90bdb5"
   },
   {
-    "state": "lose",
-    "amount": 28.89,
-    "transactionId": "5d1c0a8d-6809-48e0-bfe9-7dfef8cf928b"
+    "state": "win",
+    "amount": "2,954.10",
+    "transactionId": "7f2d6ab4-fa92-40ac-b9cc-e1055e53ae36"
   },
   {
-    "state": "lose",
-    "amount": 11.49,
-    "transactionId": "af9814f0-c5e8-4834-9546-fe141f4539fb"
+    "state": "win",
+    "amount": "1,584.94",
+    "transactionId": "88bf7e6c-a8bd-453a-bf68-86d73bfa46a4"
   },
   {
     "state": "lose",
-    "amount": 32.95,
-    "transactionId": "e9f625ba-3d64-4757-b6d4-d38fac1b7956"
+    "amount": "1,048.06",
+    "transactionId": "7ceecdd4-4d83-47ab-b7ca-c18c4fe03de0"
   },
   {
     "state": "lose",
-    "amount": 65.88,
-    "transactionId": "496f936d-d2c4-466f-862a-d20838917203"
+    "amount": "2,944.04",
+    "transactionId": "dd2f9aae-afe2-4aad-b568-ec22412a63a6"
   },
   {
     "state": "win",
-    "amount": 31.44,
-    "transactionId": "f029d778-0b87-4f15-bb53-cec19def676d"
+    "amount": "1,419.36",
+    "transactionId": "8bea3799-fde1-416b-aad3-01908a03f15d"
   },
   {
     "state": "win",
-    "amount": 37.84,
-    "transactionId": "33293948-b6ae-46a1-bcd1-acbc8643ae21"
+    "amount": "1,747.21",
+    "transactionId": "0d98804d-6579-4ef4-856e-672afa5c6323"
   },
   {
     "state": "win",
-    "amount": 42.63,
-    "transactionId": "468cae6b-138e-4e23-ade4-ec68020cc027"
-  },
-  {
-    "state": "lose",
-    "amount": 27.88,
-    "transactionId": "fbba64a7-6496-42b3-878a-a06296ad5feb"
-  },
-  {
-    "state": "lose",
-    "amount": 95.67,
-    "transactionId": "caffbaff-eb6d-442e-a119-24d0555c2045"
-  },
-  {
-    "state": "lose",
-    "amount": 2.86,
-    "transactionId": "8c45ce70-fa01-49fc-b2bf-f2ee8a6be0ad"
+    "amount": "1,571.09",
+    "transactionId": "e2bb1a87-ec6b-407b-8e1c-e96d5e424f85"
   },
   {
     "state": "win",
-    "amount": 86.46,
-    "transactionId": "f10a9995-bdae-43b4-81d8-a96f09c73dcd"
+    "amount": "1,039.97",
+    "transactionId": "a8874ac7-06ed-46ce-ae36-b560396412f5"
   },
   {
     "state": "win",
-    "amount": 93.29,
-    "transactionId": "af85368a-f35d-4a6a-94d2-af69786a90e5"
+    "amount": "3,522.43",
+    "transactionId": "834c52bf-4800-4bed-bd78-a30f856c6a9c"
   },
   {
     "state": "lose",
-    "amount": 5.73,
-    "transactionId": "9a92cbb8-ed9b-4860-b788-bb911a7feefe"
+    "amount": "1,382.71",
+    "transactionId": "ad8d8b96-ab34-450b-95de-541db1bd5050"
   },
   {
     "state": "lose",
-    "amount": 76.1,
-    "transactionId": "1d83ff5b-ca97-4e82-bbe9-44be718023ac"
+    "amount": "1,302.67",
+    "transactionId": "3e2883e8-eff1-458d-9342-f3ecd9144b6d"
   },
   {
     "state": "win",
-    "amount": 89.2,
-    "transactionId": "49808df4-78e8-428f-b4d9-3bb950cfbdec"
+    "amount": "3,897.98",
+    "transactionId": "fbe92c3c-7adf-41c6-9f50-b45b336e3be7"
   },
   {
-    "state": "win",
-    "amount": 53.12,
-    "transactionId": "03434314-8e24-4e22-bc1f-2546da77438d"
+    "state": "lose",
+    "amount": "3,058.27",
+    "transactionId": "adccf876-2092-4eb9-9d21-4cdc1b1a2441"
   },
   {
     "state": "win",
-    "amount": 96.58,
-    "transactionId": "66dcfdad-2443-47c2-88f4-6dc92d877be6"
+    "amount": "3,240.77",
+    "transactionId": "4745bf10-eead-420a-a91a-a178ccffa2fb"
   },
   {
     "state": "lose",
-    "amount": 74.35,
-    "transactionId": "f393e7b2-1c9b-4d8f-85ed-da4440f3fd1a"
-  },
-  {
-    "state": "win",
-    "amount": 81.7,
-    "transactionId": "af8ec365-50d5-4124-9609-0ea147c847f7"
+    "amount": "1,823.39",
+    "transactionId": "4d68424c-277c-47dc-9929-96988f7bc293"
   },
   {
     "state": "win",
-    "amount": 98.18,
-    "transactionId": "3a25395c-95ab-48c3-9f1d-388daa933693"
+    "amount": "1,174.91",
+    "transactionId": "46b825a3-9e31-4fa4-a577-f16234ff3598"
   },
   {
     "state": "lose",
-    "amount": 54.68,
-    "transactionId": "cfb8d469-cadc-4281-bcf1-9d0dda6f80d8"
+    "amount": "1,461.74",
+    "transactionId": "c250ecaf-9f74-46d8-8ab8-d1dfdbdf040e"
   },
   {
     "state": "lose",
-    "amount": 93.48,
-    "transactionId": "7682cf90-3351-4046-b1e5-4d445739940f"
+    "amount": "2,120.80",
+    "transactionId": "96a9f89a-5414-440a-ac50-62823c6973a1"
   },
   {
     "state": "lose",
-    "amount": 91.63,
-    "transactionId": "1759175d-df52-4800-ab70-c0eb08e57bff"
-  },
-  {
-    "state": "win",
-    "amount": 23.01,
-    "transactionId": "d30d0d6e-6834-4bfe-ba31-e0bcaa910a7a"
+    "amount": "1,223.30",
+    "transactionId": "9946e883-7974-40ae-b88e-729496c893f5"
   },
   {
     "state": "lose",
-    "amount": 92.06,
-    "transactionId": "256afa87-c7ee-4a8f-a667-719248ee1277"
+    "amount": "1,059.70",
+    "transactionId": "033b1fba-b95e-4ab3-bb25-f6e30b1fc68a"
   },
   {
-    "state": "lose",
-    "amount": 13.92,
-    "transactionId": "0d6a7222-5065-4fd2-b743-0196fa96ed6b"
+    "state": "win",
+    "amount": "2,763.44",
+    "transactionId": "3ab690ec-1b3a-4dbc-966a-a36f879bdc3f"
   },
   {
-    "state": "lose",
-    "amount": 46.65,
-    "transactionId": "28ba71d1-7879-495d-b134-91d0029800b1"
+    "state": "win",
+    "amount": "1,957.55",
+    "transactionId": "71f71a0f-ef6a-46ea-9cb1-f7be9754577e"
   },
   {
     "state": "win",
-    "amount": 55.47,
-    "transactionId": "35efca6c-158f-4877-acbf-ed3b6625cc46"
+    "amount": "1,086.38",
+    "transactionId": "27cc8f23-2ef7-4ecd-b3eb-3303f8f68201"
   },
   {
-    "state": "win",
-    "amount": 55.7,
-    "transactionId": "3bcfaf80-4379-4cf5-8f9c-37c89e9b2687"
+    "state": "lose",
+    "amount": "2,328.29",
+    "transactionId": "0e973fde-91be-472f-9987-58dd5c8fba31"
   },
   {
     "state": "win",
-    "amount": 71.61,
-    "transactionId": "b1a79633-65b3-4e2f-bd13-5a20616e7aa5"
+    "amount": "1,526.94",
+    "transactionId": "2d198674-53df-4149-88bd-c462c798ad23"
   },
   {
     "state": "lose",
-    "amount": 13.08,
-    "transactionId": "6f316b26-29e7-49f5-a1f8-44975d359f98"
+    "amount": "2,335.75",
+    "transactionId": "d779afdb-1bdd-4e6e-a11a-13396542016f"
   },
   {
     "state": "lose",
-    "amount": 9.79,
-    "transactionId": "7fc2ad37-c8b0-4b33-b655-e8d325c0b5f0"
+    "amount": "3,524.93",
+    "transactionId": "56dfed62-4202-4aa7-9d65-60e3eced38e1"
   },
   {
     "state": "lose",
-    "amount": 52.44,
-    "transactionId": "ac24ad31-2dea-4771-8ab9-c20efbf66a6d"
+    "amount": "2,455.46",
+    "transactionId": "f1e8e16c-2d4e-4006-89f2-c15bf1bcbae7"
   },
   {
-    "state": "lose",
-    "amount": 81.88,
-    "transactionId": "22793c11-afc3-4694-9e1e-fbdd6b337a93"
+    "state": "win",
+    "amount": "1,249.36",
+    "transactionId": "79df2da0-bf75-4196-98c6-566b76bad05b"
   },
   {
     "state": "win",
-    "amount": 65.53,
-    "transactionId": "e8270494-f50b-4019-b320-f5fab766fcb4"
+    "amount": "2,323.60",
+    "transactionId": "0421d57b-f8bc-4437-aca8-845cf13b532e"
   },
   {
     "state": "lose",
-    "amount": 36.56,
-    "transactionId": "ff73b027-bad4-4d87-ba08-2cb3aaa90aae"
+    "amount": "2,711.80",
+    "transactionId": "e3d99866-7f6d-45ea-be4e-eba2daaa4650"
   },
   {
-    "state": "lose",
-    "amount": 13.05,
-    "transactionId": "688a224d-0a3c-4188-a31b-b322b84e77b3"
+    "state": "win",
+    "amount": "2,051.61",
+    "transactionId": "0869daef-6955-4e3d-948a-ec0238476489"
+  },
+  {
+    "state": "win",
+    "amount": "3,228.46",
+    "transactionId": "56e3d5bc-7789-4ec8-ae19-4c33d122e127"
   },
   {
     "state": "win",
-    "amount": 27.93,
-    "transactionId": "23d16be9-f4cc-4fd6-a101-b8bc41215b7a"
+    "amount": "1,822.29",
+    "transactionId": "6230d233-f3d0-4051-8637-3d91d976d9c4"
   },
   {
     "state": "lose",
-    "amount": 57.59,
-    "transactionId": "28372986-96ce-461b-b212-2a8d441e1728"
+    "amount": "1,222.70",
+    "transactionId": "23063dee-4f8e-45cb-a1e6-f872a3e19d8e"
   },
   {
-    "state": "win",
-    "amount": 38.34,
-    "transactionId": "5a8ae034-eeaf-480d-956e-4bf137e88eb7"
+    "state": "lose",
+    "amount": "2,005.20",
+    "transactionId": "13b2423c-570a-47d9-b2d7-ed29eec2b44b"
   },
   {
     "state": "lose",
-    "amount": 73.68,
-    "transactionId": "91ec4c3a-92c6-496e-be6f-0029c52fe7c7"
+    "amount": "1,178.77",
+    "transactionId": "9a979226-983e-44a7-822e-b3a3a7443853"
   },
   {
     "state": "win",
-    "amount": 0.35,
-    "transactionId": "2f172be2-be01-438b-9b0b-63a357c5fcd7"
+    "amount": "3,484.88",
+    "transactionId": "4fa16e67-3050-4a4b-bb44-2c7c13b50155"
   },
   {
     "state": "lose",
-    "amount": 76.03,
-    "transactionId": "e1118701-bf95-40cc-ba5c-2da464c0be8c"
+    "amount": "2,487.93",
+    "transactionId": "c5398671-ff5a-4b8f-949f-bde65fed2b4d"
   },
   {
     "state": "lose",
-    "amount": 99.59,
-    "transactionId": "5b2a33be-b7dd-4007-9c54-55c795d51847"
+    "amount": "1,546.56",
+    "transactionId": "0552964d-e271-4278-85c3-b18ba7d3d60a"
   },
   {
-    "state": "lose",
-    "amount": 2.35,
-    "transactionId": "a8381b70-a300-4021-a79d-dfb893dfccff"
+    "state": "win",
+    "amount": "2,239.65",
+    "transactionId": "09a75502-621a-4ce0-b206-ff50b52675d8"
   },
   {
     "state": "lose",
-    "amount": 77.43,
-    "transactionId": "e6669199-4623-4d63-a5eb-2b946e71c0c8"
+    "amount": "1,246.94",
+    "transactionId": "4e1b21d4-3046-4221-b2f6-a3462285988f"
   },
   {
     "state": "win",
-    "amount": 67.6,
-    "transactionId": "cfb4bab9-4f69-4363-80ab-703e500a7a2d"
+    "amount": "2,589.46",
+    "transactionId": "730d5618-d86e-498f-886c-e03ce4eb019c"
   },
   {
     "state": "win",
-    "amount": 67.72,
-    "transactionId": "5cb0aeb2-8623-45e5-8584-8399453c73e7"
+    "amount": "2,772.83",
+    "transactionId": "9878ecb1-4687-4a54-ac45-b59e201162f2"
   },
   {
     "state": "lose",
-    "amount": 91.81,
-    "transactionId": "c132149c-efb5-4f75-b00b-5901f29b7ec2"
+    "amount": "1,562.45",
+    "transactionId": "0dfae029-5b1d-4d2e-b0e3-d247fe373097"
   },
   {
-    "state": "win",
-    "amount": 82.33,
-    "transactionId": "c3f1a48e-3e0e-416e-ad22-54f4e3dbb31f"
+    "state": "lose",
+    "amount": "1,410.93",
+    "transactionId": "1495aa10-148b-46b5-b10e-b9f443c59a91"
   },
   {
     "state": "win",
-    "amount": 0.4,
-    "transactionId": "6296ed61-eea5-4d29-b39f-1c8619d43dcc"
+    "amount": "1,815.91",
+    "transactionId": "358a4007-baa3-4257-ac11-0b0719ce0b28"
   },
   {
     "state": "win",
-    "amount": 82.35,
-    "transactionId": "c2141acc-d12a-4cad-87f4-7484313cef43"
+    "amount": "1,867.18",
+    "transactionId": "79140ad9-0c7c-4337-bc0a-1d8f24424e66"
   },
   {
     "state": "lose",
-    "amount": 3.74,
-    "transactionId": "488c03c2-e0b9-452b-848b-435d359fcff2"
+    "amount": "2,621.33",
+    "transactionId": "8a3f0cba-5951-4ed9-821c-14e722381c0c"
   },
   {
     "state": "win",
-    "amount": 5.35,
-    "transactionId": "0f3a3782-39fd-4f03-ad7d-efb623f12ffd"
+    "amount": "1,308.42",
+    "transactionId": "1097ba38-5143-4753-8b4c-d6d1b5bacb42"
   },
   {
     "state": "lose",
-    "amount": 18.92,
-    "transactionId": "f007749c-f874-48c6-aef3-a640d52eecb4"
+    "amount": "2,695.87",
+    "transactionId": "46774cab-55f4-4b77-b0e1-2818ed940b33"
   },
   {
     "state": "win",
-    "amount": 65,
-    "transactionId": "2bf97e93-f38b-4222-9382-477ba0091fc8"
+    "amount": "2,005.75",
+    "transactionId": "0857c095-f250-4a5d-891f-11433825ebaf"
   },
   {
     "state": "win",
-    "amount": 74.94,
-    "transactionId": "9fe92907-8da4-4766-bf79-3828efdf2333"
-  },
-  {
-    "state": "lose",
-    "amount": 24.64,
-    "transactionId": "0be0c53d-d54b-4f27-9e0b-74063ff6e4a8"
+    "amount": "1,848.99",
+    "transactionId": "5b32ea0c-d4d3-43d5-8f5e-347d89db85c9"
   },
   {
-    "state": "lose",
-    "amount": 21.06,
-    "transactionId": "3bef82fe-f375-4107-a06f-4cda5cec0dc8"
+    "state": "win",
+    "amount": "2,135.32",
+    "transactionId": "b3bfba59-f7f2-4edf-b129-198525fae56f"
   },
   {
-    "state": "lose",
-    "amount": 64.41,
-    "transactionId": "59746532-5715-4c2f-9514-d3f64539f051"
+    "state": "win",
+    "amount": "1,421.80",
+    "transactionId": "8fb97343-a291-4436-a879-d405a8d21fa9"
   },
   {
     "state": "win",
-    "amount": 4.38,
-    "transactionId": "d84de2ce-0bf6-4923-b980-42da342d2037"
+    "amount": "1,865.92",
+    "transactionId": "6f0b50e7-de9c-4785-8a4f-da501107d233"
   },
   {
     "state": "lose",
-    "amount": 22.77,
-    "transactionId": "bdf29ab1-6a99-4769-8dfb-088ba28a543f"
+    "amount": "2,463.36",
+    "transactionId": "678a982e-c06c-4057-b667-7dae81591218"
   },
   {
     "state": "win",
-    "amount": 47.15,
-    "transactionId": "81ff7d7b-388b-48c8-b15e-7070682d5658"
+    "amount": "1,336.16",
+    "transactionId": "6e01fc60-9c7a-4181-81b6-2e46c20f6335"
   },
   {
-    "state": "win",
-    "amount": 34.08,
-    "transactionId": "5f04ed50-29e0-4f79-bcc7-26e076a9b6f0"
+    "state": "lose",
+    "amount": "1,340.75",
+    "transactionId": "88d3ff94-07e2-4e9a-8ac8-c0d1df56b2a6"
   },
   {
     "state": "win",
-    "amount": 7.42,
-    "transactionId": "6aac4daf-8194-4af2-b10e-34d9b39d602c"
+    "amount": "3,629.51",
+    "transactionId": "37e6cfcf-a6f2-40fb-8796-8c3267009862"
   },
   {
     "state": "win",
-    "amount": 27.47,
-    "transactionId": "54c87821-7770-4a3b-8c2a-dc46087b34b6"
+    "amount": "2,432.06",
+    "transactionId": "ea5cb057-365b-4275-aec4-e6be066f5508"
   },
   {
     "state": "lose",
-    "amount": 77.67,
-    "transactionId": "4b4cc31e-17e5-4a49-8545-1eb7d11031f5"
+    "amount": "1,858.81",
+    "transactionId": "d3613bef-98e9-4335-97d3-cb87b12068d0"
   },
   {
     "state": "win",
-    "amount": 87.68,
-    "transactionId": "827e2992-ddf0-4cc9-bd88-66b0eec2e49e"
+    "amount": "3,576.50",
+    "transactionId": "c237a834-c1be-422f-bdc0-23cd673eab59"
   },
   {
     "state": "win",
-    "amount": 6.33,
-    "transactionId": "e1a404fb-35c5-4146-8acd-ab79a5e85660"
+    "amount": "3,481.35",
+    "transactionId": "47482402-1b8c-4d90-b686-c51b7fca0566"
   },
   {
     "state": "win",
-    "amount": 20.68,
-    "transactionId": "3b921b46-d3f8-440f-b49b-3ba7325b6ec3"
+    "amount": "1,837.43",
+    "transactionId": "d757bd8c-d0b9-4583-af95-b510df3e58c4"
   },
   {
-    "state": "win",
-    "amount": 73.18,
-    "transactionId": "803a33e8-7d3d-4170-beef-6190d5c03fb2"
+    "state": "lose",
+    "amount": "1,942.57",
+    "transactionId": "349b1d1b-1cac-4244-b05c-d88d40cbc0c7"
   },
   {
     "state": "lose",
-    "amount": 50.06,
-    "transactionId": "767011d0-4d1e-4840-821a-3cd8df29c55d"
+    "amount": "1,209.36",
+    "transactionId": "ff5e8924-a309-4ae1-86bf-ea3edc45e822"
   },
   {
     "state": "lose",
-    "amount": 12.29,
-    "transactionId": "0c992d4f-e881-46d3-a4d8-362ad64c97eb"
+    "amount": "3,091.93",
+    "transactionId": "c62ce925-60bf-435b-a88f-5cc941a111cf"
   },
   {
     "state": "lose",
-    "amount": 59.74,
-    "transactionId": "6b2df149-39c0-46ba-99fa-80dc1e984542"
+    "amount": "1,983.23",
+    "transactionId": "5f37928b-9622-420f-9db9-8455ef5c6589"
   },
   {
     "state": "win",
-    "amount": 84.22,
-    "transactionId": "684a2ca1-08d2-45a7-acf4-90eeb2593a0e"
+    "amount": "1,236.22",
+    "transactionId": "0a44b616-736e-4ed7-90d5-ee7faf0fe468"
   },
   {
     "state": "lose",
-    "amount": 46.46,
-    "transactionId": "377ee754-0222-43a3-a162-b2a5230175e9"
+    "amount": "2,337.06",
+    "transactionId": "ed6014cb-f4fc-43cb-bfdd-36796c643467"
   },
   {
     "state": "win",
-    "amount": 41.19,
-    "transactionId": "dda4e25e-4d69-45b6-8f8f-d5b5f7762288"
+    "amount": "3,678.33",
+    "transactionId": "af9e05ff-02e2-4266-85cf-1662d0dbeffb"
   },
   {
-    "state": "lose",
-    "amount": 88.9,
-    "transactionId": "1cd584d5-a7d5-4d51-ba44-65aa48592427"
-  },
-  {
     "state": "win",
-    "amount": 30.95,
-    "transactionId": "2187c728-8c1d-454f-9547-c1a5edc7cbc5"
+    "amount": "2,900.52",
+    "transactionId": "d2b28e99-b731-4ced-9b1c-edbbabda4491"
   },
   {
     "state": "lose",
-    "amount": 32.53,
-    "transactionId": "4e9d541f-38aa-45e2-929e-ae12ee8e453a"
+    "amount": "1,353.32",
+    "transactionId": "5a6181bd-be1c-4f5b-9a3c-4d693d95403d"
   },
   {
-    "state": "lose",
-    "amount": 58.18,
-    "transactionId": "f69151d7-8ca0-4f79-85f0-53188d6d7752"
+    "state": "win",
+    "amount": "1,221.58",
+    "transactionId": "f86f286e-b7d6-41a5-81a0-cba4692a58e3"
+  },
+  {
+    "state": "win",
+    "amount": "1,821.21",
+    "transactionId": "9d6689df-e0f5-4192-b482-4bdb9a279407"
   },
   {
     "state": "lose",
-    "amount": 27.94,
-    "transactionId": "feab2085-92c1-46ba-8fe9-046e948211ee"
+    "amount": "2,874.09",
+    "transactionId": "cb17e847-2e2a-4d8e-90ed-bf3881f2474e"
   },
   {
     "state": "lose",
-    "amount": 54.04,
-    "transactionId": "5b1a12c5-587a-4640-ac5e-928c5417dc8a"
+    "amount": "1,004.14",
+    "transactionId": "04538bf8-3293-42ad-a294-99d1be43338a"
   },
   {
     "state": "win",
-    "amount": 26.02,
-    "transactionId": "0f9fbd9e-f308-4804-bb81-646f617cd2da"
+    "amount": "2,200.60",
+    "transactionId": "a82f40b6-4b7c-4904-b6d8-a024f17e20c5"
   },
   {
     "state": "win",
-    "amount": 28.55,
-    "transactionId": "130814ba-36cd-480b-8558-0453df4e050c"
+    "amount": "3,984.78",
+    "transactionId": "08a19804-1e24-4a8b-9a91-dfa27ed71c00"
   },
   {
     "state": "lose",
-    "amount": 99.42,
-    "transactionId": "3d06a7b4-7fa3-4894-a24f-f5017f4dde09"
+    "amount": "1,659.32",
+    "transactionId": "09d384e0-7822-4104-8887-8fee7317770a"
   },
   {
-    "state": "lose",
-    "amount": 9.18,
-    "transactionId": "35a3bb0b-00e3-4001-81eb-686bb2d1ea80"
+    "state": "win",
+    "amount": "2,055.83",
+    "transactionId": "efe42aee-3ae1-4bf3-86b4-932f849a4aad"
   },
   {
     "state": "lose",
-    "amount": 69.84,
-    "transactionId": "7d9a39ae-d497-4879-8783-cc4f7319b4a3"
+    "amount": "3,353.23",
+    "transactionId": "1d44c1d7-5f63-4e9e-8599-238e99df0332"
   },
   {
-    "state": "win",
-    "amount": 71.07,
-    "transactionId": "58efa8a3-e9d0-42b6-88b8-8a9bc262c60b"
+    "state": "lose",
+    "amount": "1,900.13",
+    "transactionId": "02dad3dd-77f5-422d-bad2-33f5041b841b"
   },
   {
-    "state": "lose",
-    "amount": 82.88,
-    "transactionId": "490f8e83-dac2-4611-90d7-bff74195d635"
+    "state": "win",
+    "amount": "3,433.74",
+    "transactionId": "654cadf3-1b1a-4e51-a039-b4cdc865504c"
   },
   {
     "state": "win",
-    "amount": 11.67,
-    "transactionId": "73b7c804-feba-4b36-b436-1066fdc0038d"
+    "amount": "3,808.87",
+    "transactionId": "6a6065e3-d639-46c4-a57c-1d4aaacae989"
   },
   {
     "state": "win",
-    "amount": 74.76,
-    "transactionId": "89350742-22f7-491a-8033-0b6db7082abf"
+    "amount": "1,721.49",
+    "transactionId": "f251345b-256a-427d-bb50-165a0a637ad1"
   },
   {
     "state": "win",
-    "amount": 61.21,
-    "transactionId": "e5c5be3f-97fd-4a90-82e2-c0527da808ba"
+    "amount": "1,068.70",
+    "transactionId": "8af18d85-4a62-4b8e-a4a7-354a3dbec23f"
   },
   {
     "state": "win",
-    "amount": 60.51,
-    "transactionId": "50f88594-ef12-48b4-8509-0bf9aa9f9b83"
+    "amount": "2,974.22",
+    "transactionId": "3b01bd50-2e5d-4fc3-807e-62c74d702cec"
   },
   {
     "state": "lose",
-    "amount": 87.82,
-    "transactionId": "a03818a5-fd93-42fb-8b67-a058c87ec1ff"
+    "amount": "2,572.16",
+    "transactionId": "d4755faa-a206-4486-8e60-46bdecf4fe35"
   },
   {
     "state": "win",
-    "amount": 97.15,
-    "transactionId": "6e55502a-1e81-4bbd-b2fe-a986483415f3"
+    "amount": "2,015.50",
+    "transactionId": "208698ed-743c-4a61-8f10-192c3e696388"
   },
   {
     "state": "lose",
-    "amount": 72.86,
-    "transactionId": "5a0894ab-c5df-43aa-8056-566493a7627f"
+    "amount": "3,727.05",
+    "transactionId": "18e60066-e2d4-40df-89aa-93e31f1e05f7"
   },
   {
+    "state": "win",
+    "amount": "3,381.57",
+    "transactionId": "fcc2e4b5-5063-4585-997d-2b50539ce5e4"
+  },
+  {
     "state": "lose",
-    "amount": 86.8,
-    "transactionId": "d85a5df1-11d2-4c2d-b449-44a8d51e3644"
+    "amount": "3,789.68",
+    "transactionId": "863515e0-9195-4ca9-82b0-30426017b93f"
   },
   {
-    "state": "win",
-    "amount": 13.83,
-    "transactionId": "4a38fa3a-ef38-4af8-bb34-84c82cc3ad93"
+    "state": "lose",
+    "amount": "3,336.91",
+    "transactionId": "59d05f99-a908-49a1-8c6a-731a24583f30"
   },
   {
-    "state": "win",
-    "amount": 60.43,
-    "transactionId": "b656dd8c-46bc-45d1-8155-e6f8e87c1db1"
+    "state": "lose",
+    "amount": "2,570.67",
+    "transactionId": "963381b6-e612-4092-86e2-64f8bde8a57f"
   },
   {
-    "state": "win",
-    "amount": 51.23,
-    "transactionId": "1268c2be-f107-4704-bcc3-b542d916723d"
+    "state": "lose",
+    "amount": "1,174.87",
+    "transactionId": "0a5c157e-7855-40f0-b598-5026dfd74ac2"
   },
   {
     "state": "lose",
-    "amount": 35.6,
-    "transactionId": "32b371fe-da85-4621-9cc9-195bfa4c6bed"
+    "amount": "3,991.90",
+    "transactionId": "93c7b17a-ceab-4645-afaf-4be73b09956a"
   },
   {
-    "state": "win",
-    "amount": 95.97,
-    "transactionId": "5f805bb3-c37a-4958-bed9-d8593de83562"
+    "state": "lose",
+    "amount": "3,917.49",
+    "transactionId": "ee14ca0a-0a70-4f8c-8959-00c19dafedd3"
   },
   {
     "state": "win",
-    "amount": 7.66,
-    "transactionId": "b667e11a-6b2f-45f6-8105-c9340b93303d"
+    "amount": "1,007.89",
+    "transactionId": "699e94c9-f10f-4d77-bce0-15d47a2e3c42"
   },
   {
-    "state": "win",
-    "amount": 28.29,
-    "transactionId": "2a713913-efc3-4ec3-8ac8-94cfd4e96c69"
+    "state": "lose",
+    "amount": "2,378.01",
+    "transactionId": "c5b49d1d-a13e-4ac3-9830-1ca5934d0596"
   },
   {
     "state": "lose",
-    "amount": 76.64,
-    "transactionId": "bf610e0d-b780-4aec-bb27-fb926d96951d"
+    "amount": "2,402.25",
+    "transactionId": "b67c140f-7889-443d-baa2-64910ce1fb7d"
   },
   {
     "state": "win",
-    "amount": 45.07,
-    "transactionId": "526e7582-a45e-45cd-84f8-937c07bde394"
+    "amount": "1,448.87",
+    "transactionId": "30df3d2e-2f5b-4131-92e7-6412587de21c"
   },
   {
     "state": "win",
-    "amount": 89.22,
-    "transactionId": "e95f1451-d128-4f2c-8d10-99c821bff090"
+    "amount": "3,593.13",
+    "transactionId": "5602045d-5797-4d0b-b09b-7af328de67e0"
   },
   {
     "state": "win",
-    "amount": 61.87,
-    "transactionId": "953535a8-2389-4121-b07e-aa4f1e5131bc"
+    "amount": "3,682.78",
+    "transactionId": "89b89e83-68ac-4082-b484-a11ab640b20b"
   },
   {
     "state": "win",
-    "amount": 12.6,
-    "transactionId": "23f64f33-5197-4d37-b46d-2a089dc3fe73"
+    "amount": "2,464.02",
+    "transactionId": "cdd3124a-c7bd-4b52-860c-8459aa5534d6"
   },
   {
     "state": "win",
-    "amount": 3.33,
-    "transactionId": "f669e8c8-8784-4e48-bd50-8d8e80074ccb"
+    "amount": "1,168.63",
+    "transactionId": "b0bd28dd-8e97-485f-9fa2-7df2963285c2"
   },
   {
     "state": "win",
-    "amount": 26.73,
-    "transactionId": "0c5c417a-0047-4f95-a37e-51caf67302a2"
+    "amount": "1,488.55",
+    "transactionId": "0b6fd745-57d8-44c2-97bc-4c4408aaf529"
   },
   {
     "state": "win",
-    "amount": 52.24,
-    "transactionId": "dd5e1942-9093-4137-9dbd-0f0cf6fc05e4"
+    "amount": "2,656.30",
+    "transactionId": "4905ef7f-3bf6-4dd0-8be8-6c79a28c505b"
   },
   {
-    "state": "win",
-    "amount": 37.75,
-    "transactionId": "b6a4c5f4-c0ef-4267-8fd5-66a55f3505ee"
+    "state": "lose",
+    "amount": "3,618.17",
+    "transactionId": "ef897f1f-b6e2-44f1-9c21-3656c876dda1"
   },
   {
     "state": "win",
-    "amount": 6.78,
-    "transactionId": "ceef0d14-3816-4fe3-8655-aae1a1389fed"
+    "amount": "2,365.74",
+    "transactionId": "05983a65-71c5-496e-9e80-0adcc8fa8698"
   },
   {
-    "state": "lose",
-    "amount": 64.61,
-    "transactionId": "044c6f5e-4872-42d9-a7ce-1d86124c4a6d"
+    "state": "win",
+    "amount": "1,124.29",
+    "transactionId": "c6175721-62d6-4c7f-bb4d-c4f88da8e87b"
   },
   {
-    "state": "win",
-    "amount": 95.67,
-    "transactionId": "caa534ea-771a-4d2d-8370-97aa0a85e6fe"
+    "state": "lose",
+    "amount": "3,903.26",
+    "transactionId": "15a852a7-c7fa-40be-ab29-a82e51609341"
   },
   {
     "state": "lose",
-    "amount": 87.1,
-    "transactionId": "a6a1f207-b6af-42bb-82f6-808815dff79a"
+    "amount": "3,399.14",
+    "transactionId": "8d59744d-6c9c-44b1-b364-4a9d9caa0554"
   },
   {
     "state": "win",
-    "amount": 15.33,
-    "transactionId": "64e65fe4-0d84-415b-8200-ed80362a2e30"
+    "amount": "2,315.61",
+    "transactionId": "31cfa1e7-7c81-4fb2-9d77-70980938f774"
   },
   {
     "state": "win",
-    "amount": 35.26,
-    "transactionId": "aab753ea-1462-4bdf-b413-b0d4e27a38b6"
+    "amount": "1,633.83",
+    "transactionId": "d73e44e3-83cd-4825-aaa2-8532cbae64e5"
   },
   {
-    "state": "win",
-    "amount": 34.06,
-    "transactionId": "1c7283f4-3982-4222-8106-b0bce295601a"
+    "state": "lose",
+    "amount": "1,934.29",
+    "transactionId": "f7e935cf-54cc-43f8-9f45-3b4a7060196d"
   },
   {
     "state": "win",
-    "amount": 19.85,
-    "transactionId": "3dfb663a-8127-4d10-a90a-feaf2064d61a"
+    "amount": "1,154.41",
+    "transactionId": "b34fa756-68f3-47fe-b201-c86f556a2bf3"
   },
   {
-    "state": "win",
-    "amount": 1.24,
-    "transactionId": "e68e13bb-4c43-47e3-9353-3c3f22b8dcbd"
+    "state": "lose",
+    "amount": "2,256.86",
+    "transactionId": "42e72065-f418-4830-9a6c-ad483483c3a5"
   },
   {
-    "state": "win",
-    "amount": 62.8,
-    "transactionId": "60f4c7cf-da2c-43c3-9d19-f2451123d358"
+    "state": "lose",
+    "amount": "3,944.81",
+    "transactionId": "ff7ebb2c-4202-408f-b67d-430e4cf456f6"
   },
   {
-    "state": "win",
-    "amount": 77.62,
-    "transactionId": "d41e6f86-225b-4821-9b9b-7e3897099cbf"
+    "state": "lose",
+    "amount": "3,530.52",
+    "transactionId": "13240775-a967-4329-990c-0e170803d84c"
   },
   {
     "state": "lose",
-    "amount": 59.64,
-    "transactionId": "9cc577b8-40f9-4d12-a59e-f8f3de11df4d"
+    "amount": "1,992.68",
+    "transactionId": "0b87428f-d87a-4cb5-8c4b-befd9e45a5c9"
   },
   {
-    "state": "win",
-    "amount": 51.75,
-    "transactionId": "7b903272-9c96-4516-81f8-35180999e3cc"
+    "state": "lose",
+    "amount": "1,939.82",
+    "transactionId": "02d5c526-737c-4ff1-9b01-d222eaf3a42f"
   },
   {
-    "state": "win",
-    "amount": 99.02,
-    "transactionId": "ffcb224b-b872-4d62-a475-018642da6a02"
+    "state": "lose",
+    "amount": "3,062.56",
+    "transactionId": "a2809741-a8ee-48e4-b0ce-c6e4d301d979"
   },
   {
     "state": "win",
-    "amount": 38.21,
-    "transactionId": "b55cc614-ad9f-454f-a655-0492e6a7320c"
+    "amount": "3,296.03",
+    "transactionId": "fa0a9c61-d7b6-4b5a-87dc-490ce5873d7a"
   },
   {
     "state": "lose",
-    "amount": 84.83,
-    "transactionId": "f9820e6f-63cb-4708-97ba-b71f7e2d1efe"
+    "amount": "2,715.19",
+    "transactionId": "0d9dc67f-1d38-44e0-86ba-e937202925a3"
   },
   {
     "state": "lose",
-    "amount": 97.89,
-    "transactionId": "b7a0c5a9-be97-4edd-b671-7463356ec3a9"
+    "amount": "2,032.92",
+    "transactionId": "3cea60a5-b45b-4e66-b71c-a48ff8908169"
+  },
+  {
+    "state": "win",
+    "amount": "1,340.27",
+    "transactionId": "b26a60e5-8003-48e8-866e-4c2af0cb9bde"
   },
   {
     "state": "lose",
-    "amount": 39.73,
-    "transactionId": "52fc20ee-14d6-47c5-9d3e-5abf42cad7a7"
+    "amount": "2,733.76",
+    "transactionId": "bf9dbc5d-77d8-4ba1-94fb-8bbea8d374c8"
   },
   {
     "state": "win",
-    "amount": 63.86,
-    "transactionId": "028d8953-6ed8-4126-94fd-3a1e85f4e1a9"
+    "amount": "1,897.97",
+    "transactionId": "4fbdc982-c99c-4034-8ba2-bccd7e6ebdbc"
   },
   {
     "state": "lose",
-    "amount": 35.24,
-    "transactionId": "ded166a0-59bb-46e6-9112-eb4c9921a456"
+    "amount": "2,309.45",
+    "transactionId": "bcb0b323-3170-44c5-872f-b9ae8b49c287"
   },
   {
     "state": "lose",
-    "amount": 11.12,
-    "transactionId": "de9c3298-0a9a-43f1-9bd2-b72071d819e4"
+    "amount": "1,922.92",
+    "transactionId": "60ef25ed-e363-42c7-948d-550510c1087b"
   },
   {
-    "state": "win",
-    "amount": 65.97,
-    "transactionId": "68d963a7-373f-4992-a299-c193b8203cf1"
+    "state": "lose",
+    "amount": "2,978.94",
+    "transactionId": "d750284e-ccd6-4d17-8713-97b6c29297cd"
   },
   {
     "state": "lose",
-    "amount": 76.68,
-    "transactionId": "a1f36ef9-55b3-4b88-9423-7f3332bab114"
+    "amount": "1,377.21",
+    "transactionId": "ffae2d7e-78bd-4491-92d6-4aec781ef82e"
+  },
+  {
+    "state": "win",
+    "amount": "1,846.11",
+    "transactionId": "aafbf4c6-3ab1-4481-94b1-c9f259f140d2"
   },
   {
     "state": "win",
-    "amount": 39.5,
-    "transactionId": "468c29c8-a4f5-4162-84a6-f7432e3a3248"
+    "amount": "1,782.25",
+    "transactionId": "d1a53f2f-d404-4378-8944-388c6fff815f"
+  },
+  {
+    "state": "lose",
+    "amount": "3,976.49",
+    "transactionId": "cc81e686-8b04-4f2e-a0e8-bad4113d0447"
+  },
+  {
+    "state": "lose",
+    "amount": "2,076.41",
+    "transactionId": "79b27267-0fde-42aa-9507-1917f7e7c3e5"
   },
   {
     "state": "win",
-    "amount": 77.29,
-    "transactionId": "8fe04782-306d-46b6-bebd-51af28df9086"
+    "amount": "2,573.10",
+    "transactionId": "a1520b2f-1052-42ca-bc88-f63dad084ec1"
   },
   {
     "state": "win",
-    "amount": 57.04,
-    "transactionId": "47689d0c-b183-4715-a406-da2e2da012a4"
+    "amount": "1,136.93",
+    "transactionId": "58122416-a6ae-4a40-bd84-54db39002608"
   },
   {
     "state": "win",
-    "amount": 40.66,
-    "transactionId": "6c17323f-104f-43c6-917a-bfe53aca46e4"
+    "amount": "1,930.49",
+    "transactionId": "9d4b62ef-5ea9-4ff5-80c5-5ad03200d32c"
   },
   {
     "state": "lose",
-    "amount": 21.14,
-    "transactionId": "5103fcba-3a16-4f22-aa6f-a6dd15062587"
+    "amount": "3,846.51",
+    "transactionId": "90c746c9-20fd-4660-b8b8-9be7cd5150b7"
   },
   {
     "state": "lose",
-    "amount": 91.57,
-    "transactionId": "bb8bf674-c351-4494-a333-8e855fd4cba2"
+    "amount": "2,373.74",
+    "transactionId": "c081ed14-084e-4f86-a53e-2b5d43f1808d"
   },
   {
-    "state": "win",
-    "amount": 28.81,
-    "transactionId": "f06a2119-600f-4ae2-bc7f-7e6bdc3cc812"
+    "state": "lose",
+    "amount": "2,609.23",
+    "transactionId": "6065474e-2d55-4043-b671-4d371e7bedca"
+  },
+  {
+    "state": "lose",
+    "amount": "2,631.41",
+    "transactionId": "16b2367a-6929-4ad0-8886-dd3c9b005915"
   },
   {
     "state": "win",
-    "amount": 79.54,
-    "transactionId": "72857d01-34d3-4cd6-b188-6336064acbe5"
+    "amount": "2,937.96",
+    "transactionId": "f92f0813-adb3-4943-8b5f-6f7a8f2cabda"
   },
   {
     "state": "lose",
-    "amount": 54.71,
-    "transactionId": "07bd54c0-1f88-4739-ae1e-2ac1bb76b534"
+    "amount": "1,782.85",
+    "transactionId": "9a682045-2486-4260-95da-d8a720b957e7"
   },
   {
     "state": "win",
-    "amount": 94.38,
-    "transactionId": "bb8da45e-de1a-4dc6-bbb1-b98e9fe18171"
+    "amount": "3,282.84",
+    "transactionId": "29deb347-9837-4a94-af3b-560beba795aa"
   },
   {
-    "state": "win",
-    "amount": 32.36,
-    "transactionId": "9e076acb-d89c-4239-9a19-da5f6d54912b"
+    "state": "lose",
+    "amount": "3,175.94",
+    "transactionId": "52381862-fc0a-4d0d-a0cc-c82e40658efe"
   },
   {
     "state": "win",
-    "amount": 79.72,
-    "transactionId": "6189be0e-c754-4a0d-acbf-9a414d3ca362"
+    "amount": "1,464.44",
+    "transactionId": "b81e00e2-a36d-4494-8176-f2fcb461d670"
   },
   {
     "state": "lose",
-    "amount": 6,
-    "transactionId": "7056e5ec-3520-470a-8862-da31abf45f32"
+    "amount": "3,749.14",
+    "transactionId": "d120bf0e-3d39-45d8-ad5a-052137d58c6f"
   },
   {
     "state": "lose",
-    "amount": 68.69,
-    "transactionId": "63ac1988-6610-4a10-9316-e96c2be9ae78"
+    "amount": "2,807.57",
+    "transactionId": "af195b3d-fe74-45af-88d7-f947d850227e"
   },
   {
     "state": "win",
-    "amount": 51.99,
-    "transactionId": "ea9deb30-3464-46d5-9990-bef85e7823eb"
+    "amount": "1,692.78",
+    "transactionId": "c1343069-615a-4830-8315-3e60a1806223"
   },
   {
-    "state": "win",
-    "amount": 6.96,
-    "transactionId": "77dab3dd-7252-4b71-809d-b683c3caec4d"
+    "state": "lose",
+    "amount": "1,274.46",
+    "transactionId": "3836195b-909d-45e6-8a62-172acffc937c"
   },
   {
-    "state": "win",
-    "amount": 1.07,
-    "transactionId": "c92a55b2-1ed1-4098-95ca-0043090122a4"
+    "state": "lose",
+    "amount": "1,079.33",
+    "transactionId": "bd13e34d-2756-4029-b972-e4522b603abd"
   },
   {
     "state": "win",
-    "amount": 13.69,
-    "transactionId": "203a6b0f-9a2c-4cd4-8e49-4f6f253a2512"
-  },
-  {
-    "state": "lose",
-    "amount": 32.55,
-    "transactionId": "0502362f-cda9-4582-be3f-24ec407591b7"
+    "amount": "2,410.11",
+    "transactionId": "ab75a3a0-a3da-4025-9040-7745a51b8433"
   },
   {
-    "state": "lose",
-    "amount": 15.42,
-    "transactionId": "ae4e20cd-721b-4400-8ce4-20b3b2c5dc84"
+    "state": "win",
+    "amount": "2,529.69",
+    "transactionId": "503c9048-52ff-4bca-93ba-a1ba5b1788f6"
   },
   {
     "state": "lose",
-    "amount": 99.99,
-    "transactionId": "7f14b0aa-ae01-4d33-b766-f1c33036d461"
+    "amount": "1,045.97",
+    "transactionId": "2cf026f0-a79a-483e-9ad7-2da6f8760e93"
   },
   {
-    "state": "lose",
-    "amount": 6.5,
-    "transactionId": "cc840f55-bad2-4124-b358-8580b9478b0b"
+    "state": "win",
+    "amount": "1,426.72",
+    "transactionId": "fae460b9-3db4-442b-9a4b-c821d238824c"
   },
   {
-    "state": "lose",
-    "amount": 46.91,
-    "transactionId": "8c2e21f1-a098-4247-b606-0b7b6b35f4ee"
+    "state": "win",
+    "amount": "1,134.81",
+    "transactionId": "40598e9e-1229-4db3-a97c-125f1d912af2"
   },
   {
     "state": "win",
-    "amount": 42.38,
-    "transactionId": "ee33425f-594a-428e-a42f-c13e254e3ae7"
+    "amount": "3,046.12",
+    "transactionId": "ac5b1219-96e7-4b56-a656-5e346d9fc382"
   },
   {
     "state": "lose",
-    "amount": 52.22,
-    "transactionId": "f64a51dd-5ba0-49ea-875d-4cb958961d21"
+    "amount": "3,258.05",
+    "transactionId": "1e849df6-2238-4049-a740-f7531152bb1f"
   },
   {
     "state": "lose",
-    "amount": 46.59,
-    "transactionId": "34370643-bb99-4a51-bec4-1e9235c1a8fe"
+    "amount": "1,001.66",
+    "transactionId": "8bea0fcd-4c50-49b2-b829-9386c3cee9e7"
   },
   {
     "state": "lose",
-    "amount": 4.5,
-    "transactionId": "d8406106-d328-4fa3-ae36-5d838cb8431b"
+    "amount": "2,137.53",
+    "transactionId": "a23a2d99-fd06-482e-bd9d-f1dbfdb4a3f2"
+  },
+  {
+    "state": "win",
+    "amount": "3,118.33",
+    "transactionId": "f3ab6793-3ea5-42e8-a9d0-9c5ee535035b"
   },
   {
     "state": "win",
-    "amount": 22.79,
-    "transactionId": "5b3fd6c9-d300-4165-825f-57d277504545"
+    "amount": "2,696.22",
+    "transactionId": "6488ce02-abbc-4bc6-96f1-e2bd05a7b8b6"
   },
   {
     "state": "lose",
-    "amount": 44.04,
-    "transactionId": "8605b7c1-5948-4130-b318-21f307a9b0cc"
+    "amount": "1,348.23",
+    "transactionId": "58264e08-b36f-46b9-8fee-37f06b310f77"
   },
   {
     "state": "lose",
-    "amount": 10.2,
-    "transactionId": "4207e6dc-0b17-4992-85dd-ea09250827be"
+    "amount": "3,293.98",
+    "transactionId": "9569a6d6-b724-46c0-9f03-a7cf1dec36ff"
   },
   {
     "state": "lose",
-    "amount": 77.29,
-    "transactionId": "b78890ca-d714-4cac-86ee-33322cc650c6"
+    "amount": "3,787.62",
+    "transactionId": "66984576-d823-48f6-8e74-21600fa625e7"
   },
   {
     "state": "win",
-    "amount": 7.06,
-    "transactionId": "45740a98-99d0-40bb-99dc-db4bda0acb83"
+    "amount": "2,218.22",
+    "transactionId": "8d0fb591-6203-4053-802a-9fb4d955808a"
   },
   {
-    "state": "lose",
-    "amount": 75.93,
-    "transactionId": "8c515777-4ad6-4fd8-a7da-bdd2d6b38279"
+    "state": "win",
+    "amount": "1,463.86",
+    "transactionId": "09c403d5-6619-422a-8e60-e4ac8c3d6e0a"
   },
   {
     "state": "lose",
-    "amount": 72.35,
-    "transactionId": "3576b845-7704-4287-8122-f5db143e8ab1"
+    "amount": "1,541.92",
+    "transactionId": "0bb833dd-c861-4922-a1f0-55dd851b713f"
   },
   {
     "state": "lose",
-    "amount": 89.6,
-    "transactionId": "a7159d10-adb3-425e-8309-fb73ad51f2d9"
+    "amount": "1,483.24",
+    "transactionId": "9fa5a042-6c1e-46c0-a5f7-231caefad456"
   }
 ]`
 )
