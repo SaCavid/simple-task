@@ -11,12 +11,14 @@ import (
 )
 
 var (
-	msg                    = `{"state": "win", "amount": "10.15", "transactionId": "Same identification"}`
-	errorUsedTransactionId = `{"state": "win", "amount": "10.15", "transactionId": "Same identification"}`
+	msg1                   = `{"state": "win", "amount": "10.15", "transactionId": "Same identification 1"}`
+	msg2                   = `{"state": "win", "amount": "10.15", "transactionId": "Same identification 2"}`
+	msg3                   = `{"state": "win", "amount": "10.15", "transactionId": "Same identification 3"}`
+	errorUsedTransactionId = `{"state": "win", "amount": "10.15", "transactionId": "Same identification 1"}`
 	errorNoTransactionId   = `{"state": "win", "amount": "10.15", "transactionId": ""}`
 	errorNoState           = `{"state": "", "amount": "10.15", "transactionId": "Some identification"}`
-	errorState             = `{"state": "error-state", "amount": "10.15", "transactionId": "Some identification 2"}`
-	errorNullAmount        = `{"state": "win", "amount": "", "transactionId": "Some identification 3"}`
+	errorState             = `{"state": "error-state", "amount": "10.15", "transactionId": "Some identification 4"}`
+	errorNullAmount        = `{"state": "win", "amount": "", "transactionId": "Some identification 5"}`
 )
 
 func TestServer_Handler(t *testing.T) {
@@ -33,12 +35,13 @@ func TestServer_Handler(t *testing.T) {
 	h.noTransactionId(e)
 	h.noAmount(e)
 	h.sameTransactionId(e)
+	h.notLogged(e)
 	h.notRegistered(e)
 }
 
 func (h *Server) notAcceptableSourceType(e *echo.Echo) {
 	// Setup
-	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg))
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg1))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	req.Header.Set("Source-type", "not-source")
 	rec := httptest.NewRecorder()
@@ -121,24 +124,27 @@ func (h *Server) sameTransactionId(e *echo.Echo) {
 
 	err := h.Handler(c)
 	if err != nil {
-		log.Println("Testing not logged. Expected Code: 403. Got:", err.Error())
+		log.Println("Testing repeat transaction id. Expected Code: 406. Got:", err.Error())
 	}
+}
 
-	req = httptest.NewRequest(http.MethodPost, "/", strings.NewReader(errorUsedTransactionId))
+func (h *Server) notLogged(e *echo.Echo) {
+	// Setup
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg2))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	req.Header.Set("Source-type", "server")
-	rec = httptest.NewRecorder()
-	c2 := e.NewContext(req, rec)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
 
-	err = h.Handler(c2)
+	err := h.Handler(c)
 	if err != nil {
-		log.Println("Testing repeat transaction id. Expected Code: 406. Got:", err.Error())
+		log.Println("Testing not logged. Expected Code: 403. Got:", err.Error())
 	}
 }
 
 func (h *Server) notRegistered(e *echo.Echo) {
 	// Setup
-	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg))
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(msg3))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	req.Header.Set("Source-type", "server")
 	req.Header.Set("Authorization", "not-registered-id")

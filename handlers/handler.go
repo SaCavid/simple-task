@@ -5,7 +5,6 @@ import (
 	"github.com/SaCavid/simple-task/models"
 	"github.com/SaCavid/simple-task/service"
 	"github.com/labstack/echo"
-	"log"
 	"net/http"
 	"strconv"
 	"sync"
@@ -48,7 +47,22 @@ func (h *Server) Handler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
 
+	id := c.Request().Header.Get("Authorization")
+
 	if err := jd.ValidateData(); err != nil {
+		// create clean data for transaction information to save
+		data := models.Data{
+			UserId:        id,
+			State:         false,
+			Source:        i,
+			Status:        2, // error . saved for unique transaction id.
+			Amount:        0,
+			TransactionId: jd.TransactionId,
+		}
+		data.CreatedAt = time.Now()
+		data.UpdatedAt = time.Now()
+
+		h.SaveTransaction(data)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error()})
 	}
 
@@ -57,12 +71,11 @@ func (h *Server) Handler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 	}
 
-	id := c.Request().Header.Get("Authorization")
 	data := models.Data{
 		UserId:        id,
 		State:         false,
 		Source:        i,
-		Status:        2, // error . saved for unique transaction id.
+		Status:        2, // error . saved for unique transaction id. not to allow repeat
 		Amount:        a,
 		TransactionId: jd.TransactionId,
 	}
@@ -82,9 +95,9 @@ func (h *Server) Handler(c echo.Context) error {
 	switch jd.State {
 	case "win":
 
-		err = h.UserWin(id, jd)
+		err = h.UserWin(id, &data)
 		if err != nil {
-			data.State = true
+			data.Status = 2
 			h.SaveTransaction(data)
 			return echo.NewHTTPError(http.StatusInternalServerError, &models.Response{Error: true, Message: err.Error()})
 		}
@@ -92,16 +105,15 @@ func (h *Server) Handler(c echo.Context) error {
 		break
 	case "lose":
 
-		balance, err := h.UserLost(id, jd)
+		balance, err := h.UserLost(id, &data)
 		if err != nil {
+			data.Status = 2
 			h.SaveTransaction(data)
 			return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: err.Error() + jd.State + "-->" + jd.Amount + "Balance:" + fmt.Sprintf("%.2f", balance)})
 		}
 
 		break
 	default:
-
-		log.Println("error with state", jd.State)
 
 		h.SaveTransaction(data)
 		return echo.NewHTTPError(http.StatusBadRequest, &models.Response{Error: true, Message: "error with state"})

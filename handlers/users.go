@@ -179,40 +179,19 @@ func (h *Server) FetchUsers() error {
 	return nil
 }
 
-func (h *Server) UserWin(id string, d *models.JsonData) error {
-
-	a, err := strconv.ParseFloat(d.Amount, 64)
-	if err != nil {
-		return err
-	}
-	var s SourceType
-
-	i, err := s.IndexOf(d.Source)
-	if err != nil {
-		return err
-	}
+func (h *Server) UserWin(id string, d *models.Data) error {
 
 	h.Mu.Lock()
 	b := h.UserBalances[id]
-	b.Amount = b.Amount + a
+	b.Amount = b.Amount + d.Amount
 	b.Saved = true   // not saved
 	h.Balance = true // not saved balance in map
 	h.UserBalances[id] = b
 	h.Mu.Unlock()
-	mData := models.Data{}
 
-	mData.CreatedAt = time.Now()
-	mData.UpdatedAt = time.Now()
-
-	mData.UserId = id
-	mData.TransactionId = d.TransactionId
-	mData.State = true
-	mData.Amount = a
-	mData.Status = 1
-
-	mData.Source = i
-
-	h.SaveTransaction(mData)
+	d.State = true
+	d.Status = 1
+	h.SaveTransaction(*d)
 	//err = srv.CreateData(mData)
 	//if err != nil {
 	//	log.Println(err)
@@ -221,45 +200,23 @@ func (h *Server) UserWin(id string, d *models.JsonData) error {
 	return nil
 }
 
-func (h *Server) UserLost(id string, d *models.JsonData) (float64, error) {
-
-	a, err := strconv.ParseFloat(d.Amount, 64)
-	if err != nil {
-		return 0, err
-	}
-	var s SourceType
-
-	i, err := s.IndexOf(d.Source)
-	if err != nil {
-		log.Println(err)
-		return 0, err
-	}
+func (h *Server) UserLost(id string, d *models.Data) (float64, error) {
 
 	h.Mu.Lock()
 	b := h.UserBalances[id]
-	if (b.Amount - a) < 0 {
+	if (b.Amount - d.Amount) < 0 {
 		h.Mu.Unlock()
 		return b.Amount, fmt.Errorf("not enough user balance")
 	}
 
-	b.Amount = b.Amount - a
+	b.Amount = b.Amount - d.Amount
 	b.Saved = true   // user balance not saved
 	h.Balance = true // not saved balance in map
 	h.UserBalances[id] = b
 	h.Mu.Unlock()
-	mData := models.Data{}
+	d.Status = 1
 
-	mData.CreatedAt = time.Now()
-	mData.UpdatedAt = time.Now()
-
-	mData.UserId = id
-	mData.TransactionId = d.TransactionId
-	mData.State = false
-	mData.Amount = a
-	mData.Source = i
-	mData.Status = 1
-
-	h.SaveTransaction(mData)
+	h.SaveTransaction(*d)
 	//err = srv.CreateData(mData)
 	//if err != nil {
 	//	log.Println(err)
