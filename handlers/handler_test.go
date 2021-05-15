@@ -43,10 +43,12 @@ func TestServer_Handler(t *testing.T) {
 	h.notAcceptableSourceType(e)
 	h.noState(e)
 	h.wrongState(e)
+
 	h.noTransactionId(e)
 	h.noAmount(e)
 	h.sameTransactionId(e)
 	h.notLogged(e)
+
 	h.notRegistered(e)
 	h.userWin(e)
 	h.userLose(e)
