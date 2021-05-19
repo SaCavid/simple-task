@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/SaCavid/simple-task/models"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 	"log"
 	"net/http"
 	"strings"
