@@ -8,7 +8,7 @@
 
 ## Initialization
     
-    Docker Desktop must be installed for this task.
+    Docker Desktop must be installed and run for this task.
     Firstly please clone repository to your machine. 
     Below command to create and run simple-task image
 
@@ -16,11 +16,12 @@
     
 ## Testing golang
 
-    After initialization finished - below command must be used for testing.
+    After initialization finished - below command must be used for testing while running 
+    processing container.
     
         $ docker exec processing go test -bench=. ./...
 
-    Testing 
+    Testing:
         1. Bad request
         2. Not acceptable source type
         3. No State
@@ -59,6 +60,7 @@
                 "Accept" "application/json"
                 "Content-type" "application/json"
                 "Source-type"  "server" || "game" || "payment"
+                // more source-types can be added at ./handlers/states.go file
                 "Authorization"  "NewUserId"
             
                 States can be "win" || "lose"
