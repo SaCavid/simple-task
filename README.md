@@ -67,7 +67,7 @@
             Below json object must be posted for processing
             {
                 "state": "lose", 
-                "amount": "8.35", 
+                "amount": "8.78", 
                 "transactionId": "some generated identificator"
             }
 
