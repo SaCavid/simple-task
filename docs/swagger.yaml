@@ -1,0 +1,76 @@
+basePath: /
+definitions:
+  models.JsonData:
+    properties:
+      amount:
+        type: string
+      source:
+        type: string
+      state:
+        type: string
+      transactionId:
+        type: string
+    type: object
+  models.Response:
+    properties:
+      data:
+        type: object
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
+host: localhost
+info:
+  contact: {}
+  description: Api for processing transactions
+  title: Simple Task
+  version: "1.0"
+paths:
+  /api/processing:
+    post:
+      consumes:
+      - application/json
+      description: process posted requests
+      operationId: create account
+      parameters:
+      - description: transaction info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.JsonData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Processing
+      tags:
+      - handler
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

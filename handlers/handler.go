@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/SaCavid/simple-task/models"
 	"github.com/SaCavid/simple-task/service"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
 	"sync"
@@ -31,6 +31,19 @@ type Server struct {
 	Repo *service.TaskRepository
 }
 
+// @Summary Processing
+// @Security ApiKeyAuth
+// @Tags handler
+// @Description process posted requests
+// @ID create account
+// @Accept json
+// @Produce json
+// @Param input body models.JsonData true "transaction info"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} models.Response
+// @Failure 500 {object} models.Response
+// @Failure default {object} models.Response
+// @Router /api/processing [post]
 func (h *Server) Handler(c echo.Context) error {
 
 	jd := new(models.JsonData)
