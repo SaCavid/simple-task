@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/SaCavid/simple-task/models"
 	"github.com/SaCavid/simple-task/service"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 	"net/http"
 	"strconv"
 	"sync"

@@ -6,7 +6,7 @@ import (
 	"github.com/SaCavid/simple-task/models"
 	"github.com/SaCavid/simple-task/service"
 	"github.com/joho/godotenv"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 	"github.com/swaggo/echo-swagger"
 	"log"
 	"net/http"
